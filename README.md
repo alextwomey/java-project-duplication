@@ -6,6 +6,6 @@ Final project for ISTE-121.
 - Email: err4471@rit.edu
 - GitHub: ethanrusz
 
-### Punkpopop
-- Email: <email>
+### New Group Member
+- Email:
 - GitHub: Punkpopop
