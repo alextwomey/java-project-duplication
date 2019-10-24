@@ -6,6 +6,6 @@ Final project for ISTE-121.
 - Email: err4471@rit.edu
 - GitHub: ethanrusz
 
-### New Group Member
-- Email:
+### Kenneth Wood
+- Email: kw3732@rit.edu
 - GitHub: Punkpopop
