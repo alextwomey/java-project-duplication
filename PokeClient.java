@@ -1,6 +1,6 @@
 /**
  * @author Ethan Ruszanowski
- * @version 0.1.0
+ * @version 0.1.1
  * */
 
 import java.awt.*;
@@ -10,10 +10,11 @@ import javax.swing.*;
  * Main class
  */
 public class PokeClient extends JFrame {
-
+  // Create JButtons
   private JButton jbFight = new JButton("Fight");
   private JButton jbRun = new JButton("Run");
 
+  // Java text area
   private JTextArea jtaOut = new JTextArea();
     private JScrollPane jspOut = new JScrollPane(jtaOut);
 
@@ -28,18 +29,19 @@ public class PokeClient extends JFrame {
 	}
 
 	public void setupWindow() {
-    JPanel southPane = new JPanel();
-    JPanel jpLeft = new JPanel(new GridLayout(1,1));
-    JPanel jpRight = new JPanel(new GridLayout(1,2));
+    JPanel jpSouth = new JPanel(new GridLayout(1,2));
+    JPanel jpRight = new JPanel(new GridLayout(1, 2));
+    this.add(jpSouth, BorderLayout.SOUTH);
 
-    this.add(southPane, BorderLayout.SOUTH);
-    southPane.add(jpLeft, BorderLayout.EAST);
-    southPane.add(jpRight, BorderLayout.WEST);
-
-    jpRight.add(jbFight);
+    // Add components to south
+    jpSouth.add(jspOut);
+    jpSouth.add(jpRight);
     jpRight.add(jbRun);
+    jpRight.add(jbFight);
 
-    jpLeft.add(jspOut);
+    // Set up jtaOut
+    jtaOut.setEditable(false);
+    jtaOut.setText("What would you like to do?");
 
     this.setTitle("PokeClient");
     this.setSize(700, 600);
