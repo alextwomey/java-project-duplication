@@ -14,3 +14,6 @@
 *.zip
 *.tar.gz
 *.rar
+
+# Ignore VSCode configurations
+.vscode/
