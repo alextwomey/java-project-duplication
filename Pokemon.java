@@ -11,16 +11,24 @@ public class Pokemon{
    private int def = 0;
    private int acc = 0;
    private int spd = 0;
-   
-   
+
+    /*********************
+     * Stats Key
+     * hp - Health
+     * att - Attack
+     * def - Defense
+     * acc - Accuracy
+     * spd - Speed
+     ********************/
+
    public Pokemon(String[] statsIn){
-      name = statsIn[0];   
+      name = statsIn[0];
       hp = Integer.parseInt(statsIn[1]);
-      att = Integer.parseInt(statsIn[2]);      
-      def = Integer.parseInt(statsIn[3]);      
-      acc = Integer.parseInt(statsIn[4]);      
-      spd = Integer.parseInt(statsIn[5]);      
-      
+      att = Integer.parseInt(statsIn[2]);
+      def = Integer.parseInt(statsIn[3]);
+      acc = Integer.parseInt(statsIn[4]);
+      spd = Integer.parseInt(statsIn[5]);
+
    }
    //name getter/setter
    public String getName(){
@@ -29,7 +37,7 @@ public class Pokemon{
    public void setName(String nameIn){
       name = nameIn;
    }
-   
+
    //att getter/setter/increment/decrement
    public int getAtt(){
       return att;
@@ -43,8 +51,8 @@ public class Pokemon{
    public void lowerAtt(int attDown){
       att -= attDown;
    }
-   
-   
+
+
    //def getter/setter/increment/decrement
    public int getDef(){
       return def;
@@ -58,7 +66,7 @@ public class Pokemon{
    public void lowerDef(int defDown){
       def -= defDown;
    }
-   
+
    //spd getter/setter/increment/decrement
    public int getSpd(){
       return spd;
@@ -72,7 +80,7 @@ public class Pokemon{
    public void lowerSpd(int spdDown){
       spd -= spdDown;
    }
-   
+
    //acc getter/setter/increment/decrement
    public int getAcc(){
       return acc;
@@ -86,7 +94,7 @@ public class Pokemon{
    public void lowerAcc(int accDown){
       acc -= accDown;
    }
-   
+
    //hp getter/setter/increment/decrement
    public int getHp(){
       return hp;
