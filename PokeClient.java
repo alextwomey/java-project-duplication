@@ -65,8 +65,8 @@ public class PokeClient extends JFrame implements ActionListener {
       case "Run":
         doRun();
         break;
-      }
     }
+  }
 
   public void doFight() {
     //TODO add run event
