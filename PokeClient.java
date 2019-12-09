@@ -5,11 +5,13 @@
 
 import java.awt.*;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 /**
  * Main class
  */
-public class PokeClient extends JFrame {
+public class PokeClient extends JFrame implements ActionListener {
   // Create JButtons
   private JButton jbFight = new JButton("Fight");
   private JButton jbRun = new JButton("Run");
@@ -39,6 +41,10 @@ public class PokeClient extends JFrame {
     jpRight.add(jbRun);
     jpRight.add(jbFight);
 
+    // Add action stuff
+    jbFight.addActionListener(this);
+    jbRun.addActionListener(this);
+
     // Set up jtaOut
     jtaOut.setEditable(false);
     jtaOut.setText("What would you like to do?");
@@ -48,4 +54,24 @@ public class PokeClient extends JFrame {
     this.setLocation(100,100);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+
+  // GUI button switch
+  public void actionPerformed(ActionEvent ae) {
+    switch(ae.getActionCommand()) {
+      case "Fight":
+        doFight();
+        break;
+      case "Run":
+        doRun();
+        break;
+      }
+    }
+
+  public void doFight() {
+    //TODO add run event
+  }
+
+  public void doRun() {
+    // TODO add fight event
+  }
 }
