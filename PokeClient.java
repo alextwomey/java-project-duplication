@@ -50,7 +50,8 @@ public class PokeClient extends JFrame implements ActionListener {
     jtaOut.setText("What would you like to do?");
 
     this.setTitle("PokeClient");
-    this.setSize(700, 600);
+    this.setSize(480, 224);
+    this.setResizable(false);
     this.setLocation(100,100);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
