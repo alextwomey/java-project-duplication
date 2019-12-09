@@ -83,7 +83,6 @@ public class PokeServer extends JFrame implements ActionListener {
 
   public void doDisco() {
     // TODO add Disconnect
-    System.out.println("I work!");
   }
 
   public void doQuit() {
