@@ -1,6 +1,6 @@
 /**
  * @author Ethan Ruszanowski
- * @version 0.2.0
+ * @version 0.2.1
  * */
 
 import java.awt.*;
@@ -26,8 +26,8 @@ public class PokeClient extends JFrame implements ActionListener {
     private JScrollPane jspChat = new JScrollPane(jtaChat);
 
   // Message box
-  private JTextArea jtfMessageBox = new JTextArea(2, 10);
-    private JScrollPane jspMessageBox = new JScrollPane(jtfMessageBox);
+  private JTextArea jtaMessageBox = new JTextArea(2, 10);
+    private JScrollPane jspMessageBox = new JScrollPane(jtaMessageBox);
 
   public static void main(String[] args) {
 		new PokeClient();
@@ -84,7 +84,7 @@ public class PokeClient extends JFrame implements ActionListener {
     jpChatSouth.add(jbSend);
     jtaChat.setEditable(false);
     jtaChat.setWrapStyleWord(true);
-    // jtfMessageBox.setWrapStyleWord(true);
+    // jtaMessageBox.setWrapStyleWord(true);
 
     chat.addWindowListener(new java.awt.event.WindowAdapter() {
     @Override
@@ -109,6 +109,9 @@ public class PokeClient extends JFrame implements ActionListener {
       case "Run":
         doRun();
         break;
+      case "Send":
+        doSend();
+        break;
     }
   }
 
@@ -118,5 +121,11 @@ public class PokeClient extends JFrame implements ActionListener {
 
   public void doRun() {
     // TODO add fight event
+  }
+
+  public void doSend() {
+    jtaChat.append("Me: " + jtaMessageBox.getText() + "\n");
+    jtaMessageBox.setText("");
+    // TODO finish send method
   }
 }
