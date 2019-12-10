@@ -1,6 +1,6 @@
 /**
  * @author Ethan Ruszanowski
- * @version 0.2.0
+ * @version 0.2.1
  * */
 
 import java.awt.*;
@@ -109,6 +109,9 @@ public class PokeClient extends JFrame implements ActionListener {
       case "Run":
         doRun();
         break;
+      case "Send":
+        doSend();
+        break;
     }
   }
 
@@ -118,5 +121,10 @@ public class PokeClient extends JFrame implements ActionListener {
 
   public void doRun() {
     // TODO add fight event
+  }
+
+  public void doSend() {
+    // TODO send method
+    System.out.println("test");
   }
 }
