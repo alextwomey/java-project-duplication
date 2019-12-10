@@ -36,8 +36,8 @@ public class PokeServer extends JFrame implements ActionListener {
    private String syncMe = "pls sync me...pls?";
    private ArrayList<Socket> connections = new ArrayList<Socket>();
    private int PORT = 27015;
-   
-   
+
+
   public static void main(String[] args) {
 		new PokeServer();
 	}
@@ -46,7 +46,7 @@ public class PokeServer extends JFrame implements ActionListener {
 	   setupWindow();
       this.setVisible(true);
       serverPrep();
-		
+
 	}
       //set up connections and start threads
    public void serverPrep(){
@@ -54,26 +54,26 @@ public class PokeServer extends JFrame implements ActionListener {
          listener = new ServerSocket(PORT);
       }
       catch(Exception e){e.printStackTrace();}
-      
+
       while(!isFinished){
          try{
             Socket clientSocket = listener.accept();
             ThreadChatServer cliThread = new ThreadChatServer(clientSocket);
-            
-            cliThread.start(); 
-         
+
+            cliThread.start();
+
          }catch(IOException ioe){
-            System.out.println("Exception found on accept. Ignoring. Stack Trace :"); 
-            ioe.printStackTrace(); 
+            System.out.println("Exception found on accept. Ignoring. Stack Trace :");
+            ioe.printStackTrace();
          }
       }
-      
+
       try{
          listener.close();
          System.out.println("Server Stopped");
       }catch(Exception IOE){
-         System.out.println("Error Found stopping server socket"); 
-         System.exit(-1); 
+         System.out.println("Error Found stopping server socket");
+         System.exit(-1);
       }
    }
 
@@ -131,15 +131,15 @@ public class PokeServer extends JFrame implements ActionListener {
   }
 
   public void doQuit() {
-    // TODO Add quit
+    System.exit(0);
   }
-  
+
   public class ThreadChatServer extends Thread{
       Socket myClientSocket;
       int indexConnection;
       String input;
       boolean runThread = true;
-      
+
       public ThreadChatServer(Socket s){
          myClientSocket = s;
          synchronized(syncMe){
@@ -148,39 +148,39 @@ public class PokeServer extends JFrame implements ActionListener {
             indexCounter++;
          }
       }
-      
+
       public void run(){
          connected = true;
          InputStream in = null;
-         OutputStream out = null; 
+         OutputStream out = null;
          BufferedReader bin = null;
          PrintWriter bout = null;
          Date dNow = new Date();
          String dateString = ft.format(dNow);
          jtaLog.append("\nAccepted client address : "+myClientSocket.getInetAddress());
          try{
-         
+
             //in = myClientSocket.getInputStream();
             out = myClientSocket.getOutputStream();
             //bin = new BufferedReader(new InputStreamReader(in));
-            
+
             bout = new PrintWriter(out);
-      
+
             bout.println("Connected to Server at "+dateString);
             bout.flush();
             //bout.close();
-         
+
          }catch(Exception e){
             e.printStackTrace();
          }
-         
+
          while(connected){
             //System.out.println("waitin");
             try{
                in = myClientSocket.getInputStream();
                bin = new BufferedReader(new InputStreamReader(in));
-               
-               
+
+
                input=bin.readLine();
                //System.out.println("Recieved input:"+input);
                jtaCLog.append("\n"+input);
@@ -193,8 +193,8 @@ public class PokeServer extends JFrame implements ActionListener {
                      bout.flush();
                   }
                }
-               
-            
+
+
             }
             catch(SocketException e){
                System.out.println("Client closed connection");
@@ -203,8 +203,8 @@ public class PokeServer extends JFrame implements ActionListener {
             catch(Exception ee){
             }
          }//end of while
-         
+
       }//end of run
-  
+
   }
 }
