@@ -124,6 +124,8 @@ public class PokeClient extends JFrame implements ActionListener {
   }
 
   public void doSend() {
-    // TODO send method
+    jtaChat.append("Me: " + jtaMessageBox.getText() + "\n");
+    jtaMessageBox.setText("");
+    // TODO finish send method
   }
 }
