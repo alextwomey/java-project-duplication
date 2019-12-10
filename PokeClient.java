@@ -26,8 +26,8 @@ public class PokeClient extends JFrame implements ActionListener {
     private JScrollPane jspChat = new JScrollPane(jtaChat);
 
   // Message box
-  private JTextArea jtfMessageBox = new JTextArea(2, 10);
-    private JScrollPane jspMessageBox = new JScrollPane(jtfMessageBox);
+  private JTextArea jtaMessageBox = new JTextArea(2, 10);
+    private JScrollPane jspMessageBox = new JScrollPane(jtaMessageBox);
 
   public static void main(String[] args) {
 		new PokeClient();
@@ -84,7 +84,7 @@ public class PokeClient extends JFrame implements ActionListener {
     jpChatSouth.add(jbSend);
     jtaChat.setEditable(false);
     jtaChat.setWrapStyleWord(true);
-    // jtfMessageBox.setWrapStyleWord(true);
+    // jtaMessageBox.setWrapStyleWord(true);
 
     chat.addWindowListener(new java.awt.event.WindowAdapter() {
     @Override
@@ -125,6 +125,5 @@ public class PokeClient extends JFrame implements ActionListener {
 
   public void doSend() {
     // TODO send method
-    System.out.println("test");
   }
 }
