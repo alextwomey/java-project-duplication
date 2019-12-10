@@ -18,7 +18,7 @@ public class PokeClient extends JFrame implements ActionListener {
   private JButton jbSend = new JButton("Send");
 
   // Output text area
-  private JTextArea jtaOut = new JTextArea();
+  private JTextArea jtaOut = new JTextArea(2, 10);
     private JScrollPane jspOut = new JScrollPane(jtaOut);
 
   // Chat assets
@@ -26,7 +26,8 @@ public class PokeClient extends JFrame implements ActionListener {
     private JScrollPane jspChat = new JScrollPane(jtaChat);
 
   // Message box
-  private JTextField jtfMessageBox = new JTextField();
+  private JTextArea jtfMessageBox = new JTextArea(2, 10);
+    private JScrollPane jspMessageBox = new JScrollPane(jtfMessageBox);
 
   public static void main(String[] args) {
 		new PokeClient();
@@ -41,7 +42,6 @@ public class PokeClient extends JFrame implements ActionListener {
 	public void setupWindow() {
     JPanel jpSouth = new JPanel(new GridLayout(1, 2));
     JPanel jpRunFight = new JPanel(new GridLayout(1, 2));
-    JPanel jpChatCenter = new JPanel();
     JPanel jpChatSouth = new JPanel(new GridLayout(1, 2));
     this.add(jpSouth, BorderLayout.SOUTH);
 
@@ -80,8 +80,22 @@ public class PokeClient extends JFrame implements ActionListener {
 
     // Add components to jpChatSouth
     chat.add(jpChatSouth, BorderLayout.SOUTH);
-    jpChatSouth.add(jtfMessageBox);
+    jpChatSouth.add(jspMessageBox);
     jpChatSouth.add(jbSend);
+    jtaChat.setEditable(false);
+    jtaChat.setWrapStyleWord(true);
+    // jtfMessageBox.setWrapStyleWord(true);
+
+    chat.addWindowListener(new java.awt.event.WindowAdapter() {
+    @Override
+    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+      JOptionPane.showMessageDialog(
+        chat,
+        "Please close from the game window.",
+        "Oops!",
+        JOptionPane.INFORMATION_MESSAGE);
+      }
+    });
 
     chat.setVisible(true);
 	}
