@@ -1,4 +1,4 @@
-# java-project
+# pokemon-battle
 Final project for ISTE-121.
 
 ## Group Member Contact Information
