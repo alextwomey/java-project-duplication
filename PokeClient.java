@@ -13,6 +13,9 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 /**
  * Main class
@@ -89,6 +92,9 @@ public class PokeClient extends JFrame implements ActionListener {
     this.setLocation(100,100);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+   // background music method called to run automatically
+    music();
+
     // Chat window setup
     JFrame chat = new JFrame();
     chat.setTitle("PokeClient - Chat");
@@ -137,6 +143,24 @@ public class PokeClient extends JFrame implements ActionListener {
         break;
     }
   }
+  
+  // music() method for background music
+  public static void music() {
+       try {
+         AudioInputStream ais = AudioSystem.getAudioInputStream( new File(
+            "BackgroundMusic.wav"));
+            
+            Clip clip = AudioSystem.getClip();
+            clip.open(ais);
+            
+            while(true){
+               clip.start();
+               clip.loop(clip.LOOP_CONTINUOUSLY);              
+            } 
+       } catch( Exception e) {
+            e.printStackTrace();
+       }
+   }
 
   public void doFight() {
     //TODO add run event
