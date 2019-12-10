@@ -152,7 +152,7 @@ public class PokeClient extends JFrame implements ActionListener {
       PrintWriter pout = new PrintWriter(out);
       pout.println(name+": "+jtaMessageBox.getText().trim());
       pout.flush();
-      String formatOut = String.format("\n%s",jtaMessageBox.getText().trim());
+      String formatOut = String.format("\n%s", "Me: " + jtaMessageBox.getText().trim());
       jtaChat.setEditable(true);
       appendToPane(jtaChat, formatOut,Color.BLUE );
       jtaChat.setEditable(false);
