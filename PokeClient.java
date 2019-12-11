@@ -290,7 +290,7 @@ public class PokeClient extends JFrame implements ActionListener {
   }
 
   // music() method for background music
-  public static void {
+  public static void music() {
        try {
          AudioInputStream ais = AudioSystem.getAudioInputStream( new File(
             "BackgroundMusic.wav"));
