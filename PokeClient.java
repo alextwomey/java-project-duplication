@@ -42,9 +42,14 @@ public class PokeClient extends JFrame implements ActionListener {
   private boolean listFlag = false;
   private ArrayList<String> cNames = new ArrayList<String>();
 
+  //synchronized assets
+  String syncMe = "pls pls pls sync meee";
+
   //Attribute for lobby list
   private JPanel jpList;
-
+  private JTextArea jtList;
+  private JComboBox nameSelect;
+  private DefaultComboBoxModel model = new DefaultComboBoxModel();
   // Output text area
   private JTextArea jtaOut = new JTextArea(2, 10);
     private JScrollPane jspOut = new JScrollPane(jtaOut);
@@ -52,11 +57,12 @@ public class PokeClient extends JFrame implements ActionListener {
   // Chat assets
   private JTextPane jtaChat = new JTextPane();
     private JScrollPane jspChat = new JScrollPane(jtaChat);
+  private JFrame chat;
 
   // Message box
   private JTextArea jtaMessageBox = new JTextArea(2, 10);
     private JScrollPane jspMessageBox = new JScrollPane(jtaMessageBox);
-    
+
   // ArrayList for chosen Pokemon
   private ArrayList<String> chosenPokemon = new ArrayList<String>();
 
@@ -69,10 +75,10 @@ public class PokeClient extends JFrame implements ActionListener {
       lobbyThreadPrep();
       setupWindow();
       setupChoiceWindow();
-      setUpLobby();
+      //setUpLobby();
 	   this.setVisible(true);
      // background music method called to run automatically
-     music();
+     //music();
 	}
    //Networking chat start area, connects and starts thread
    public void chatThreadPrep(){
@@ -103,7 +109,6 @@ public class PokeClient extends JFrame implements ActionListener {
 
       }catch(Exception e){}
    }
-
    public void battleThreadPrep(){
      try{
        Thread battleThread = new ThreadBattle();
@@ -120,49 +125,64 @@ public class PokeClient extends JFrame implements ActionListener {
      }
 
    }
-   public void lobbyList(){
-     for(int i = 0; i < cNames.size();i++){
-       JLabel jlName = new JLabel(cNames.get(i));
-       jpList.add(jlName);
-     }
-   }
+
    public void setUpLobby(){
-     JFrame lobby = new JFrame();
-     lobby.setTitle("PokeClient - Lobby");
+     JPanel lobby = new JPanel(new BorderLayout());
+
      lobby.setSize(400, 400);
-     lobby.setResizable(false);
-     lobby.setLocation(700,200);
+
+
 
      JPanel jpTitle = new JPanel(new FlowLayout());
      JLabel jlChoose = new JLabel("Please choose someone to battle!");
      jpTitle.add(jlChoose);
-     lobby.add(jpTitle, "North");
 
-     jpList = new JPanel(new FlowLayout());
 
-     lobby.add(jpList, "Center");
+     jpList = new JPanel(new BorderLayout());
+     jtList = new JTextArea(15,15);
+     jtList.setEditable(false);
+     jpList.add(jtList,"Center");
+
+     //Dummy ARray for combobox
+
+     model = new DefaultComboBoxModel();
+     nameSelect = new JComboBox();
+     nameSelect.setModel(model);
+     jpList.add(nameSelect,"South");
 
 
      JPanel jpBattle = new JPanel(new FlowLayout());
      JButton jBattle = new JButton("Battle!");
      jpBattle.add(jBattle);
+
+
+     lobby.add(jpTitle, "North");
+     lobby.add(jpList, "Center");
      lobby.add(jpBattle,"South");
 
-     lobby.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-     lobby.addWindowListener(new java.awt.event.WindowAdapter() {
-     @Override
-     public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-       JOptionPane.showMessageDialog(
-         lobby,
-         "Please close from the game window.",
-         "Oops!",
-         JOptionPane.INFORMATION_MESSAGE);
-       }
-     });
-
-     lobby.setVisible(true);
+     chat.add(lobby,"East");
+     //lobby.setVisible(true);
 
    }
+
+   public void remakeComboBox(String[] n){
+     String[] reDrawNameList = n;
+     model = new DefaultComboBoxModel(reDrawNameList);
+     nameSelect.setModel(model);
+   }
+
+   public void redrawNames(String nS){
+     String nameString = nS;
+     String[] arrOfName = nameString.split(",");
+     String namesNewL = "";
+     for(int i = 0; i < arrOfName.length; i++){
+       namesNewL = namesNewL +"\n"+arrOfName[i]+",";
+     }
+     jtList.setText(namesNewL);
+
+     remakeComboBox(arrOfName);
+   }
+
 	public void setupWindow() {
     JPanel jpSouth = new JPanel(new GridLayout(1, 2));
     JPanel jpRunFight = new JPanel(new GridLayout(1, 2));
@@ -191,22 +211,28 @@ public class PokeClient extends JFrame implements ActionListener {
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     // Chat window setup
-    JFrame chat = new JFrame();
+    chat = new JFrame();
     chat.setTitle("PokeClient - Chat");
-    chat.setSize(400, 400);
+    chat.setSize(800, 400);
     chat.setResizable(false);
     chat.setLocation(300,200);
     // Prevent close from chat window
     chat.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
     // Add components to chat center
-    chat.add(jspChat, BorderLayout.CENTER);
+    JPanel jpChatHolder = new JPanel(new BorderLayout());
+    jpChatHolder.setSize(400,400);
+    jpChatHolder.add(jspChat, "Center");
+
 
     // Add components to jpChatSouth
-    chat.add(jpChatSouth, BorderLayout.SOUTH);
+
     jpChatSouth.add(jspMessageBox);
     jpChatSouth.add(jbSend);
     jtaChat.setEditable(false);
+    jpChatHolder.add(jpChatSouth, BorderLayout.SOUTH);
+    chat.add(jpChatHolder, "Center");
+    setUpLobby();
     // jtaChat.setWrapStyleWord(true);
     // jtaMessageBox.setWrapStyleWord(true);
 
@@ -223,14 +249,14 @@ public class PokeClient extends JFrame implements ActionListener {
 
     chat.setVisible(true);
 	}
-   
+
    // window for choosing Pokemon
    public void setupChoiceWindow() {
-   
+
       JPanel jpTitle = new JPanel( new FlowLayout());
       JLabel jlChoose = new JLabel("Please choose 6 Pokemon!");
       jpTitle.add(jlChoose);
-      
+
       // holds all pokemon
       JPanel jpList = new JPanel(new GridLayout( 0, 1));
       // individual JPanels for Pokemon
@@ -330,13 +356,13 @@ public class PokeClient extends JFrame implements ActionListener {
       jpScolipede.add(jcbScolipede);
       jpScolipede.add(jlScolipede);
       jpList.add(jpScolipede);
-      
+
       // South Panel
       JPanel jpConfirm = new JPanel();
       JButton jbConfirm = new JButton("Confirm");
       jpConfirm.add(jbConfirm);
       jbConfirm.addActionListener( this);
-      
+
     // Choose Pokemon window setup
     JFrame choosePokemonFrame = new JFrame();
     choosePokemonFrame.setTitle("Choose Your Pokemon!");
@@ -505,17 +531,14 @@ public class PokeClient extends JFrame implements ActionListener {
 
 
               while(connected1){
-                ObjectInputStream ois = new ObjectInputStream(in);
-                System.out.println("Wauiting");
-                cNames = (ArrayList<String>)ois.readObject();
-                listFlag = true;
-                while(listFlag){
-                  System.out.println(cNames);
-                  lobbyList();
-                  listFlag = false;
+                String inS = bin.readLine();
+                if(inS.equals("N")){
+                  String holder = bin.readLine();
+                  redrawNames(holder);
+                  }
                 }
 
-              }
+
            }catch(Exception e){
              e.printStackTrace();
              connected = false;
