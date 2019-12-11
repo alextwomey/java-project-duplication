@@ -26,10 +26,20 @@ public class PokeClient extends JFrame implements ActionListener {
   //networking attributes
   private JTextPane myReadArea;
   private Socket s;
+  private Socket s2;
+  private Socket sList;
   private boolean connected = false;
-  private String ipaddress;
-  private String name;
+  private String ipaddress = "null";
+  private String name= "null";
   private int PORT = 27015;
+  private int PORT2 = 27016;
+  private OutputStream out;
+  private PrintWriter pout;
+  private boolean listFlag = false;
+  private ArrayList<String> cNames = new ArrayList<String>();
+
+  //Attribute for lobby list
+  private JPanel jpList;
 
   // Output text area
   private JTextArea jtaOut = new JTextArea(2, 10);
@@ -48,20 +58,95 @@ public class PokeClient extends JFrame implements ActionListener {
 	}
 
 	public PokeClient() {
-	   setupWindow();
+
       chatThreadPrep();
+      lobbyThreadPrep();
+      setupWindow();
+      setUpLobby();
 	   this.setVisible(true);
 	}
    //Networking chat start area, connects and starts thread
    public void chatThreadPrep(){
       try{
-         ipaddress = JOptionPane.showInputDialog("Enter Ip Address to connect to: ");
-         name = JOptionPane.showInputDialog("Enter your name:  ");
-         Thread chatThread = new ThreadChatClient(ipaddress);
-         chatThread.start();
-         }catch(Exception e){}
+        boolean nameSelected = false;
+        boolean ipEntered = false;
+        while(!ipEntered){
+          ipaddress = JOptionPane.showInputDialog("Enter Ip Address to connect to: ");
+          if(ipaddress.equals("null")||ipaddress.equals("")){
+            JOptionPane.showMessageDialog(null, "Please enter an Ip address");
+          }else{
+            ipEntered = true;
+            //System.out.println(ipaddress);
+          }
+        }
+
+        while(!nameSelected){
+          name = JOptionPane.showInputDialog("Enter your name:  ");
+          if(name.equals("null")|| name.equals("")){
+            JOptionPane.showMessageDialog(null, "Please enter a name");
+          }else{
+            nameSelected = true;
+            //System.out.println(name);
+          }
+        }
+        Thread chatThread = new ThreadChatClient(ipaddress);
+        chatThread.start();
+
+      }catch(Exception e){}
    }
 
+   public void lobbyThreadPrep(){
+     try{
+       Thread lobbyThread = new ThreadLobby();
+       lobbyThread.start();
+     }catch(Exception e){
+       e.printStackTrace();
+     }
+
+   }
+   public void lobbyList(){
+     for(int i = 0; i < cNames.size();i++){
+       JLabel jlName = new JLabel(cNames.get(i));
+       jpList.add(jlName);
+     }
+   }
+   public void setUpLobby(){
+     JFrame lobby = new JFrame();
+     lobby.setTitle("PokeClient - Lobby");
+     lobby.setSize(400, 400);
+     lobby.setResizable(false);
+     lobby.setLocation(700,200);
+
+     JPanel jpTitle = new JPanel(new FlowLayout());
+     JLabel jlChoose = new JLabel("Please choose someone to battle!");
+     jpTitle.add(jlChoose);
+     lobby.add(jpTitle, "North");
+
+     jpList = new JPanel(new FlowLayout());
+
+     lobby.add(jpList, "Center");
+
+
+     JPanel jpBattle = new JPanel(new FlowLayout());
+     JButton jBattle = new JButton("Battle!");
+     jpBattle.add(jBattle);
+     lobby.add(jpBattle,"South");
+
+     lobby.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+     lobby.addWindowListener(new java.awt.event.WindowAdapter() {
+     @Override
+     public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+       JOptionPane.showMessageDialog(
+         lobby,
+         "Please close from the game window.",
+         "Oops!",
+         JOptionPane.INFORMATION_MESSAGE);
+       }
+     });
+
+     lobby.setVisible(true);
+
+   }
 	public void setupWindow() {
     JPanel jpSouth = new JPanel(new GridLayout(1, 2));
     JPanel jpRunFight = new JPanel(new GridLayout(1, 2));
@@ -86,7 +171,7 @@ public class PokeClient extends JFrame implements ActionListener {
     this.setTitle("PokeClient - Game");
     this.setSize(480, 224);
     this.setResizable(false);
-    this.setLocation(100,100);
+    this.setLocation(500,601);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     // Chat window setup
@@ -148,8 +233,8 @@ public class PokeClient extends JFrame implements ActionListener {
 
   public void doSend() {
    try{
-      OutputStream out = s.getOutputStream();
-      PrintWriter pout = new PrintWriter(out);
+      out = s.getOutputStream();
+      pout = new PrintWriter(out);
       pout.println(name+": "+jtaMessageBox.getText().trim());
       pout.flush();
       String formatOut = String.format("\n%s", "Me: " + jtaMessageBox.getText().trim());
@@ -174,22 +259,27 @@ public class PokeClient extends JFrame implements ActionListener {
 
       }
 
-
-
-
       public void run(){
          try{
             s = new Socket(ipA, PORT);
             connected = true;
 
-         }catch(Exception e){}
+         }catch(Exception e){e.printStackTrace();}
          try{
+            //recieve date and time from server
             InputStream in = s.getInputStream();
             BufferedReader bin = new BufferedReader(new InputStreamReader(in));
             display = bin.readLine();
             jtaChat.setEditable(true);
             appendToPane(jtaChat, display,Color.GREEN );
             jtaChat.setEditable(false);
+
+            //send name to server
+            out = s.getOutputStream();
+            pout = new PrintWriter(out);
+            pout.println(name);
+            pout.flush();
+
             }catch(Exception e){e.printStackTrace();}
          while(connected){
             try{
@@ -222,5 +312,39 @@ public class PokeClient extends JFrame implements ActionListener {
          tp.setCaretPosition(len);
          tp.setCharacterAttributes(aset, false);
          tp.replaceSelection(msg);
+       }
+
+   public class ThreadLobby extends Thread{
+        private boolean connected1 = true;
+         public ThreadLobby(){
+
+         }
+
+         public void run(){
+           try{
+              s2 = new Socket(ipaddress, PORT2);
+              System.out.println("we made it");
+              InputStream in = s2.getInputStream();
+              BufferedReader bin = new BufferedReader(new InputStreamReader(in));
+              
+
+              while(connected1){
+                ObjectInputStream ois = new ObjectInputStream(in);
+                System.out.println("Wauiting");
+                cNames = (ArrayList<String>)ois.readObject();
+                listFlag = true;
+                while(listFlag){
+                  System.out.println(cNames);
+                  lobbyList();
+                  listFlag = false;
+                }
+
+              }
+           }catch(Exception e){
+             e.printStackTrace();
+             connected = false;
+           }
+         }
+
        }
 }
