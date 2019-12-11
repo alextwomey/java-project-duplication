@@ -45,14 +45,18 @@ public class PokeClient extends JFrame implements ActionListener {
   // Message box
   private JTextArea jtaMessageBox = new JTextArea(2, 10);
     private JScrollPane jspMessageBox = new JScrollPane(jtaMessageBox);
+    
+  // ArrayList for chosen Pokemon
+  private ArrayList<String> chosenPokemon = new ArrayList<String>();
 
   public static void main(String[] args) {
 		new PokeClient();
 	}
 
 	public PokeClient() {
-	   setupWindow();
-     chatThreadPrep();
+	    setupWindow();
+      setupChoiceWindow();
+      chatThreadPrep();
 	   this.setVisible(true);
      // background music method called to run automatically
      music();
@@ -127,6 +131,148 @@ public class PokeClient extends JFrame implements ActionListener {
 
     chat.setVisible(true);
 	}
+   
+   // window for choosing Pokemon
+   public void setupChoiceWindow() {
+   
+      JPanel jpTitle = new JPanel( new FlowLayout());
+      JLabel jlChoose = new JLabel("Please choose 6 Pokemon!");
+      jpTitle.add(jlChoose);
+      
+      // holds all pokemon
+      JPanel jpList = new JPanel(new GridLayout( 0, 1));
+      // individual JPanels for Pokemon
+      // Absol
+      JPanel jpAbsol = new JPanel( new GridLayout( 1, 0));
+      JCheckBox jcbAbsol = new JCheckBox("Absol");
+      JLabel jlAbsolIcon = new JLabel();
+      jlAbsolIcon.setIcon( new ImageIcon(getClass().getResource("AbsolICON.png")));
+      jpAbsol.add(jcbAbsol);
+      jpAbsol.add(jlAbsolIcon);
+      jpList.add(jpAbsol);
+      //Bulbasaur
+      JPanel jpBulb = new JPanel( new GridLayout( 1, 0));
+      JCheckBox jcbBulb = new JCheckBox("Bulbasaur");
+      JLabel jlBulbIcon = new JLabel();
+      jlBulbIcon.setIcon( new ImageIcon(getClass().getResource("BulbasaurICON.png")));
+      jpBulb.add(jcbBulb);
+      jpBulb.add(jlBulbIcon);
+      jpList.add(jpBulb);
+      //Charizard
+      JPanel jpCharizard = new JPanel( new GridLayout( 1, 0));
+      JCheckBox jcbCharizard = new JCheckBox("Charizard");
+      JLabel jlCharizardIcon = new JLabel();
+      jlCharizardIcon.setIcon( new ImageIcon(getClass().getResource("CharizardICON.png")));
+      jpCharizard.add(jcbCharizard);
+      jpCharizard.add(jlCharizardIcon);
+      jpList.add(jpCharizard);
+      //Cyndaquil
+      JPanel jpCyndaquill = new JPanel( new GridLayout( 1, 0));
+      JCheckBox jcbCyndaquill = new JCheckBox("Cyndaquil");
+      JLabel jlCyndaquillIcon = new JLabel();
+      jlCyndaquillIcon.setIcon( new ImageIcon(getClass().getResource("CyndiquillICON.png")));
+      jpCyndaquill.add(jcbCyndaquill);
+      jpCyndaquill.add(jlCyndaquillIcon);
+      jpList.add(jpCyndaquill);
+      //Drifblim
+      JPanel jpDrifblim = new JPanel( new GridLayout( 1, 0));
+      JCheckBox jcbDrifblim = new JCheckBox("Drifblim");
+      JLabel jlDrifblimIcon = new JLabel();
+      jlDrifblimIcon.setIcon( new ImageIcon(getClass().getResource("DrifblimICON.png")));
+      jpDrifblim.add(jcbDrifblim);
+      jpDrifblim.add(jlDrifblimIcon);
+      jpList.add(jpDrifblim);
+      //Feraligatr
+      JPanel jpFeraligatr = new JPanel( new GridLayout( 1, 0));
+      JCheckBox jcbFeraligatr = new JCheckBox("Feraligatr");
+      JLabel jlFeraligatrIcon = new JLabel();
+      jlFeraligatrIcon.setIcon( new ImageIcon(getClass().getResource("FeraligatrICON.png")));
+      jpFeraligatr.add(jcbFeraligatr);
+      jpFeraligatr.add(jlFeraligatrIcon);
+      jpList.add(jpFeraligatr);
+      //Gardevoir
+      JPanel jpGardevoir = new JPanel( new GridLayout( 1, 0));
+      JCheckBox jcbGardevoir = new JCheckBox("Gardevoir");
+      JLabel jlGardevoir = new JLabel();
+      jlGardevoir.setIcon( new ImageIcon(getClass().getResource("GardevoirICON.png")));
+      jpGardevoir.add(jcbGardevoir);
+      jpGardevoir.add(jlGardevoir);
+      jpList.add(jpGardevoir);
+      //Kadabra
+      JPanel jpKadabra = new JPanel( new GridLayout( 1, 0));
+      JCheckBox jcbKadabra = new JCheckBox("Kadabra");
+      JLabel jlKadabra = new JLabel();
+      jlKadabra.setIcon( new ImageIcon(getClass().getResource("KadabraICON.png")));
+      jpKadabra.add(jcbKadabra);
+      jpKadabra.add(jlKadabra);
+      jpList.add(jpKadabra);
+      //Milotic
+      JPanel jpMilotic = new JPanel( new GridLayout( 1, 0));
+      JCheckBox jcbMilotic = new JCheckBox("Milotic");
+      JLabel jlMilotic = new JLabel();
+      jlMilotic.setIcon( new ImageIcon(getClass().getResource("MiloticICON.png")));
+      jpMilotic.add(jcbMilotic);
+      jpMilotic.add(jlMilotic);
+      jpList.add(jpMilotic);
+      //Pikachu
+      JPanel jpPikachu = new JPanel( new GridLayout( 1, 0));
+      JCheckBox jcbPikachu = new JCheckBox("Pikachu");
+      JLabel jlPikachu = new JLabel();
+      jlPikachu.setIcon( new ImageIcon(getClass().getResource("PikachuICON.png")));
+      jpPikachu.add(jcbPikachu);
+      jpPikachu.add(jlPikachu);
+      jpList.add(jpPikachu);
+      //Scizor
+      JPanel jpScizor = new JPanel( new GridLayout( 1, 0));
+      JCheckBox jcbScizor = new JCheckBox("Scizor");
+      JLabel jlScizor = new JLabel();
+      jlScizor.setIcon( new ImageIcon(getClass().getResource("ScizorICON.png")));
+      jpScizor.add(jcbScizor);
+      jpScizor.add(jlScizor);
+      jpList.add(jpScizor);
+      //Scolipede
+      JPanel jpScolipede = new JPanel( new GridLayout( 1, 0));
+      JCheckBox jcbScolipede = new JCheckBox("Scolipede");
+      JLabel jlScolipede = new JLabel();
+      jlScolipede.setIcon( new ImageIcon(getClass().getResource("ScolipedeICON.png")));
+      jpScolipede.add(jcbScolipede);
+      jpScolipede.add(jlScolipede);
+      jpList.add(jpScolipede);
+      
+      // South Panel
+      JPanel jpConfirm = new JPanel();
+      JButton jbConfirm = new JButton("Confirm");
+      jpConfirm.add(jbConfirm);
+      jbConfirm.addActionListener( this);
+      
+    // Choose Pokemon window setup
+    JFrame choosePokemonFrame = new JFrame();
+    choosePokemonFrame.setTitle("Choose Your Pokemon!");
+    choosePokemonFrame.setResizable(false);
+    choosePokemonFrame.setLocation(200,100);
+    // Prevent close from chat window
+    choosePokemonFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+    //add to choosePokemonFrame
+    choosePokemonFrame.add(jpTitle, BorderLayout.NORTH);
+    choosePokemonFrame.add(jpList, BorderLayout.CENTER);
+    choosePokemonFrame.add(jpConfirm, BorderLayout.SOUTH);
+    // pack frame to match dimensions
+    choosePokemonFrame.pack();
+
+    choosePokemonFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+    @Override
+    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+      JOptionPane.showMessageDialog(
+        choosePokemonFrame,
+        "Please close from the game window.",
+        "Oops!",
+        JOptionPane.INFORMATION_MESSAGE);
+      }
+    });
+
+    choosePokemonFrame.setVisible(true);
+	}
+
 
   // GUI button switch
   public void actionPerformed(ActionEvent ae) {
@@ -144,7 +290,7 @@ public class PokeClient extends JFrame implements ActionListener {
   }
 
   // music() method for background music
-  public static void music() {
+  public static void {
        try {
          AudioInputStream ais = AudioSystem.getAudioInputStream( new File(
             "BackgroundMusic.wav"));
