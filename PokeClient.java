@@ -27,12 +27,13 @@ public class PokeClient extends JFrame implements ActionListener {
   private JTextPane myReadArea;
   private Socket s;
   private Socket s2;
-  private Socket sList;
+  private Socket s3;
   private boolean connected = false;
   private String ipaddress = "null";
   private String name= "null";
   private int PORT = 27015;
   private int PORT2 = 27016;
+  private int PORT3 = 27017;
   private OutputStream out;
   private PrintWriter pout;
   private boolean listFlag = false;
@@ -95,6 +96,13 @@ public class PokeClient extends JFrame implements ActionListener {
       }catch(Exception e){}
    }
 
+   public void battleThreadPrep(){
+     try{
+       Thread battleThread = new ThreadBattle();
+     }catch(Exception e){
+       e.printStackTrace();
+     }
+   }
    public void lobbyThreadPrep(){
      try{
        Thread lobbyThread = new ThreadLobby();
@@ -326,7 +334,7 @@ public class PokeClient extends JFrame implements ActionListener {
               System.out.println("we made it");
               InputStream in = s2.getInputStream();
               BufferedReader bin = new BufferedReader(new InputStreamReader(in));
-              
+
 
               while(connected1){
                 ObjectInputStream ois = new ObjectInputStream(in);
@@ -347,4 +355,19 @@ public class PokeClient extends JFrame implements ActionListener {
          }
 
        }
+
+   public class ThreadBattle extends Thread{
+     public ThreadBattle(){
+
+     }
+
+     public void run(){
+       try{
+         s3 = new Socket(ipaddress, PORT3);
+       }catch(Exception e){
+         e.printStackTrace();
+       }
+     }
+
+   }
 }
