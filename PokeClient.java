@@ -52,8 +52,10 @@ public class PokeClient extends JFrame implements ActionListener {
 
 	public PokeClient() {
 	   setupWindow();
-      chatThreadPrep();
+     chatThreadPrep();
 	   this.setVisible(true);
+     // background music method called to run automatically
+     music();
 	}
    //Networking chat start area, connects and starts thread
    public void chatThreadPrep(){
@@ -91,9 +93,6 @@ public class PokeClient extends JFrame implements ActionListener {
     this.setResizable(false);
     this.setLocation(100,100);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-   // background music method called to run automatically
-    music();
 
     // Chat window setup
     JFrame chat = new JFrame();
@@ -143,20 +142,20 @@ public class PokeClient extends JFrame implements ActionListener {
         break;
     }
   }
-  
+
   // music() method for background music
   public static void music() {
        try {
          AudioInputStream ais = AudioSystem.getAudioInputStream( new File(
             "BackgroundMusic.wav"));
-            
+
             Clip clip = AudioSystem.getClip();
             clip.open(ais);
-            
+
             while(true){
                clip.start();
-               clip.loop(clip.LOOP_CONTINUOUSLY);              
-            } 
+               clip.loop(clip.LOOP_CONTINUOUSLY);
+            }
        } catch( Exception e) {
             e.printStackTrace();
        }
