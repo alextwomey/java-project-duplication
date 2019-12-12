@@ -745,6 +745,7 @@ public class PokeClient extends JFrame implements ActionListener {
              out = s3.getOutputStream();
              pout = new PrintWriter(out);
 
+             String bCase = bin.readLine();
 
 
 

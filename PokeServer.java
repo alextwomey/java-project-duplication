@@ -50,6 +50,7 @@ public class PokeServer extends JFrame implements ActionListener {
    private Map<String, Socket> connectedSocketsLobby = new HashMap<String, Socket>();
    private Map<String, Socket> connectedSocketsBattle = new HashMap<String, Socket>();
    private Map<String, Socket> battlers = new HashMap<String, Socket>();
+   private Map<String, ArrayList<Pokemon>> partyList = new HashMap<String, ArrayList<Pokemon>>();
 
 
   public static void main(String[] args) {
@@ -388,6 +389,8 @@ public class PokeServer extends JFrame implements ActionListener {
     private String[] pokeList;
     private String pokeLString;
     private ArrayList<Pokemon> party = new ArrayList<Pokemon>();
+    private ArrayList<Pokemon> p1party = new ArrayList<Pokemon>();
+    private ArrayList<Pokemon> p2party = new ArrayList<Pokemon>();
 
     private InputStream in = null;
     private OutputStream out = null;
@@ -470,6 +473,7 @@ public class PokeServer extends JFrame implements ActionListener {
             party.add(chari);
           }
         }
+        partyList.put(cName,party);
         System.out.println(cName+"ready");
       }catch(Exception e){
         e.printStackTrace();
@@ -487,13 +491,15 @@ public class PokeServer extends JFrame implements ActionListener {
           if(key.equals(enemy)){
             b2 = s;
             b2n = key;
+            p2party = partyList.get(key);
           }
           else if(key.equals(cName)){
             b1 = s;
             b1n = key;
+            p1party = partyList.get(key);
           }
         }
-          System.out.println(b1n+b2n+"hhh");
+          //System.out.println(b1n+b2n+"hhh");
 
 
           /*
@@ -505,7 +511,7 @@ public class PokeServer extends JFrame implements ActionListener {
           }
           */
           if(battlingString.equals("NB")){
-            ThreadBattleLogic tbl = new ThreadBattleLogic(b1,b2,b1n,b2n);
+            ThreadBattleLogic tbl = new ThreadBattleLogic(b1,b2,b1n,b2n,p1party,p2party);
             tbl.start();
           }
 
@@ -526,7 +532,8 @@ public class PokeServer extends JFrame implements ActionListener {
     private Socket p2s = null;
     private String p1n = "";
     private String p2n = "";
-
+    private ArrayList<Pokemon> p1Party = new ArrayList<Pokemon>();
+    private ArrayList<Pokemon> p2Party = new ArrayList<Pokemon>();
     private InputStream in1 = null;
     private OutputStream out1 = null;
     private BufferedReader bin1 = null;
@@ -537,11 +544,18 @@ public class PokeServer extends JFrame implements ActionListener {
     private BufferedReader bin2 = null;
     private PrintWriter bout2 = null;
 
-    public ThreadBattleLogic (Socket p1, Socket p2, String n1, String n2){
+    private Pokemon cbp1;
+    private Pokemon cbp2;
+    private int p1cpi = 0;
+    private int p2cpi = 0;
+
+    public ThreadBattleLogic (Socket p1, Socket p2, String n1, String n2, ArrayList<Pokemon> p1p, ArrayList<Pokemon> p2p){
       p1s = p1;
       p2s = p2;
       p1n = n1;
       p2n = n2;
+      p1Party = p1p;
+      p2Party = p2p;
     }
 
     public void run(){
@@ -557,8 +571,15 @@ public class PokeServer extends JFrame implements ActionListener {
         out2 = p2s.getOutputStream();
         bout2 = new PrintWriter(out2);
 
-
+        cbp1 = p1Party.get(p1cpi);
+        cbp2 = p2Party.get(p2cpi);
         while(battling){
+          if(cbp1.getSpd()>=cbp2.getSpd()){
+            bout1.println("MOVE");
+            bout1.flush();
+          }
+
+
 
         }
 
