@@ -49,6 +49,7 @@ public class PokeServer extends JFrame implements ActionListener {
    private Map<String, Socket> connectedSocketsChat = new HashMap<String, Socket>();
    private Map<String, Socket> connectedSocketsLobby = new HashMap<String, Socket>();
    private Map<String, Socket> connectedSocketsBattle = new HashMap<String, Socket>();
+   private Map<String, Socket> battlers = new HashMap<String, Socket>();
 
   public static void main(String[] args) {
 		new PokeServer();
@@ -70,17 +71,19 @@ public class PokeServer extends JFrame implements ActionListener {
       }
       catch(Exception e){e.printStackTrace();}
 
+      ThreadWaitForBattle twfb = new ThreadWaitForBattle();
+      twfb.start();
+
       while(!isFinished){
          try{
             Socket clientSocket = listener.accept();
             ThreadChatServer cliThread = new ThreadChatServer(clientSocket);
             cliThread.start();
-
-
          }catch(IOException ioe){
             System.out.println("Exception found on accept. Ignoring. Stack Trace :");
             ioe.printStackTrace();
          }
+
       }
 
       try{
@@ -148,9 +151,10 @@ public class PokeServer extends JFrame implements ActionListener {
   public void doQuit() {
     System.exit(0);
   }
+
   public void updateNameList(){
     String nameString = "";
-    Set set = connectedSocketsChat.keySet();
+    Set set = connectedSocketsLobby.keySet();
     String[] namesArray = new String[set.size()];
     namesArray = (String[])set.toArray(namesArray);
     for(int i = 0; i<namesArray.length;i++){
@@ -351,5 +355,101 @@ public class PokeServer extends JFrame implements ActionListener {
 
     }
     }
+  }
+
+  public class ThreadWaitForBattle extends Thread{
+    public ThreadWaitForBattle(){
+
+    }
+    public void run(){
+      try{
+        while(!isFinished){
+        Socket sBattle = listener3.accept();
+        ThreadBattleServer bThread = new ThreadBattleServer(sBattle);
+        bThread.start();
+      }
+      }catch(IOException ioe){
+         System.out.println("Exception found on accept. Ignoring. Stack Trace :");
+         ioe.printStackTrace();
+      }
+    }
+
+  }
+
+  public class ThreadBattleServer extends Thread{
+    private String cName;
+    private String enemy;
+    private Socket bSocket;
+    private String battlingString;
+    private boolean battling = false;
+    private boolean connected1 = true;
+    public ThreadBattleServer(Socket sB){
+      InputStream in = null;
+      OutputStream out = null;
+      BufferedReader bin = null;
+      PrintWriter bout = null;
+
+      bSocket = sB;
+      try{
+        System.out.println("Started");
+        //only get input from challenger socket
+        in = bSocket.getInputStream();
+        bin = new BufferedReader(new InputStreamReader(in));
+        battlingString = bin.readLine();
+        System.out.println(battlingString);
+        if(battlingString.equals("NB")){
+          //logic to challenger other user
+          cName = bin.readLine();
+          enemy = bin.readLine();
+          battlers.put(cName,bSocket);
+          jtaLog.append("\n"+cName+" has challenged "+enemy+" to a battle!");
+          connectedSocketsBattle.put(cName,(Socket)connectedSocketsLobby.get(cName));
+          connectedSocketsBattle.put(enemy,(Socket)connectedSocketsLobby.get(enemy));
+
+          //System.out.println("NameList Updated");
+
+          for(Map.Entry mapElement : connectedSocketsLobby.entrySet()){
+            String key = (String)mapElement.getKey();
+            if(key.equals(enemy)){
+              Socket sOut = (Socket)mapElement.getValue();
+              out = sOut.getOutputStream();
+              bout = new PrintWriter(out);
+              bout.println("B");
+              bout.flush();
+              bout.println(cName);
+              bout.flush();
+            }
+
+          }
+          battling = true;
+        }
+
+        else if(battlingString.equals("BA")){
+          //challenged socket
+          cName = bin.readLine();
+          enemy = bin.readLine();
+          System.out.println(cName+ enemy);
+          battlers.put(cName, bSocket);
+          battling = true;
+          jtaLog.append("\nBattle Started between "+cName +" and "+ enemy);
+
+        }
+
+        connectedSocketsLobby.remove(cName);
+        connectedSocketsLobby.remove(enemy);
+        updateNameList();
+
+      }catch(Exception e){
+        e.printStackTrace();
+      }
+    }
+
+    public void run(){
+      System.out.println("Battle Started!");
+      while(battling){
+        //dn
+      }
+    }
+
   }
 }
