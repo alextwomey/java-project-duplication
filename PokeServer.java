@@ -29,6 +29,7 @@ public class PokeServer extends JFrame implements ActionListener {
 
    //Network attributes
    private int indexCounter = 0;
+   private int nameCounter = 0;
    private SimpleDateFormat ft = new SimpleDateFormat ("E, dd MMM yyyy 'at' hh:mm:ss");
    private ServerSocket listener;
    private ServerSocket listener2;
@@ -38,14 +39,16 @@ public class PokeServer extends JFrame implements ActionListener {
    private boolean connected = false;
    private boolean cod = false;
    private String syncMe = "pls sync me...pls?";
-   private ArrayList<Socket> connections = new ArrayList<Socket>();
-   private ArrayList<Socket> connections2 = new ArrayList<Socket>();
-   private ArrayList<String> names = new ArrayList<String>();
-   private ArrayList<String> connectedNames = new ArrayList<String>();
+   //private ArrayList<Socket> connections = new ArrayList<Socket>();
+   //private ArrayList<Socket> connections2 = new ArrayList<Socket>();
+   //private ArrayList<String> names = new ArrayList<String>();
+   //private ArrayList<String> connectedNames = new ArrayList<String>();
    private int PORT = 27015;
    private int PORT2 = 27016;
    private int PORT3 = 27017;
-
+   private Map<String, Socket> connectedSocketsChat = new HashMap<String, Socket>();
+   private Map<String, Socket> connectedSocketsLobby = new HashMap<String, Socket>();
+   private Map<String, Socket> connectedSocketsBattle = new HashMap<String, Socket>();
 
   public static void main(String[] args) {
 		new PokeServer();
@@ -147,15 +150,33 @@ public class PokeServer extends JFrame implements ActionListener {
   }
   public void updateNameList(){
     String nameString = "";
-    for(int i = 0; i<connectedNames.size();i++){
-      nameString = nameString + connectedNames.get(i)+",";
+    Set set = connectedSocketsChat.keySet();
+    String[] namesArray = new String[set.size()];
+    namesArray = (String[])set.toArray(namesArray);
+    for(int i = 0; i<namesArray.length;i++){
+      nameString = nameString + namesArray[i]+",";
 
     }
-    System.out.println(nameString);
+    //System.out.println(nameString);
 
     try{
+      for(Map.Entry mapElement : connectedSocketsLobby.entrySet()){
+        String key = (String)mapElement.getKey();
+        OutputStream out = null;
+        PrintWriter bout = null;
+
+        Socket sOut = (Socket)mapElement.getValue();
+        out = sOut.getOutputStream();
+
+        bout = new PrintWriter(out);
+        bout.println("N");
+        bout.flush();
+        bout.println(nameString);
+        bout.flush();
+      }
+      /*
       for(int i = 0; i < connections2.size(); i++){
-        System.out.println("updating name list");
+        //System.out.println("updating name list");
         OutputStream out = null;
         PrintWriter bout = null;
         out = connections2.get(i).getOutputStream();
@@ -166,26 +187,29 @@ public class PokeServer extends JFrame implements ActionListener {
         bout.flush();
 
       }
+      */
 
     }catch(Exception e){
       //e.printStackTrace();
       System.out.println("error updating name list");
     }
   }
+
   public class ThreadChatServer extends Thread{
       Socket myClientSocket;
       int indexConnection;
       String input;
       boolean runThread = true;
+      private String cName;
 
       public ThreadChatServer(Socket s){
 
 
          myClientSocket = s;
          synchronized(syncMe){
-            connections.add(myClientSocket);
-            indexConnection = indexCounter;
-            indexCounter++;
+            //connections.add(myClientSocket);
+            //indexConnection = indexCounter;
+            //indexCounter++;
          }
       }
 
@@ -219,13 +243,15 @@ public class PokeServer extends JFrame implements ActionListener {
             //recieve name from client and add to list
             in = myClientSocket.getInputStream();
             bin = new BufferedReader(new InputStreamReader(in));
-            String cName = bin.readLine();
+            cName = bin.readLine();
             synchronized(syncMe){
-              names.add(cName);
-              connectedNames.add(cName);
+              //names.add(cName);
+              //connectedNames.add(cName);
               cod = true;
             }
-            jtaLog.append("\nAdded "+ names.get(indexConnection) +" to server list");
+            //names.get(indexConnection)
+            jtaLog.append("\nAdded "+ cName +" to server list");
+            connectedSocketsChat.put(cName,myClientSocket);
             updateNameList();
          }catch(Exception e){
             e.printStackTrace();
@@ -242,22 +268,32 @@ public class PokeServer extends JFrame implements ActionListener {
                //System.out.println("Recieved input:"+input);
                jtaCLog.append("\n"+input);
                //out put area
-               for(int i = 0; i < connections.size(); i++){
-                  if(i != indexConnection){
-                     out = connections.get(i).getOutputStream();
-                     bout = new PrintWriter(out);
-                     bout.println(input);
-                     bout.flush();
+               for(Map.Entry mapElement : connectedSocketsChat.entrySet()){
+                 String key = (String)mapElement.getKey();
+                 if(!key.equals(cName)){
+                   Socket sOut = (Socket)mapElement.getValue();
+                   out = sOut.getOutputStream();
+                   bout = new PrintWriter(out);
+                   bout.println(input);
+                   bout.flush();
+                 }
+               }
+               /*
+               for(int i = 0; i < connectedSocketsChat.size(); i++){
+                  if(connectedSocketsChat){
+
                   }
                }
-
+               */
 
             }
             catch(SocketException e){
                //System.out.println("Client closed connection");
-               jtaLog.append("\nRemoved "+ names.get(indexConnection) +" from server list");
+              // names.get(indexConnection)
+               jtaLog.append("\nRemoved "+ cName +" from server list");
                synchronized(syncMe){
-                 connectedNames.remove(indexConnection);
+                 //connectedNames.remove(indexConnection);
+                 connectedSocketsChat.remove(cName);
                  cod = true;
                }
                connected = false;
@@ -275,15 +311,17 @@ public class PokeServer extends JFrame implements ActionListener {
     private int indexConnection2;
     private Socket s2In;
     private int ic = indexCounter;
+    private String cName;
 
     public ThreadLobbyServer(Socket s2){
       s2In = s2;
       indexConnection2 = ic--;
       cod = true;
-      connections2.add(s2In);
+      //connections2.add(s2In);
+
     }
     public void run(){
-      System.out.println("no Me");
+      //System.out.println("no Me");
       InputStream in = null;
       OutputStream out = null;
       BufferedReader bin = null;
@@ -291,6 +329,11 @@ public class PokeServer extends JFrame implements ActionListener {
       boolean connected1 = true;
       //System.out.println("Started!");
       try{
+        in = s2In.getInputStream();
+        bin = new BufferedReader(new InputStreamReader(in));
+        cName = bin.readLine();
+        connectedSocketsLobby.put(cName,s2In);
+
         /*
         out = s2In.getOutputStream();
         bout = new PrintWriter(out);
@@ -304,6 +347,8 @@ public class PokeServer extends JFrame implements ActionListener {
     }catch(Exception e){
       //e.printStackTrace();
       connected1 = false;
+      connectedSocketsLobby.remove(cName);
+
     }
     }
   }

@@ -174,13 +174,21 @@ public class PokeClient extends JFrame implements ActionListener {
    public void redrawNames(String nS){
      String nameString = nS;
      String[] arrOfName = nameString.split(",");
+     String[] arrOfNameSansMe = new String[arrOfName.length-1];
      String namesNewL = "";
      for(int i = 0; i < arrOfName.length; i++){
+       if(arrOfName[i].equals(name)){
+         namesNewL = namesNewL +"\nMe: "+arrOfName[i]+",";
+       }
+       else{
        namesNewL = namesNewL +"\n"+arrOfName[i]+",";
      }
+     }
      jtList.setText(namesNewL);
-
-     remakeComboBox(arrOfName);
+     ArrayList<String> al = new ArrayList<String>(Arrays.asList(arrOfName));
+     al.remove(name);
+     arrOfNameSansMe = al.toArray(arrOfNameSansMe);
+     remakeComboBox(arrOfNameSansMe);
    }
 
 	public void setupWindow() {
@@ -525,11 +533,13 @@ public class PokeClient extends JFrame implements ActionListener {
          public void run(){
            try{
               s2 = new Socket(ipaddress, PORT2);
-              System.out.println("we made it");
+              //System.out.println("we made it");
               InputStream in = s2.getInputStream();
               BufferedReader bin = new BufferedReader(new InputStreamReader(in));
-
-
+              out = s2.getOutputStream();
+              pout = new PrintWriter(out);
+              pout.println(name);
+              pout.flush();
               while(connected1){
                 String inS = bin.readLine();
                 if(inS.equals("N")){
