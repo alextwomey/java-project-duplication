@@ -64,7 +64,24 @@ public class PokeClient extends JFrame implements ActionListener {
     private JScrollPane jspMessageBox = new JScrollPane(jtaMessageBox);
 
   // ArrayList for chosen Pokemon
-  private ArrayList<String> chosenPokemon = new ArrayList<String>();
+  private ArrayList<JCheckBox> jcbList = new ArrayList<JCheckBox>();
+  //Array for Poemon names
+  private String[] chosenPokemon = new String[ 6];
+  // Global JCheckBox's
+  private JCheckBox jcbAbsol;
+  private JCheckBox jcbBulb;
+  private JCheckBox jcbCharizard;
+  private JCheckBox jcbCyndaquill;
+  private JCheckBox jcbDrifblim;
+  private JCheckBox jcbFeraligatr;
+  private JCheckBox jcbGardevoir;
+  private JCheckBox jcbKadabra;
+  private JCheckBox jcbMilotic;
+  private JCheckBox jcbPikachu;
+  private JCheckBox jcbScizor;
+  private JCheckBox jcbScolipede;
+  // Global JFrame for choosing Pokemon
+  private JFrame choosePokemonFrame;
 
   public static void main(String[] args) {
 		new PokeClient();
@@ -270,7 +287,7 @@ public class PokeClient extends JFrame implements ActionListener {
       // individual JPanels for Pokemon
       // Absol
       JPanel jpAbsol = new JPanel( new GridLayout( 1, 0));
-      JCheckBox jcbAbsol = new JCheckBox("Absol");
+      jcbAbsol = new JCheckBox("Absol");
       JLabel jlAbsolIcon = new JLabel();
       jlAbsolIcon.setIcon( new ImageIcon(getClass().getResource("AbsolICON.png")));
       jpAbsol.add(jcbAbsol);
@@ -278,7 +295,7 @@ public class PokeClient extends JFrame implements ActionListener {
       jpList.add(jpAbsol);
       //Bulbasaur
       JPanel jpBulb = new JPanel( new GridLayout( 1, 0));
-      JCheckBox jcbBulb = new JCheckBox("Bulbasaur");
+      jcbBulb = new JCheckBox("Bulbasaur");
       JLabel jlBulbIcon = new JLabel();
       jlBulbIcon.setIcon( new ImageIcon(getClass().getResource("BulbasaurICON.png")));
       jpBulb.add(jcbBulb);
@@ -286,7 +303,7 @@ public class PokeClient extends JFrame implements ActionListener {
       jpList.add(jpBulb);
       //Charizard
       JPanel jpCharizard = new JPanel( new GridLayout( 1, 0));
-      JCheckBox jcbCharizard = new JCheckBox("Charizard");
+      jcbCharizard = new JCheckBox("Charizard");
       JLabel jlCharizardIcon = new JLabel();
       jlCharizardIcon.setIcon( new ImageIcon(getClass().getResource("CharizardICON.png")));
       jpCharizard.add(jcbCharizard);
@@ -294,7 +311,7 @@ public class PokeClient extends JFrame implements ActionListener {
       jpList.add(jpCharizard);
       //Cyndaquil
       JPanel jpCyndaquill = new JPanel( new GridLayout( 1, 0));
-      JCheckBox jcbCyndaquill = new JCheckBox("Cyndaquil");
+      jcbCyndaquill = new JCheckBox("Cyndaquil");
       JLabel jlCyndaquillIcon = new JLabel();
       jlCyndaquillIcon.setIcon( new ImageIcon(getClass().getResource("CyndiquillICON.png")));
       jpCyndaquill.add(jcbCyndaquill);
@@ -302,7 +319,7 @@ public class PokeClient extends JFrame implements ActionListener {
       jpList.add(jpCyndaquill);
       //Drifblim
       JPanel jpDrifblim = new JPanel( new GridLayout( 1, 0));
-      JCheckBox jcbDrifblim = new JCheckBox("Drifblim");
+      jcbDrifblim = new JCheckBox("Drifblim");
       JLabel jlDrifblimIcon = new JLabel();
       jlDrifblimIcon.setIcon( new ImageIcon(getClass().getResource("DrifblimICON.png")));
       jpDrifblim.add(jcbDrifblim);
@@ -310,7 +327,7 @@ public class PokeClient extends JFrame implements ActionListener {
       jpList.add(jpDrifblim);
       //Feraligatr
       JPanel jpFeraligatr = new JPanel( new GridLayout( 1, 0));
-      JCheckBox jcbFeraligatr = new JCheckBox("Feraligatr");
+      jcbFeraligatr = new JCheckBox("Feraligatr");
       JLabel jlFeraligatrIcon = new JLabel();
       jlFeraligatrIcon.setIcon( new ImageIcon(getClass().getResource("FeraligatrICON.png")));
       jpFeraligatr.add(jcbFeraligatr);
@@ -318,7 +335,7 @@ public class PokeClient extends JFrame implements ActionListener {
       jpList.add(jpFeraligatr);
       //Gardevoir
       JPanel jpGardevoir = new JPanel( new GridLayout( 1, 0));
-      JCheckBox jcbGardevoir = new JCheckBox("Gardevoir");
+      jcbGardevoir = new JCheckBox("Gardevoir");
       JLabel jlGardevoir = new JLabel();
       jlGardevoir.setIcon( new ImageIcon(getClass().getResource("GardevoirICON.png")));
       jpGardevoir.add(jcbGardevoir);
@@ -326,7 +343,7 @@ public class PokeClient extends JFrame implements ActionListener {
       jpList.add(jpGardevoir);
       //Kadabra
       JPanel jpKadabra = new JPanel( new GridLayout( 1, 0));
-      JCheckBox jcbKadabra = new JCheckBox("Kadabra");
+      jcbKadabra = new JCheckBox("Kadabra");
       JLabel jlKadabra = new JLabel();
       jlKadabra.setIcon( new ImageIcon(getClass().getResource("KadabraICON.png")));
       jpKadabra.add(jcbKadabra);
@@ -334,7 +351,7 @@ public class PokeClient extends JFrame implements ActionListener {
       jpList.add(jpKadabra);
       //Milotic
       JPanel jpMilotic = new JPanel( new GridLayout( 1, 0));
-      JCheckBox jcbMilotic = new JCheckBox("Milotic");
+      jcbMilotic = new JCheckBox("Milotic");
       JLabel jlMilotic = new JLabel();
       jlMilotic.setIcon( new ImageIcon(getClass().getResource("MiloticICON.png")));
       jpMilotic.add(jcbMilotic);
@@ -342,7 +359,7 @@ public class PokeClient extends JFrame implements ActionListener {
       jpList.add(jpMilotic);
       //Pikachu
       JPanel jpPikachu = new JPanel( new GridLayout( 1, 0));
-      JCheckBox jcbPikachu = new JCheckBox("Pikachu");
+      jcbPikachu = new JCheckBox("Pikachu");
       JLabel jlPikachu = new JLabel();
       jlPikachu.setIcon( new ImageIcon(getClass().getResource("PikachuICON.png")));
       jpPikachu.add(jcbPikachu);
@@ -350,7 +367,7 @@ public class PokeClient extends JFrame implements ActionListener {
       jpList.add(jpPikachu);
       //Scizor
       JPanel jpScizor = new JPanel( new GridLayout( 1, 0));
-      JCheckBox jcbScizor = new JCheckBox("Scizor");
+      jcbScizor = new JCheckBox("Scizor");
       JLabel jlScizor = new JLabel();
       jlScizor.setIcon( new ImageIcon(getClass().getResource("ScizorICON.png")));
       jpScizor.add(jcbScizor);
@@ -358,7 +375,7 @@ public class PokeClient extends JFrame implements ActionListener {
       jpList.add(jpScizor);
       //Scolipede
       JPanel jpScolipede = new JPanel( new GridLayout( 1, 0));
-      JCheckBox jcbScolipede = new JCheckBox("Scolipede");
+      jcbScolipede = new JCheckBox("Scolipede");
       JLabel jlScolipede = new JLabel();
       jlScolipede.setIcon( new ImageIcon(getClass().getResource("ScolipedeICON.png")));
       jpScolipede.add(jcbScolipede);
@@ -372,7 +389,7 @@ public class PokeClient extends JFrame implements ActionListener {
       jbConfirm.addActionListener( this);
 
     // Choose Pokemon window setup
-    JFrame choosePokemonFrame = new JFrame();
+    choosePokemonFrame = new JFrame();
     choosePokemonFrame.setTitle("Choose Your Pokemon!");
     choosePokemonFrame.setResizable(false);
     choosePokemonFrame.setLocation(200,100);
@@ -412,6 +429,9 @@ public class PokeClient extends JFrame implements ActionListener {
       case "Send":
         doSend();
         break;
+      case "Confirm":
+         doConfirm();
+         break;
     }
   }
 
@@ -458,6 +478,86 @@ public class PokeClient extends JFrame implements ActionListener {
     //jtaMessageBox.setText("");
     // TODO finish send method
   }
+  
+  public void doConfirm() {
+      int count = 0;
+      int index = 0;
+      
+      if(jcbAbsol.isSelected() ) {
+         count += 1;
+         jcbList.add( jcbAbsol);
+      }
+      if( jcbBulb.isSelected() ) {
+         count += 1;
+         jcbList.add( jcbBulb);
+      }  
+      if( jcbCharizard.isSelected() ) {
+         count+= 1;
+         jcbList.add( jcbCharizard);
+      }
+      if( jcbCyndaquill.isSelected() ) {
+         count += 1;
+         jcbList.add( jcbCyndaquill);
+      }
+      if( jcbDrifblim.isSelected() ) {
+         count += 1;
+         jcbList.add( jcbDrifblim);
+      }
+      if( jcbFeraligatr.isSelected() ) {
+         count += 1;
+         jcbList.add( jcbFeraligatr);
+      }
+      if( jcbGardevoir.isSelected() ) {
+         count += 1;
+         jcbList.add( jcbGardevoir);
+      }
+      if( jcbKadabra.isSelected() ) {
+         count += 1;
+         jcbList.add( jcbKadabra);
+      }
+      if( jcbMilotic.isSelected() ) {
+         count += 1;
+         jcbList.add( jcbMilotic);
+      }
+      if( jcbPikachu.isSelected() ) {
+         count += 1;
+         jcbList.add( jcbPikachu);
+      }
+      if( jcbScizor.isSelected() ) {
+         count += 1;
+         jcbList.add( jcbScizor);
+      }
+      if( jcbScolipede.isSelected() ) {
+         count += 1;
+         jcbList.add( jcbScolipede);
+      }
+      // too many chosen
+      if( count > 6 || count < 6) {
+         JOptionPane.showMessageDialog(choosePokemonFrame,"You chose " + count + " Pokemon. Only choose SIX.");
+         jcbAbsol.setSelected( false);
+         jcbBulb.setSelected( false);
+         jcbCharizard.setSelected( false);
+         jcbCyndaquill.setSelected( false);
+         jcbDrifblim.setSelected( false);
+         jcbFeraligatr.setSelected( false);
+         jcbGardevoir.setSelected( false);
+         jcbKadabra.setSelected( false);
+         jcbMilotic.setSelected( false);
+         jcbPikachu.setSelected( false);
+         jcbScizor.setSelected( false);
+         jcbScolipede.setSelected( false);
+         jcbList.clear();
+      }
+      //just enough chosen
+      if( count == 6) {
+         for( JCheckBox j : jcbList ) {
+            String name = j.getText();
+            chosenPokemon[index] = name;
+            index += 1;
+         }
+      }
+      
+   } // end doConfirm()
 
    public class ThreadChatClient extends Thread{
       private String ipA;
