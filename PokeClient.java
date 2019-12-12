@@ -25,6 +25,10 @@ public class PokeClient extends JFrame implements ActionListener {
   private JButton jbFight = new JButton("Fight");
   private JButton jbRun = new JButton("Run");
   private JButton jbSend = new JButton("Send");
+  private JButton jbOne = new JButton("One");
+  private JButton jbTwo = new JButton("Two");
+  private JButton jbThree = new JButton("Three");
+  private JButton jbFour = new JButton("Four");
   private JButton jBattle;
   private JButton jbConfirm;
 
@@ -261,7 +265,7 @@ public class PokeClient extends JFrame implements ActionListener {
     tm.start();
 
     JPanel jpSouth = new JPanel(new GridLayout(1, 2));
-    JPanel jpRunFight = new JPanel(new GridLayout(1, 2));
+    JPanel jpRunFight = new JPanel(new GridLayout(2, 3));
 
     this.add(jpSouth, BorderLayout.SOUTH);
 
@@ -269,12 +273,20 @@ public class PokeClient extends JFrame implements ActionListener {
     jpSouth.add(jspOut);
     jpSouth.add(jpRunFight);
     jpRunFight.add(jbRun);
+    jpRunFight.add(jbOne);
+    jpRunFight.add(jbTwo);
     jpRunFight.add(jbFight);
+    jpRunFight.add(jbThree);
+    jpRunFight.add(jbFour);
 
     // Add action stuff
     jbFight.addActionListener(this);
     jbRun.addActionListener(this);
     jbSend.addActionListener(this);
+    jbOne.addActionListener(this);
+    jbTwo.addActionListener(this);
+    jbThree.addActionListener(this);
+    jbFour.addActionListener(this);
 
     // Set up jtaOut
     jtaOut.setEditable(false);
