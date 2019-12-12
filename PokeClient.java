@@ -101,13 +101,13 @@ public class PokeClient extends JFrame implements ActionListener {
       //
       //setupChoiceWindow();
 
-      setUpChatWindow();
+     // setUpChatWindow();
 
-      lobbyThreadPrep();
+      //lobbyThreadPrep();
       //setupWindow();
 
 
-      //setUpGameWindow();
+      setUpGameWindow();
 
      // background music method called to run automatically
      //music();
@@ -265,8 +265,74 @@ public class PokeClient extends JFrame implements ActionListener {
     tm.start();
 
     JPanel jpSouth = new JPanel(new GridLayout(1, 2));
-    JPanel jpRunFight = new JPanel(new GridLayout(2, 3));
-
+    JPanel jpRunFight = new JPanel(new GridLayout(2, 3));    
+    JPanel friendlyPokemon = new JPanel( new FlowLayout());
+    JPanel enemyPokemon = new JPanel( new FlowLayout());
+    
+    // Absol
+     JLabel AbsolFRONT = new JLabel();
+     AbsolFRONT.setIcon( new ImageIcon(getClass().getResource("AbsolFRONT.png")));
+     JLabel AbsolBACK = new JLabel();
+     AbsolBACK.setIcon( new ImageIcon(getClass().getResource("AbsolBACK.png")));
+     // Bulbasaur
+     JLabel BulbasaurFRONT = new JLabel();
+     BulbasaurFRONT.setIcon( new ImageIcon(getClass().getResource("BulbasaurFRONT.png")));
+     JLabel BulbasaurBACK = new JLabel();
+     BulbasaurBACK.setIcon( new ImageIcon(getClass().getResource("BulbasaurBACK.png")));
+     // Charizard
+     JLabel CharizardFRONT = new JLabel();
+     CharizardFRONT.setIcon( new ImageIcon(getClass().getResource("CharizardFRONT.png")));
+     JLabel CharizardBACK = new JLabel();
+     CharizardBACK.setIcon( new ImageIcon(getClass().getResource("CharizardBACK.png")));
+     // Cyndaquill
+     JLabel CyndaquillFRONT = new JLabel();
+     CyndaquillFRONT.setIcon( new ImageIcon(getClass().getResource("CyndaquillFRONT.png")));
+     JLabel CyndaquillBACK = new JLabel();
+     CyndaquillBACK.setIcon( new ImageIcon(getClass().getResource("CyndaquillBACK.png")));
+     // Drifblim
+     JLabel DrifblimFRONT = new JLabel();
+     DrifblimFRONT.setIcon( new ImageIcon(getClass().getResource("DrifblimFRONT.png")));
+     JLabel DrifblimBACK = new JLabel();
+     DrifblimBACK.setIcon( new ImageIcon(getClass().getResource("DrifblimBACK.png")));
+     // Feraligatr
+     JLabel FeraligatrFRONT = new JLabel();
+     FeraligatrFRONT.setIcon( new ImageIcon(getClass().getResource("FeraligatrFRONT.png")));
+     JLabel FeraligatrBACK = new JLabel();
+     FeraligatrBACK.setIcon( new ImageIcon(getClass().getResource("FeraligatrBACK.png")));
+     // Gardevoir
+     JLabel GardevoirFRONT = new JLabel();
+     GardevoirFRONT.setIcon( new ImageIcon(getClass().getResource("GardevoirFRONT.png")));
+     JLabel GardevoirBACK = new JLabel();
+     GardevoirBACK.setIcon( new ImageIcon(getClass().getResource("GardevoirBACK.png")));
+     // Kadabra
+     JLabel KadabraFRONT = new JLabel();
+     KadabraFRONT.setIcon( new ImageIcon(getClass().getResource("KadabraFRONT.png")));
+     JLabel KadabraBACK = new JLabel();
+     KadabraBACK.setIcon( new ImageIcon(getClass().getResource("KadabraBACK.png")));
+     // Milotic
+     JLabel MiloticFRONT = new JLabel();
+     MiloticFRONT.setIcon( new ImageIcon(getClass().getResource("MiloticFRONT.png")));
+     JLabel MiloticBACK = new JLabel();
+     MiloticBACK.setIcon( new ImageIcon(getClass().getResource("MiloticBACK.png")));
+     // Pikachu
+     JLabel PikachuFRONT = new JLabel();
+     PikachuFRONT.setIcon( new ImageIcon(getClass().getResource("PikachuFRONT.png")));
+     JLabel PikachuBACK = new JLabel();
+     PikachuBACK.setIcon( new ImageIcon(getClass().getResource("PikachuBACK.png")));
+     // Scizor
+     JLabel ScizorFRONT = new JLabel();
+     ScizorFRONT.setIcon( new ImageIcon(getClass().getResource("ScizorFRONT.png")));
+     JLabel ScizorBACK = new JLabel();
+     ScizorBACK.setIcon( new ImageIcon(getClass().getResource("ScizorBACK.png")));
+     // Scolipede
+     JLabel ScolipedeFRONT = new JLabel();
+     ScolipedeFRONT.setIcon( new ImageIcon(getClass().getResource("ScolipedeFRONT.png")));
+     JLabel ScolipedeBACK = new JLabel();
+     ScolipedeBACK.setIcon( new ImageIcon(getClass().getResource("ScolipedeBACK.png")));
+     
+     this.add( friendlyPokemon, BorderLayout.WEST);
+     this.add( enemyPokemon, BorderLayout.EAST);
+    
     this.add(jpSouth, BorderLayout.SOUTH);
 
     // Add components to south
