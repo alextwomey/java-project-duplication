@@ -49,6 +49,7 @@ public class PokeServer extends JFrame implements ActionListener {
    private Map<String, Socket> connectedSocketsChat = new HashMap<String, Socket>();
    private Map<String, Socket> connectedSocketsLobby = new HashMap<String, Socket>();
    private Map<String, Socket> connectedSocketsBattle = new HashMap<String, Socket>();
+   private Map<String, Socket> battlers = new HashMap<String, Socket>();
 
 
   public static void main(String[] args) {
@@ -383,13 +384,25 @@ public class PokeServer extends JFrame implements ActionListener {
     private String battlingString;
     private boolean battling = false;
     private boolean connected1 = true;
-    private Map<String, Socket> battlers = new HashMap<String, Socket>();
+    //private Map<String, Socket> battlers = new HashMap<String, Socket>();
+    private String[] pokeList;
+    private String pokeLString;
+    private ArrayList<Pokemon> party = new ArrayList<Pokemon>();
+
+    private InputStream in = null;
+    private OutputStream out = null;
+    private BufferedReader bin = null;
+    private PrintWriter bout = null;
+
+
+
+    private Socket b1 = null;
+    private Socket b2 = null;
+    private String b1n = "";
+    private String b2n = "";
 
     public ThreadBattleServer(Socket sB){
-      InputStream in = null;
-      OutputStream out = null;
-      BufferedReader bin = null;
-      PrintWriter bout = null;
+
 
       bSocket = sB;
       try{
@@ -403,7 +416,10 @@ public class PokeServer extends JFrame implements ActionListener {
           //logic to challenger other user
           cName = bin.readLine();
           enemy = bin.readLine();
-          connectedSocketsBattle.put(cName,bSocket);
+          pokeLString = bin.readLine();
+          pokeList = pokeLString.split(",");
+          System.out.println(pokeLString+cName);
+          battlers.put(cName,bSocket);
           jtaLog.append("\n"+cName+" has challenged "+enemy+" to a battle!");
           connectedSocketsBattle.put(cName,(Socket)connectedSocketsLobby.get(cName));
           connectedSocketsBattle.put(enemy,(Socket)connectedSocketsLobby.get(enemy));
@@ -430,8 +446,11 @@ public class PokeServer extends JFrame implements ActionListener {
           //challenged socket
           cName = bin.readLine();
           enemy = bin.readLine();
-          //System.out.println(cName+ enemy);
+          pokeLString = bin.readLine();
+          pokeList = pokeLString.split(",");
+          System.out.println(pokeLString+cName);
           connectedSocketsBattle.put(cName, bSocket);
+          battlers.put(cName,bSocket);
           battling = true;
           jtaLog.append("\nBattle Started between "+cName +" and "+ enemy);
 
@@ -441,28 +460,110 @@ public class PokeServer extends JFrame implements ActionListener {
         connectedSocketsLobby.remove(enemy);
         updateNameList();
 
+        for(int i = 0; i < pokeList.length; i++){
+          if(pokeList[i].equals("Pikachu")){
+            Pikachu pika = new Pikachu();
+            party.add(pika);
+          }
+          else if(pokeList[i].equals("Charizard")){
+            Charizard chari = new Charizard();
+            party.add(chari);
+          }
+        }
+        System.out.println(cName+"ready");
       }catch(Exception e){
         e.printStackTrace();
       }
     }
 
     public void run(){
-      //System.out.println("Battle Started!");
-      //each battling thread now has a battling hasmap of their name and Socket
-      //as well as the enemys name and socket
-      //use this hashmap to communicate
-      for(Map.Entry mapElement : connectedSocketsBattle.entrySet()){
-        String key = (String)mapElement.getKey();
-        if(key.equals(cName)){
-          battlers.put(cName,(Socket)mapElement.getValue());
+      //Thread.sleep(5000);
+      System.out.println(battlers.size());
+      try{
+        for(Map.Entry mapElement : battlers.entrySet()){
+          String key = (String)mapElement.getKey();
+          Socket s = (Socket)mapElement.getValue();
+
+          if(key.equals(enemy)){
+            b2 = s;
+            b2n = key;
+          }
+          else if(key.equals(cName)){
+            b1 = s;
+            b1n = key;
+          }
         }
-        if(key.equals(enemy)){
-          battlers.put(enemy,(Socket)mapElement.getValue());
-        }
+          System.out.println(b1n+b2n+"hhh");
+
+
+          /*
+          in = s.getInputStream();
+          bin = new BufferedReader(new InputStreamReader(in));
+          String ins = bin.readLine();
+          if(ins.equals("R")){
+            System.out.println(cName+" is ready 2 battle");
+          }
+          */
+          if(battlingString.equals("NB")){
+            ThreadBattleLogic tbl = new ThreadBattleLogic(b1,b2,b1n,b2n);
+            tbl.start();
+          }
+
+
+      }catch(Exception e){
+        //e.printStackTrace();
       }
-      
-      while(battling){
-        //dn
+      /*
+
+      */
+    }//nd of run
+
+  }//end of that class
+
+  public class ThreadBattleLogic extends Thread{
+    private boolean battling = true;
+    private Socket p1s = null;
+    private Socket p2s = null;
+    private String p1n = "";
+    private String p2n = "";
+
+    private InputStream in1 = null;
+    private OutputStream out1 = null;
+    private BufferedReader bin1 = null;
+    private PrintWriter bout1 = null;
+
+    private InputStream in2 = null;
+    private OutputStream out2 = null;
+    private BufferedReader bin2 = null;
+    private PrintWriter bout2 = null;
+
+    public ThreadBattleLogic (Socket p1, Socket p2, String n1, String n2){
+      p1s = p1;
+      p2s = p2;
+      p1n = n1;
+      p2n = n2;
+    }
+
+    public void run(){
+      System.out.println("battle starting between "+p1n+p2n);
+      try{
+        in1 = p1s.getInputStream();
+        bin1 = new BufferedReader(new InputStreamReader(in1));
+        out1 = p1s.getOutputStream();
+        bout1 = new PrintWriter(out1);
+
+        in2 = p2s.getInputStream();
+        bin2 = new BufferedReader(new InputStreamReader(in2));
+        out2 = p2s.getOutputStream();
+        bout2 = new PrintWriter(out2);
+
+
+        while(battling){
+
+        }
+
+      }catch(Exception e){
+        e.printStackTrace();
       }
     }
 

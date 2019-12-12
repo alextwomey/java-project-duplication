@@ -44,6 +44,9 @@ public class PokeClient extends JFrame implements ActionListener {
   private ArrayList<String> cNames = new ArrayList<String>();
   private boolean battling = false;
 
+  //TEST ATTRIBUTE FOR POKEMON ARRAY
+  String[] pokeArray = {"Pikachu", "Charizard"};
+
   //synchronized assets
   String syncMe = "pls pls pls sync meee";
 
@@ -676,18 +679,18 @@ public class PokeClient extends JFrame implements ActionListener {
        }
 
    public class ThreadBattle extends Thread{
+     private InputStream in;
+     private BufferedReader bin;
      String enemy = "";
      public ThreadBattle(String opp){
        enemy = opp;
      }
 
      public void run(){
-
-
          try{
           s3 = new Socket(ipaddress, PORT3);
-           InputStream in = s3.getInputStream();
-           BufferedReader bin = new BufferedReader(new InputStreamReader(in));
+           in = s3.getInputStream();
+           bin = new BufferedReader(new InputStreamReader(in));
            out = s3.getOutputStream();
            pout = new PrintWriter(out);
            if(battling){
@@ -698,6 +701,12 @@ public class PokeClient extends JFrame implements ActionListener {
              pout.flush();
              pout.println(enemy);
              pout.flush();
+             String listOfPokemon = "";
+             for(int i = 0; i < pokeArray.length; i++){
+               listOfPokemon = listOfPokemon + pokeArray[i]+",";
+             }
+             pout.println(listOfPokemon);
+             pout.flush();
            }
            else if(!battling){
              pout.println("NB");
@@ -705,6 +714,12 @@ public class PokeClient extends JFrame implements ActionListener {
              pout.println(name);
              pout.flush();
              pout.println(enemy);
+             pout.flush();
+             String listOfPokemon = "";
+             for(int i = 0; i < pokeArray.length; i++){
+               listOfPokemon = listOfPokemon + pokeArray[i]+",";
+             }
+             pout.println(listOfPokemon);
              pout.flush();
              battling = true;
 
@@ -716,8 +731,23 @@ public class PokeClient extends JFrame implements ActionListener {
          }
 
          try{
+           Thread.sleep(1000);
+           boolean waiting = true;
            setUpGameWindow();
+           System.out.println("Set up! "+name);
+
+           pout.println("R");
+           pout.flush();
            while(battling){
+             //BATTLE LOGIC
+             in = s3.getInputStream();
+             bin = new BufferedReader(new InputStreamReader(in));
+             out = s3.getOutputStream();
+             pout = new PrintWriter(out);
+
+
+
+
 
            }
          }catch(Exception e){
