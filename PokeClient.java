@@ -25,6 +25,8 @@ public class PokeClient extends JFrame implements ActionListener {
   private JButton jbFight = new JButton("Fight");
   private JButton jbRun = new JButton("Run");
   private JButton jbSend = new JButton("Send");
+  private JButton jBattle;
+  private JButton jbConfirm;
 
   //networking attributes
   private JTextPane myReadArea;
@@ -41,6 +43,7 @@ public class PokeClient extends JFrame implements ActionListener {
   private PrintWriter pout;
   private boolean listFlag = false;
   private ArrayList<String> cNames = new ArrayList<String>();
+  private boolean battling = false;
 
   //synchronized assets
   String syncMe = "pls pls pls sync meee";
@@ -88,12 +91,17 @@ public class PokeClient extends JFrame implements ActionListener {
 	}
 
 	public PokeClient() {
-      chatThreadPrep();
+      //
+      //setupChoiceWindow();
+
+      setUpChatWindow();
+
       lobbyThreadPrep();
-      setupWindow();
-      setupChoiceWindow();
-      //setUpLobby();
-	   this.setVisible(true);
+      //setupWindow();
+
+
+      //setUpGameWindow();
+
      // background music method called to run automatically
      //music();
 	}
@@ -126,9 +134,12 @@ public class PokeClient extends JFrame implements ActionListener {
 
       }catch(Exception e){}
    }
-   public void battleThreadPrep(){
+   public void battleThreadPrep(String eN){
+     String ee = eN;
+
      try{
-       Thread battleThread = new ThreadBattle();
+       ThreadBattle battleThread = new ThreadBattle(ee);
+       battleThread.start();
      }catch(Exception e){
        e.printStackTrace();
      }
@@ -169,7 +180,7 @@ public class PokeClient extends JFrame implements ActionListener {
 
 
      JPanel jpBattle = new JPanel(new FlowLayout());
-     JButton jBattle = new JButton("Battle!");
+     jBattle = new JButton("Battle!");
      jpBattle.add(jBattle);
 
 
@@ -179,6 +190,8 @@ public class PokeClient extends JFrame implements ActionListener {
 
      chat.add(lobby,"East");
      //lobby.setVisible(true);
+     jBattle.addActionListener(this);
+
 
    }
 
@@ -208,7 +221,83 @@ public class PokeClient extends JFrame implements ActionListener {
      remakeComboBox(arrOfNameSansMe);
    }
 
+  public void setUpChatWindow(){
+    // Chat window setup
+    chat = new JFrame();
+    JPanel jpChatSouth = new JPanel(new GridLayout(1, 2));
+    chat.setTitle("PokeClient - Chat");
+    chat.setSize(800, 400);
+    chat.setResizable(false);
+    chat.setLocation(300,200);
+    // Prevent close from chat window
+    chat.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    // Add components to chat center
+    JPanel jpChatHolder = new JPanel(new BorderLayout());
+    jpChatHolder.setSize(400,400);
+    jpChatHolder.add(jspChat, "Center");
+
+
+    // Add components to jpChatSouth
+
+    jpChatSouth.add(jspMessageBox);
+    jpChatSouth.add(jbSend);
+    jbSend.addActionListener(this);
+    jtaChat.setEditable(false);
+    jpChatHolder.add(jpChatSouth, BorderLayout.SOUTH);
+    chat.add(jpChatHolder, "Center");
+
+
+    setUpLobby();
+    chatThreadPrep();
+    chat.setVisible(true);
+  }
+  public void setUpGameWindow(){
+    //starts music thread
+    ThreadMusic tm = new ThreadMusic();
+    tm.start();
+
+    JPanel jpSouth = new JPanel(new GridLayout(1, 2));
+    JPanel jpRunFight = new JPanel(new GridLayout(1, 2));
+
+    this.add(jpSouth, BorderLayout.SOUTH);
+
+    // Add components to south
+    jpSouth.add(jspOut);
+    jpSouth.add(jpRunFight);
+    jpRunFight.add(jbRun);
+    jpRunFight.add(jbFight);
+
+    // Add action stuff
+    jbFight.addActionListener(this);
+    jbRun.addActionListener(this);
+    jbSend.addActionListener(this);
+
+    // Set up jtaOut
+    jtaOut.setEditable(false);
+    jtaOut.setText("What would you like to do?");
+
+    this.setTitle("PokeClient - Game");
+    this.setSize(480, 224);
+    this.setResizable(false);
+    this.setLocation(500,601);
+    this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+    this.setVisible(true);
+    this.addWindowListener(new java.awt.event.WindowAdapter() {
+    @Override
+    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+      JOptionPane.showMessageDialog(
+        chat,
+        "Please close from the Chat window.",
+        "Oops!",
+        JOptionPane.INFORMATION_MESSAGE);
+      }
+    });
+
+  }
+
 	public void setupWindow() {
+    /*
     JPanel jpSouth = new JPanel(new GridLayout(1, 2));
     JPanel jpRunFight = new JPanel(new GridLayout(1, 2));
     JPanel jpChatSouth = new JPanel(new GridLayout(1, 2));
@@ -234,7 +323,8 @@ public class PokeClient extends JFrame implements ActionListener {
     this.setResizable(false);
     this.setLocation(500,601);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+    */
+    /*
     // Chat window setup
     chat = new JFrame();
     chat.setTitle("PokeClient - Chat");
@@ -257,7 +347,7 @@ public class PokeClient extends JFrame implements ActionListener {
     jtaChat.setEditable(false);
     jpChatHolder.add(jpChatSouth, BorderLayout.SOUTH);
     chat.add(jpChatHolder, "Center");
-    setUpLobby();
+
     // jtaChat.setWrapStyleWord(true);
     // jtaMessageBox.setWrapStyleWord(true);
 
@@ -271,8 +361,9 @@ public class PokeClient extends JFrame implements ActionListener {
         JOptionPane.INFORMATION_MESSAGE);
       }
     });
-
+    setUpLobby();
     chat.setVisible(true);
+    */
 	}
 
    // window for choosing Pokemon
@@ -384,7 +475,7 @@ public class PokeClient extends JFrame implements ActionListener {
 
       // South Panel
       JPanel jpConfirm = new JPanel();
-      JButton jbConfirm = new JButton("Confirm");
+      jbConfirm = new JButton("Confirm");
       jpConfirm.add(jbConfirm);
       jbConfirm.addActionListener( this);
 
@@ -414,11 +505,13 @@ public class PokeClient extends JFrame implements ActionListener {
     });
 
     choosePokemonFrame.setVisible(true);
-	}
-
+	 }
+  //action listener for getting the Battle button
 
   // GUI button switch
   public void actionPerformed(ActionEvent ae) {
+
+  /*
     switch(ae.getActionCommand()) {
       case "Fight":
         doFight();
@@ -432,7 +525,32 @@ public class PokeClient extends JFrame implements ActionListener {
       case "Confirm":
          doConfirm();
          break;
+         */
+
+    Object choice = ae.getSource();
+    if(choice.equals(jBattle)){
+      String opponent = (String)nameSelect.getSelectedItem();
+      //System.out.println(opponent);
+      if(opponent != null){
+        //System.out.println(opponent);
+        ThreadBattle battleThread = new ThreadBattle(opponent);
+        battleThread.start();
+        jBattle.setEnabled(false);
+        //battling = true;
+
     }
+    }else if(choice.equals(jbSend)){
+      doSend();
+    }else if(choice.equals(jbRun)){
+      doRun();
+    }
+    else if(choice.equals(jbFight)){
+      doFight();
+    }
+    else if(choice.equals(jbConfirm)){
+      doConfirm();
+    }
+
   }
 
   // music() method for background music
@@ -641,11 +759,30 @@ public class PokeClient extends JFrame implements ActionListener {
               pout.println(name);
               pout.flush();
               while(connected1){
+
                 String inS = bin.readLine();
+                //send to update list
                 if(inS.equals("N")){
                   String holder = bin.readLine();
+                  //System.out.println(holder);
                   redrawNames(holder);
+                  //sent to challenge to a battle
+                }else if(inS.equals("B")){
+                  //Start battle thread
+                  String challenger = bin.readLine();
+                  System.out.println("Challenged! by: "+challenger);
+
+                  battling = true;
+
+                  if(battling==true){
+                    jBattle.setEnabled(false);
+                    ThreadBattle battleThread1 = new ThreadBattle(challenger);
+                    battleThread1.start();
                   }
+
+
+                }
+
                 }
 
 
@@ -658,17 +795,60 @@ public class PokeClient extends JFrame implements ActionListener {
        }
 
    public class ThreadBattle extends Thread{
-     public ThreadBattle(){
-
+     String enemy = "";
+     public ThreadBattle(String opp){
+       enemy = opp;
      }
 
      public void run(){
-       try{
-         s3 = new Socket(ipaddress, PORT3);
-       }catch(Exception e){
-         e.printStackTrace();
-       }
-     }
 
+
+         try{
+          s3 = new Socket(ipaddress, PORT3);
+           InputStream in = s3.getInputStream();
+           BufferedReader bin = new BufferedReader(new InputStreamReader(in));
+           out = s3.getOutputStream();
+           pout = new PrintWriter(out);
+           if(battling){
+             pout.println("BA");
+             pout.flush();
+             //System.out.println("send BA");
+             pout.println(name);
+             pout.flush();
+             pout.println(enemy);
+             pout.flush();
+           }
+           else if(!battling){
+             pout.println("NB");
+             pout.flush();
+             pout.println(name);
+             pout.flush();
+             pout.println(enemy);
+             pout.flush();
+             battling = true;
+
+           }
+
+
+         }catch(Exception e){
+           e.printStackTrace();
+         }
+
+         try{
+           setUpGameWindow();
+           while(battling){
+
+           }
+         }catch(Exception e){
+           e.printStackTrace();
+         }
+     }//end of run
+
+   }
+
+   public class ThreadMusic extends Thread{
+     public void run(){
+       music();
+     }
    }
 }
