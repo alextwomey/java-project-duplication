@@ -481,9 +481,10 @@ public class PokeServer extends JFrame implements ActionListener {
     }
 
     public void run(){
-      //Thread.sleep(5000);
+
       System.out.println(battlers.size());
       try{
+        Thread.sleep(1000);
         for(Map.Entry mapElement : battlers.entrySet()){
           String key = (String)mapElement.getKey();
           Socket s = (Socket)mapElement.getValue();
@@ -561,6 +562,8 @@ public class PokeServer extends JFrame implements ActionListener {
     public void run(){
       System.out.println("battle starting between "+p1n+p2n);
       try{
+        String mc1 = "";
+        String mc2 = "";
         in1 = p1s.getInputStream();
         bin1 = new BufferedReader(new InputStreamReader(in1));
         out1 = p1s.getOutputStream();
@@ -573,18 +576,144 @@ public class PokeServer extends JFrame implements ActionListener {
 
         cbp1 = p1Party.get(p1cpi);
         cbp2 = p2Party.get(p2cpi);
+
         while(battling){
           if(cbp1.getSpd()>=cbp2.getSpd()){
             bout1.println("MOVE");
             bout1.flush();
-          }
+            mc1 = bin1.readLine();
+            if(mc1.equals("1")){
+              jtaLog.append("\n"+p1n+" has chosen move: "+cbp1.getM1Name());
+              cbp1.move1(cbp2);
+              //cbp1.lowerM1PP();
+            }
+            else if(mc1.equals("2")){
+              jtaLog.append("\n"+p1n+" has chosen move: "+cbp1.getM2Name());
+              cbp1.move2(cbp2);
+              //cbp1.lowerM2PP();
+            }
+            else if(mc1.equals("3")){
+              jtaLog.append("\n"+p1n+" has chosen move: "+cbp1.getM3Name());
+              cbp1.move3(cbp2);
+              //cbp1.lowerM3PP();
+            }
+            else if(mc1.equals("4")){
+              jtaLog.append("\n"+p1n+" has chosen move: "+cbp1.getM4Name());
+              cbp1.move4(cbp2);
+              //cbp1.lowerM4PP();
+            }
+            if(!cbp2.getAlive()){
+              jtaLog.append("\n"+p2n+"s "+cbp2.getName()+" has fainted!");
+              battling = false;
+              break;
+            }
+            //jtaLog.append("\n"+p1n+" has chosen move: "+);
+            bout2.println("MOVE");
+            bout2.flush();
+            mc2 = bin2.readLine();
+            if(mc2.equals("1")){
+              jtaLog.append("\n"+p2n+" has chosen move: "+cbp2.getM1Name());
+              cbp2.move1(cbp1);
+            }
+            else if(mc2.equals("2")){
+              jtaLog.append("\n"+p2n+" has chosen move: "+cbp2.getM2Name());
+              cbp2.move2(cbp1);
+            }
+            else if(mc2.equals("3")){
+              jtaLog.append("\n"+p2n+" has chosen move: "+cbp2.getM3Name());
+              cbp2.move3(cbp1);
+            }
+            else if(mc2.equals("4")){
+              jtaLog.append("\n"+p2n+" has chosen move: "+cbp2.getM4Name());
+              cbp2.move4(cbp1);
+            }
+            if(!cbp1.getAlive()){
+              jtaLog.append("\n"+p1n+"s "+cbp1.getName()+" has fainted!");
+              battling = false;
+              break;
+            }
+          }//end of speed check if
+          else{
+            bout2.println("MOVE");
+            bout2.flush();
+            mc2 = bin2.readLine();
+            if(mc2.equals("1")){
+              jtaLog.append("\n"+p2n+" has chosen move: "+cbp2.getM1Name());
+              cbp2.move1(cbp1);
+            }
+            else if(mc2.equals("2")){
+              jtaLog.append("\n"+p2n+" has chosen move: "+cbp2.getM2Name());
+              cbp2.move2(cbp1);
+            }
+            else if(mc2.equals("3")){
+              jtaLog.append("\n"+p2n+" has chosen move: "+cbp2.getM3Name());
+              cbp2.move3(cbp1);
+            }
+            else if(mc2.equals("4")){
+              jtaLog.append("\n"+p2n+" has chosen move: "+cbp2.getM4Name());
+              cbp2.move4(cbp1);
+            }
+            if(!cbp1.getAlive()){
+              jtaLog.append("\n"+p1n+"s "+cbp1.getName()+" has fainted!");
+              battling = false;
+              break;
+            }
 
+            bout1.println("MOVE");
+            bout1.flush();
+            mc1 = bin1.readLine();
+            if(mc1.equals("1")){
+              jtaLog.append("\n"+p1n+" has chosen move: "+cbp1.getM1Name());
+              cbp1.move1(cbp2);
+            }
+            else if(mc1.equals("2")){
+              jtaLog.append("\n"+p1n+" has chosen move: "+cbp1.getM2Name());
+              cbp1.move2(cbp2);
+            }
+            else if(mc1.equals("3")){
+              jtaLog.append("\n"+p1n+" has chosen move: "+cbp1.getM3Name());
+              cbp1.move3(cbp2);
+            }
+            else if(mc1.equals("4")){
+              jtaLog.append("\n"+p1n+" has chosen move: "+cbp1.getM4Name());
+              cbp1.move4(cbp2);
+            }
+            if(!cbp2.getAlive()){
+              jtaLog.append("\n"+p2n+"s "+cbp2.getName()+" has fainted!");
+              battling = false;
+              break;
 
+            }
+          }//end of speed check else
 
-        }
+          bout1.println("EOT");
+          bout1.flush();
+          //send back pokemon health and info, cbp1,cbp2
+          bout2.println("EOT");
+          bout2.flush();
+          //send back pokemon health and info, cbp1,cbp2
+          jtaLog.append("\n"+cbp1.getName()+"s health is "+cbp1.getHp());
+          jtaLog.append("\n"+cbp2.getName()+"s health is "+cbp2.getHp());
+          jtaLog.append("\n");
+          Thread.sleep(5000);
+        }//end of while
+
+        jtaLog.append("\nBattle Over!");
+        bout1.println("OVER");
+        bout1.flush();
+        bout2.println("OVER");
+        bout2.flush();
+
+        connectedSocketsLobby.put(p1n,connectedSocketsBattle.get(p1n));
+        connectedSocketsLobby.put(p2n,connectedSocketsBattle.get(p2n));
+        updateNameList();
+        battlers.remove(p1n);
+        battlers.remove(p2n);
 
       }catch(Exception e){
-        e.printStackTrace();
+        //e.printStackTrace();
+        jtaLog.append("\nUnexpected disconnect");
+
       }
     }
 
