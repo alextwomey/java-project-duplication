@@ -645,7 +645,7 @@ public class PokeClient extends JFrame implements ActionListener {
                 //send to update list
                 if(inS.equals("N")){
                   String holder = bin.readLine();
-                  System.out.println(holder);
+                  //System.out.println(holder);
                   redrawNames(holder);
                   //sent to challenge to a battle
                 }else if(inS.equals("B")){
@@ -693,7 +693,7 @@ public class PokeClient extends JFrame implements ActionListener {
            if(battling){
              pout.println("BA");
              pout.flush();
-             System.out.println("send BA");
+             //System.out.println("send BA");
              pout.println(name);
              pout.flush();
              pout.println(enemy);
@@ -716,7 +716,10 @@ public class PokeClient extends JFrame implements ActionListener {
          }
 
          try{
+           setUpGameWindow();
+           while(battling){
 
+           }
          }catch(Exception e){
            e.printStackTrace();
          }

@@ -49,7 +49,7 @@ public class PokeServer extends JFrame implements ActionListener {
    private Map<String, Socket> connectedSocketsChat = new HashMap<String, Socket>();
    private Map<String, Socket> connectedSocketsLobby = new HashMap<String, Socket>();
    private Map<String, Socket> connectedSocketsBattle = new HashMap<String, Socket>();
-   private Map<String, Socket> battlers = new HashMap<String, Socket>();
+
 
   public static void main(String[] args) {
 		new PokeServer();
@@ -383,6 +383,8 @@ public class PokeServer extends JFrame implements ActionListener {
     private String battlingString;
     private boolean battling = false;
     private boolean connected1 = true;
+    private Map<String, Socket> battlers = new HashMap<String, Socket>();
+
     public ThreadBattleServer(Socket sB){
       InputStream in = null;
       OutputStream out = null;
@@ -391,17 +393,17 @@ public class PokeServer extends JFrame implements ActionListener {
 
       bSocket = sB;
       try{
-        System.out.println("Started");
+        //System.out.println("Started");
         //only get input from challenger socket
         in = bSocket.getInputStream();
         bin = new BufferedReader(new InputStreamReader(in));
         battlingString = bin.readLine();
-        System.out.println(battlingString);
+        //System.out.println(battlingString);
         if(battlingString.equals("NB")){
           //logic to challenger other user
           cName = bin.readLine();
           enemy = bin.readLine();
-          battlers.put(cName,bSocket);
+          connectedSocketsBattle.put(cName,bSocket);
           jtaLog.append("\n"+cName+" has challenged "+enemy+" to a battle!");
           connectedSocketsBattle.put(cName,(Socket)connectedSocketsLobby.get(cName));
           connectedSocketsBattle.put(enemy,(Socket)connectedSocketsLobby.get(enemy));
@@ -428,8 +430,8 @@ public class PokeServer extends JFrame implements ActionListener {
           //challenged socket
           cName = bin.readLine();
           enemy = bin.readLine();
-          System.out.println(cName+ enemy);
-          battlers.put(cName, bSocket);
+          //System.out.println(cName+ enemy);
+          connectedSocketsBattle.put(cName, bSocket);
           battling = true;
           jtaLog.append("\nBattle Started between "+cName +" and "+ enemy);
 
@@ -445,7 +447,20 @@ public class PokeServer extends JFrame implements ActionListener {
     }
 
     public void run(){
-      System.out.println("Battle Started!");
+      //System.out.println("Battle Started!");
+      //each battling thread now has a battling hasmap of their name and Socket
+      //as well as the enemys name and socket
+      //use this hashmap to communicate
+      for(Map.Entry mapElement : connectedSocketsBattle.entrySet()){
+        String key = (String)mapElement.getKey();
+        if(key.equals(cName)){
+          battlers.put(cName,(Socket)mapElement.getValue());
+        }
+        if(key.equals(enemy)){
+          battlers.put(enemy,(Socket)mapElement.getValue());
+        }
+      }
+      
       while(battling){
         //dn
       }
