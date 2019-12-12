@@ -514,23 +514,8 @@ public class PokeClient extends JFrame implements ActionListener {
   // GUI button switch
   public void actionPerformed(ActionEvent ae) {
 
-  /*
-    switch(ae.getActionCommand()) {
-      case "Fight":
-        doFight();
-        break;
-      case "Run":
-        doRun();
-        break;
-      case "Send":
-        doSend();
-        break;
-      case "Confirm":
-         doConfirm();
-         break;
-         */
-
     Object choice = ae.getSource();
+
     if(choice.equals(jBattle)){
       String opponent = (String)nameSelect.getSelectedItem();
       //System.out.println(opponent);
@@ -541,7 +526,7 @@ public class PokeClient extends JFrame implements ActionListener {
         jBattle.setEnabled(false);
         //battling = true;
 
-    }
+      }
     }else if(choice.equals(jbSend)){
       doSend();
     }else if(choice.equals(jbRun)){
@@ -599,11 +584,11 @@ public class PokeClient extends JFrame implements ActionListener {
     //jtaMessageBox.setText("");
     // TODO finish send method
   }
-  
+
   public void doConfirm() {
       int count = 0;
       int index = 0;
-      
+
       if(jcbAbsol.isSelected() ) {
          count += 1;
          jcbList.add( jcbAbsol);
@@ -611,7 +596,7 @@ public class PokeClient extends JFrame implements ActionListener {
       if( jcbBulb.isSelected() ) {
          count += 1;
          jcbList.add( jcbBulb);
-      }  
+      }
       if( jcbCharizard.isSelected() ) {
          count+= 1;
          jcbList.add( jcbCharizard);
@@ -677,8 +662,8 @@ public class PokeClient extends JFrame implements ActionListener {
             index += 1;
          }
       }
-      
-   } // end doConfirm()
+
+  } // end doConfirm()
 
    public class ThreadChatClient extends Thread{
       private String ipA;
@@ -865,7 +850,27 @@ public class PokeClient extends JFrame implements ActionListener {
              pout = new PrintWriter(out);
 
              String bCase = bin.readLine();
+             //System.out.println(bCase+name);
+             if(bCase.equals("MOVE")){
+               Scanner uip = new Scanner(System.in);
+               //System.out.print("1,2,3,4");
+               //String m = uip.nextLine();
+               String m = "1";
+               pout.println(m);
+               pout.flush();
+             }
+             else if(bCase.equals("EOT")){
+               //UPDATE GRAPHICS
+               try{
+                 Thread.sleep(5000);
+               }catch(Exception e){
+                   e.printStackTrace();
+                 }
+             }else if(bCase.equals("OVER")){
+               battling=false;
+               jBattle.setEnabled(false);
 
+             }
 
 
 
@@ -882,4 +887,6 @@ public class PokeClient extends JFrame implements ActionListener {
        music();
      }
    }
-}
+
+
+}//end of main class

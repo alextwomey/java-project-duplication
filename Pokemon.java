@@ -25,6 +25,7 @@ public class Pokemon{
    private String m2Name = "";
    private String m3Name = "";
    private String m4Name = "";
+   private boolean alive = true;
    
    
        /*********************
@@ -213,6 +214,16 @@ public class Pokemon{
    }
    public void lowerHp(int hpDown){
       hp -= hpDown;
+      alive = checkIfDead();
+   }
+   public boolean getAlive(){
+      return alive;
+   }
+   public boolean checkIfDead(){
+      if(getHp() <= 0){
+         return false;
+      }
+      else return true;
    }
    //-----------------------------------------------------------
    //Abstract movelist 
