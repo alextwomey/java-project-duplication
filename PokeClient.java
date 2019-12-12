@@ -48,6 +48,9 @@ public class PokeClient extends JFrame implements ActionListener {
   private boolean listFlag = false;
   private ArrayList<String> cNames = new ArrayList<String>();
   private boolean battling = false;
+  
+  private String yourPokemon = "";
+  private String theirPokemon = "";
 
   //TEST ATTRIBUTE FOR POKEMON ARRAY
   String[] pokeArray = {"Pikachu", "Charizard"};
@@ -99,11 +102,11 @@ public class PokeClient extends JFrame implements ActionListener {
 
 	public PokeClient() {
       //
-      //setupChoiceWindow();
+      setupChoiceWindow();
 
-      setUpChatWindow();
+      //setUpChatWindow();
 
-      lobbyThreadPrep();
+      //lobbyThreadPrep();
       //setupWindow();
 
 
@@ -673,6 +676,11 @@ public class PokeClient extends JFrame implements ActionListener {
             chosenPokemon[index] = name;
             index += 1;
          }
+      choosePokemonFrame.setVisible(false);
+      setUpChatWindow();
+
+      lobbyThreadPrep();
+      
       }
 
   } // end doConfirm()
@@ -818,8 +826,8 @@ public class PokeClient extends JFrame implements ActionListener {
              pout.println(enemy);
              pout.flush();
              String listOfPokemon = "";
-             for(int i = 0; i < pokeArray.length; i++){
-               listOfPokemon = listOfPokemon + pokeArray[i]+",";
+             for(int i = 0; i < chosenPokemon.length; i++){
+               listOfPokemon = listOfPokemon + chosenPokemon[i]+",";
              }
              pout.println(listOfPokemon);
              pout.flush();
@@ -832,8 +840,11 @@ public class PokeClient extends JFrame implements ActionListener {
              pout.println(enemy);
              pout.flush();
              String listOfPokemon = "";
-             for(int i = 0; i < pokeArray.length; i++){
-               listOfPokemon = listOfPokemon + pokeArray[i]+",";
+             
+             
+             
+             for(int i = 0; i < chosenPokemon.length; i++){
+               listOfPokemon = listOfPokemon + chosenPokemon[i]+",";
              }
              pout.println(listOfPokemon);
              pout.flush();
@@ -864,6 +875,8 @@ public class PokeClient extends JFrame implements ActionListener {
              String bCase = bin.readLine();
              //System.out.println(bCase+name);
              if(bCase.equals("MOVE")){
+               yourPokemon = bin.readLine();
+               theirPokemon = bin.readLine();
                Scanner uip = new Scanner(System.in);
                //System.out.print("1,2,3,4");
                //String m = uip.nextLine();
@@ -875,12 +888,22 @@ public class PokeClient extends JFrame implements ActionListener {
                //UPDATE GRAPHICS
                try{
                  Thread.sleep(5000);
+                 String poke1Hp = bin.readLine();
+                 String poke2Hp = bin.readLine();
+                 String outString = poke1Hp+"\n"+poke2Hp;
+                 jtaOut.setText(outString);
+                 
                }catch(Exception e){
                    e.printStackTrace();
                  }
              }else if(bCase.equals("OVER")){
+               String poke1Hp = bin.readLine();
+               String poke2Hp = bin.readLine();
+               String outString = poke1Hp+"\n"+poke2Hp;
+               jtaOut.setText(outString);
                battling=false;
                jBattle.setEnabled(false);
+               jtaOut.append("\nGAME OVER");
 
              }
 
