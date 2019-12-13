@@ -286,9 +286,9 @@ public class PokeClient extends JFrame implements ActionListener {
      CharizardBACK.setIcon( new ImageIcon(getClass().getResource("CharizardBACK.png")));
      // Cyndaquill
      JLabel CyndaquillFRONT = new JLabel();
-     CyndaquillFRONT.setIcon( new ImageIcon(getClass().getResource("CyndaquillFRONT.png")));
+     CyndaquillFRONT.setIcon( new ImageIcon(getClass().getResource("CyndiquillFRONT.png")));
      JLabel CyndaquillBACK = new JLabel();
-     CyndaquillBACK.setIcon( new ImageIcon(getClass().getResource("CyndaquillBACK.png")));
+     CyndaquillBACK.setIcon( new ImageIcon(getClass().getResource("CyndiquillBACK.png")));
      // Drifblim
      JLabel DrifblimFRONT = new JLabel();
      DrifblimFRONT.setIcon( new ImageIcon(getClass().getResource("DrifblimFRONT.png")));
