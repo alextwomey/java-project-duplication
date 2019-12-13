@@ -342,7 +342,7 @@ public class PokeClient extends JFrame implements ActionListener {
      if( yourPokemon.equals( "Bulbasaur")) {
          friendlyPokemon.add( BulbasaurFRONT);
      }
-     if( yourPokemon.equals( Charizard)) {
+     if( yourPokemon.equals( "Charizard")) {
          friendlyPokemon.add( CharizardFRONT);
      }
      if( yourPokemon.equals( "Cyndaquill")) {
@@ -380,7 +380,7 @@ public class PokeClient extends JFrame implements ActionListener {
      if( theirPokemon.equals( "Bulbasaur")) {
          enemyPokemon.add( BulbasaurFRONT);
      }
-     if( theirPokemon.equals( Charizard)) {
+     if( theirPokemon.equals( "Charizard")) {
          enemyPokemon.add( CharizardFRONT);
      }
      if( theirPokemon.equals( "Cyndaquill")) {
