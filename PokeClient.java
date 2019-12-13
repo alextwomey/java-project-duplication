@@ -330,6 +330,84 @@ public class PokeClient extends JFrame implements ActionListener {
      JLabel ScolipedeBACK = new JLabel();
      ScolipedeBACK.setIcon( new ImageIcon(getClass().getResource("ScolipedeBACK.png")));
      
+     // figures out what Pokemon
+     //friendly
+     if( yourPokemon.equals("Absol")) {
+          friendlyPokemon.add( AbsolFRONT);
+     }
+     if( yourPokemon.equals( "Bulbasaur")) {
+         friendlyPokemon.add( BulbasaurFRONT);
+     }
+     if( yourPokemon.equals( Charizard)) {
+         friendlyPokemon.add( CharizardFRONT);
+     }
+     if( yourPokemon.equals( "Cyndaquill")) {
+         friendlyPokemon.add( CyndaquillFRONT);
+     }
+     if( yourPokemon.equals( "Drifblim")) {
+         friendlyPokemon.add( DrifblimFRONT);
+     }
+     if( yourPokemon.equals( "Feraligatr")) {
+         friendlyPokemon.add( FeraligatrFRONT);
+     }
+     if( yourPokemon.equals( "Gardevoir")) {
+         friendlyPokemon.add( GardevoirFRONT);
+     }
+     if( yourPokemon.equals( "Kadabra")) {
+         friendlyPokemon.add( KadabraFRONT);
+     }
+     if( yourPokemon.equals( "MiloticFRONT")) {
+         friendlyPokemon.add( MiloticFRONT);
+     }
+     if( yourPokemon.equals( "Pikachu")) {
+         friendlyPokemon.add( PikachuFRONT);
+     }
+     if( yourPokemon.equals( "Scizor")) {
+         friendlyPokemon.add( ScizorFRONT);
+     }
+     if( yourPokemon.equals( "Scolipede")) {
+         friendlyPokemon.add( ScolipedeFRONT);
+     }
+     
+     //enemy Pokemon
+     if( theirPokemon.equals( "Absol")) {
+         enemyPokemon.add( AbsolFRONT);
+     }
+     if( theirPokemon.equals( "Bulbasaur")) {
+         enemyPokemon.add( BulbasaurFRONT);
+     }
+     if( theirPokemon.equals( Charizard)) {
+         enemyPokemon.add( CharizardFRONT);
+     }
+     if( theirPokemon.equals( "Cyndaquill")) {
+         enemyPokemon.add( CyndaquillFRONT);
+     }
+     if( theirPokemon.equals( "Drifblim")) {
+         enemyPokemon.add( DrifblimFRONT);
+     }
+     if( theirPokemon.equals( "Feraligatr")) {
+         enemyPokemon.add( FeraligatrFRONT);
+     }
+     if( theirPokemon.equals( "Gardevoir")) {
+         enemyPokemon.add( GardevoirFRONT);
+     }
+     if( theirPokemon.equals( "Kadabra")) {
+         enemyPokemon.add( KadabraFRONT);
+     }
+     if( theirPokemon.equals( "MiloticFRONT")) {
+         enemyPokemon.add( MiloticFRONT);
+     }
+     if( theirPokemon.equals( "Pikachu")) {
+         enemyPokemon.add( PikachuFRONT);
+     }
+     if( theirPokemon.equals( "Scizor")) {
+         enemyPokemon.add( ScizorFRONT);
+     }
+     if( theirPokemon.equals( "Scolipede")) {
+         enemyPokemon.add( ScolipedeFRONT);
+     }
+     
+     
      this.add( friendlyPokemon, BorderLayout.WEST);
      this.add( enemyPokemon, BorderLayout.EAST);
     
