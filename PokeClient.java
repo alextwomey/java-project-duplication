@@ -25,10 +25,6 @@ public class PokeClient extends JFrame implements ActionListener {
   private JButton jbFight = new JButton("Fight");
   private JButton jbRun = new JButton("Run");
   private JButton jbSend = new JButton("Send");
-  private JButton jbOne = new JButton("One");
-  private JButton jbTwo = new JButton("Two");
-  private JButton jbThree = new JButton("Three");
-  private JButton jbFour = new JButton("Four");
   private JButton jBattle;
   private JButton jbConfirm;
 
@@ -48,9 +44,6 @@ public class PokeClient extends JFrame implements ActionListener {
   private boolean listFlag = false;
   private ArrayList<String> cNames = new ArrayList<String>();
   private boolean battling = false;
-  
-  private String yourPokemon = "";
-  private String theirPokemon = "";
 
   //TEST ATTRIBUTE FOR POKEMON ARRAY
   String[] pokeArray = {"Pikachu", "Charizard"};
@@ -102,11 +95,11 @@ public class PokeClient extends JFrame implements ActionListener {
 
 	public PokeClient() {
       //
-      setupChoiceWindow();
+      //setupChoiceWindow();
 
-      //setUpChatWindow();
+      setUpChatWindow();
 
-      //lobbyThreadPrep();
+      lobbyThreadPrep();
       //setupWindow();
 
 
@@ -268,7 +261,7 @@ public class PokeClient extends JFrame implements ActionListener {
     tm.start();
 
     JPanel jpSouth = new JPanel(new GridLayout(1, 2));
-    JPanel jpRunFight = new JPanel(new GridLayout(2, 3));
+    JPanel jpRunFight = new JPanel(new GridLayout(1, 2));
 
     this.add(jpSouth, BorderLayout.SOUTH);
 
@@ -276,20 +269,12 @@ public class PokeClient extends JFrame implements ActionListener {
     jpSouth.add(jspOut);
     jpSouth.add(jpRunFight);
     jpRunFight.add(jbRun);
-    jpRunFight.add(jbOne);
-    jpRunFight.add(jbTwo);
     jpRunFight.add(jbFight);
-    jpRunFight.add(jbThree);
-    jpRunFight.add(jbFour);
 
     // Add action stuff
     jbFight.addActionListener(this);
     jbRun.addActionListener(this);
     jbSend.addActionListener(this);
-    jbOne.addActionListener(this);
-    jbTwo.addActionListener(this);
-    jbThree.addActionListener(this);
-    jbFour.addActionListener(this);
 
     // Set up jtaOut
     jtaOut.setEditable(false);
@@ -529,8 +514,23 @@ public class PokeClient extends JFrame implements ActionListener {
   // GUI button switch
   public void actionPerformed(ActionEvent ae) {
 
-    Object choice = ae.getSource();
+  /*
+    switch(ae.getActionCommand()) {
+      case "Fight":
+        doFight();
+        break;
+      case "Run":
+        doRun();
+        break;
+      case "Send":
+        doSend();
+        break;
+      case "Confirm":
+         doConfirm();
+         break;
+         */
 
+    Object choice = ae.getSource();
     if(choice.equals(jBattle)){
       String opponent = (String)nameSelect.getSelectedItem();
       //System.out.println(opponent);
@@ -541,7 +541,7 @@ public class PokeClient extends JFrame implements ActionListener {
         jBattle.setEnabled(false);
         //battling = true;
 
-      }
+    }
     }else if(choice.equals(jbSend)){
       doSend();
     }else if(choice.equals(jbRun)){
@@ -599,11 +599,11 @@ public class PokeClient extends JFrame implements ActionListener {
     //jtaMessageBox.setText("");
     // TODO finish send method
   }
-
+  
   public void doConfirm() {
       int count = 0;
       int index = 0;
-
+      
       if(jcbAbsol.isSelected() ) {
          count += 1;
          jcbList.add( jcbAbsol);
@@ -611,7 +611,7 @@ public class PokeClient extends JFrame implements ActionListener {
       if( jcbBulb.isSelected() ) {
          count += 1;
          jcbList.add( jcbBulb);
-      }
+      }  
       if( jcbCharizard.isSelected() ) {
          count+= 1;
          jcbList.add( jcbCharizard);
@@ -676,14 +676,9 @@ public class PokeClient extends JFrame implements ActionListener {
             chosenPokemon[index] = name;
             index += 1;
          }
-      choosePokemonFrame.setVisible(false);
-      setUpChatWindow();
-
-      lobbyThreadPrep();
-      
       }
-
-  } // end doConfirm()
+      
+   } // end doConfirm()
 
    public class ThreadChatClient extends Thread{
       private String ipA;
@@ -826,8 +821,8 @@ public class PokeClient extends JFrame implements ActionListener {
              pout.println(enemy);
              pout.flush();
              String listOfPokemon = "";
-             for(int i = 0; i < chosenPokemon.length; i++){
-               listOfPokemon = listOfPokemon + chosenPokemon[i]+",";
+             for(int i = 0; i < pokeArray.length; i++){
+               listOfPokemon = listOfPokemon + pokeArray[i]+",";
              }
              pout.println(listOfPokemon);
              pout.flush();
@@ -840,11 +835,8 @@ public class PokeClient extends JFrame implements ActionListener {
              pout.println(enemy);
              pout.flush();
              String listOfPokemon = "";
-             
-             
-             
-             for(int i = 0; i < chosenPokemon.length; i++){
-               listOfPokemon = listOfPokemon + chosenPokemon[i]+",";
+             for(int i = 0; i < pokeArray.length; i++){
+               listOfPokemon = listOfPokemon + pokeArray[i]+",";
              }
              pout.println(listOfPokemon);
              pout.flush();
@@ -873,39 +865,7 @@ public class PokeClient extends JFrame implements ActionListener {
              pout = new PrintWriter(out);
 
              String bCase = bin.readLine();
-             //System.out.println(bCase+name);
-             if(bCase.equals("MOVE")){
-               yourPokemon = bin.readLine();
-               theirPokemon = bin.readLine();
-               Scanner uip = new Scanner(System.in);
-               //System.out.print("1,2,3,4");
-               //String m = uip.nextLine();
-               String m = "1";
-               pout.println(m);
-               pout.flush();
-             }
-             else if(bCase.equals("EOT")){
-               //UPDATE GRAPHICS
-               try{
-                 Thread.sleep(5000);
-                 String poke1Hp = bin.readLine();
-                 String poke2Hp = bin.readLine();
-                 String outString = poke1Hp+"\n"+poke2Hp;
-                 jtaOut.setText(outString);
-                 
-               }catch(Exception e){
-                   e.printStackTrace();
-                 }
-             }else if(bCase.equals("OVER")){
-               String poke1Hp = bin.readLine();
-               String poke2Hp = bin.readLine();
-               String outString = poke1Hp+"\n"+poke2Hp;
-               jtaOut.setText(outString);
-               battling=false;
-               jBattle.setEnabled(false);
-               jtaOut.append("\nGAME OVER");
 
-             }
 
 
 
@@ -922,6 +882,4 @@ public class PokeClient extends JFrame implements ActionListener {
        music();
      }
    }
-
-
-}//end of main class
+}
