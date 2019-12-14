@@ -68,6 +68,9 @@ public class PokeClient extends JFrame implements ActionListener {
    private JCheckBox jcbScolipede;
    //JFrame for game window
    private JFrame jfGame;
+   private Icon mPoke;
+   private Icon tPoke;
+   private Icon bg = new ImageIcon(getClass().getResource("background.jpg"));
 
 //END OF GUI ATTRIBUTES------------------------------------
 
@@ -101,8 +104,11 @@ public class PokeClient extends JFrame implements ActionListener {
    String syncMe = "pls pls pls sync meee";
    // ArrayList for chosen Pokemon
    private ArrayList<JCheckBox> jcbList = new ArrayList<JCheckBox>();
+   private ArrayList<Pokemon> party = new ArrayList<Pokemon>();
    //Array for Poemon names
    private String[] chosenPokemon = new String[6];
+   //
+   PokeField pf;
 
 //END OF LOGIC ATTRIBUTES----------------------------------
 
@@ -115,8 +121,8 @@ public class PokeClient extends JFrame implements ActionListener {
       //setupChoiceWindow();
 
       //TEST HERE
-      setUpGameWindow();
-
+      //setUpGameWindow();
+      setupChoiceWindow();
 
       //setUpChatWindow();
 
@@ -390,6 +396,7 @@ public class PokeClient extends JFrame implements ActionListener {
       });
 
       choosePokemonFrame.setVisible(true);
+
    }//end of choice window
 
    public void setUpGameWindow(){
@@ -402,173 +409,12 @@ public class PokeClient extends JFrame implements ActionListener {
       JPanel jpSouth = new JPanel(new GridLayout(1, 2));
       JPanel jpRunFight = new JPanel(new GridLayout(2, 3));
 
-      /*
-
-      JPanel friendlyPokemon = new JPanel( new FlowLayout());
-      JPanel enemyPokemon = new JPanel( new FlowLayout());
-
       //POKEMOOON
-      // Absol
-      JLabel AbsolFRONT = new JLabel();
-      AbsolFRONT.setIcon( new ImageIcon(getClass().getResource("AbsolFRONT.png")));
-      JLabel AbsolBACK = new JLabel();
-      AbsolBACK.setIcon( new ImageIcon(getClass().getResource("AbsolBACK.png")));
-      // Bulbasaur
-      JLabel BulbasaurFRONT = new JLabel();
-      BulbasaurFRONT.setIcon( new ImageIcon(getClass().getResource("BulbasaurFRONT.png")));
-      JLabel BulbasaurBACK = new JLabel();
-      BulbasaurBACK.setIcon( new ImageIcon(getClass().getResource("BulbasaurBACK.png")));
-      // Charizard
-      JLabel CharizardFRONT = new JLabel();
-      CharizardFRONT.setIcon( new ImageIcon(getClass().getResource("CharizardFRONT.png")));
-      JLabel CharizardBACK = new JLabel();
-      CharizardBACK.setIcon( new ImageIcon(getClass().getResource("CharizardBACK.png")));
-      // Cyndaquill
-      JLabel CyndaquillFRONT = new JLabel();
-      CyndaquillFRONT.setIcon( new ImageIcon(getClass().getResource("CyndiquillFRONT.png")));
-      JLabel CyndaquillBACK = new JLabel();
-      CyndaquillBACK.setIcon( new ImageIcon(getClass().getResource("CyndiquillBACK.png")));
-      // Drifblim
-      JLabel DrifblimFRONT = new JLabel();
-      DrifblimFRONT.setIcon( new ImageIcon(getClass().getResource("DrifblimFRONT.png")));
-      JLabel DrifblimBACK = new JLabel();
-      DrifblimBACK.setIcon( new ImageIcon(getClass().getResource("DrifblimBACK.png")));
-      // Feraligatr
-      JLabel FeraligatrFRONT = new JLabel();
-      FeraligatrFRONT.setIcon( new ImageIcon(getClass().getResource("FeraligatrFRONT.png")));
-      JLabel FeraligatrBACK = new JLabel();
-      FeraligatrBACK.setIcon( new ImageIcon(getClass().getResource("FeraligatrBACK.png")));
-      // Gardevoir
-      JLabel GardevoirFRONT = new JLabel();
-      GardevoirFRONT.setIcon( new ImageIcon(getClass().getResource("GardevoirFRONT.png")));
-      JLabel GardevoirBACK = new JLabel();
-      GardevoirBACK.setIcon( new ImageIcon(getClass().getResource("GardevoirBACK.png")));
-      // Kadabra
-      JLabel KadabraFRONT = new JLabel();
-      KadabraFRONT.setIcon( new ImageIcon(getClass().getResource("KadabraFRONT.png")));
-      JLabel KadabraBACK = new JLabel();
-      KadabraBACK.setIcon( new ImageIcon(getClass().getResource("KadabraBACK.png")));
-      // Milotic
-      JLabel MiloticFRONT = new JLabel();
-      MiloticFRONT.setIcon( new ImageIcon(getClass().getResource("MiloticFRONT.png")));
-      JLabel MiloticBACK = new JLabel();
-      MiloticBACK.setIcon( new ImageIcon(getClass().getResource("MiloticBACK.png")));
-      // Pikachu
-      JLabel PikachuFRONT = new JLabel();
-      PikachuFRONT.setIcon( new ImageIcon(getClass().getResource("PikachuFRONT.png")));
-      JLabel PikachuBACK = new JLabel();
-      PikachuBACK.setIcon( new ImageIcon(getClass().getResource("PikachuBACK.png")));
-      // Scizor
-      JLabel ScizorFRONT = new JLabel();
-      ScizorFRONT.setIcon( new ImageIcon(getClass().getResource("ScizorFRONT.png")));
-      JLabel ScizorBACK = new JLabel();
-      ScizorBACK.setIcon( new ImageIcon(getClass().getResource("ScizorBACK.png")));
-      // Scolipede
-      JLabel ScolipedeFRONT = new JLabel();
-      ScolipedeFRONT.setIcon( new ImageIcon(getClass().getResource("ScolipedeFRONT.png")));
-      JLabel ScolipedeBACK = new JLabel();
-      ScolipedeBACK.setIcon( new ImageIcon(getClass().getResource("ScolipedeBACK.png")));
 
-      yourPokemon = "Absol";
-      theirPokemon = "Charizard";
-
-      if( yourPokemon.equals("Absol")) {
-          friendlyPokemon.add( AbsolBACK);
-      }
-      if( yourPokemon.equals( "Bulbasaur")) {
-         friendlyPokemon.add( BulbasaurBACK);
-      }
-      if( yourPokemon.equals( "Charizard")) {
-         friendlyPokemon.add( CharizardBACK);
-      }
-      if( yourPokemon.equals( "Cyndaquill")) {
-         friendlyPokemon.add( CyndaquillBACK);
-      }
-      if( yourPokemon.equals( "Drifblim")) {
-         friendlyPokemon.add( DrifblimBACK);
-      }
-      if( yourPokemon.equals( "Feraligatr")) {
-         friendlyPokemon.add( FeraligatrBACK);
-      }
-      if( yourPokemon.equals( "Gardevoir")) {
-         friendlyPokemon.add( GardevoirBACK);
-      }
-      if( yourPokemon.equals( "Kadabra")) {
-         friendlyPokemon.add( KadabraBACK);
-      }
-      if( yourPokemon.equals( "MiloticFRONT")) {
-         friendlyPokemon.add( MiloticBACK);
-      }
-      if( yourPokemon.equals( "Pikachu")) {
-         friendlyPokemon.add( PikachuBACK);
-      }
-      if( yourPokemon.equals( "Scizor")) {
-         friendlyPokemon.add( ScizorBACK);
-      }
-      if( yourPokemon.equals( "Scolipede")) {
-         friendlyPokemon.add( ScolipedeBACK);
-      }
-
-      //enemy Pokemon
-      if( theirPokemon.equals( "Absol")) {
-         enemyPokemon.add( AbsolFRONT);
-      }
-      if( theirPokemon.equals( "Bulbasaur")) {
-         enemyPokemon.add( BulbasaurFRONT);
-      }
-      if( theirPokemon.equals( "Charizard")) {
-         enemyPokemon.add( CharizardFRONT);
-      }
-      if( theirPokemon.equals( "Cyndaquill")) {
-         enemyPokemon.add( CyndaquillFRONT);
-      }
-      if( theirPokemon.equals( "Drifblim")) {
-         enemyPokemon.add( DrifblimFRONT);
-      }
-      if( theirPokemon.equals( "Feraligatr")) {
-         enemyPokemon.add( FeraligatrFRONT);
-      }
-      if( theirPokemon.equals( "Gardevoir")) {
-         enemyPokemon.add( GardevoirFRONT);
-      }
-      if( theirPokemon.equals( "Kadabra")) {
-         enemyPokemon.add( KadabraFRONT);
-      }
-      if( theirPokemon.equals( "MiloticFRONT")) {
-         enemyPokemon.add( MiloticFRONT);
-      }
-      if( theirPokemon.equals( "Pikachu")) {
-         enemyPokemon.add( PikachuFRONT);
-      }
-      if( theirPokemon.equals( "Scizor")) {
-         enemyPokemon.add( ScizorFRONT);
-      }
-      if( theirPokemon.equals( "Scolipede")) {
-         enemyPokemon.add( ScolipedeFRONT);
-      }
+      //Graphics for the Field
 
 
-      this.add( friendlyPokemon, BorderLayout.WEST);
-      this.add( enemyPokemon, BorderLayout.EAST);
-
-      */
-      Icon mPoke = new ImageIcon(getClass().getResource("BulbasaurBACK.png"));
-      Icon tPoke = new ImageIcon(getClass().getResource("KadabraFRONT.png"));
-      Icon bg = new ImageIcon(getClass().getResource("background.jpg"));
-
-      class PokeField extends JPanel{
-
-         public PokeField(){
-            setPreferredSize(new Dimension(480,140));
-         }
-         protected void paintComponent(Graphics g){
-            bg.paintIcon(jfGame,g,-0,0);
-            mPoke.paintIcon(jfGame,g,50,90);
-            tPoke.paintIcon(jfGame,g,380,10);
-         }
-
-      }
-      PokeField pf = new PokeField();
+      pf = new PokeField();
       jfGame.add(pf);
 
       jfGame.add(jpSouth, BorderLayout.SOUTH);
@@ -597,7 +443,7 @@ public class PokeClient extends JFrame implements ActionListener {
       jtaOut.setText("What would you like to do?");
 
       jfGame.setTitle("PokeClient - Game");
-      jfGame.setSize(480, 224);
+      jfGame.setSize(480, 265);
       jfGame.setResizable(false);
       jfGame.setLocationRelativeTo(chat);
       //jfGame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -614,6 +460,7 @@ public class PokeClient extends JFrame implements ActionListener {
          }//end of windowClosing
       });
       */
+      updatePokemon();
    }//end of game window
 
    public void closeGameWindow(){
@@ -625,6 +472,112 @@ public class PokeClient extends JFrame implements ActionListener {
 //End of gui method threads------------------------------
 
 //OTHER METHODS------------------------------------------
+   int pppp = 0;
+   public void updatePokemon(){
+
+      //TESTTEST
+      yourPokemon = party.get(pppp).getName();
+      theirPokemon = "Charizard";
+      pppp++;
+      //TESTTEST
+      //update buttons
+      System.out.println(party);
+      jbOne.setHorizontalAlignment(SwingConstants.LEFT);
+      jbTwo.setHorizontalAlignment(SwingConstants.LEFT);
+      jbThree.setHorizontalAlignment(SwingConstants.LEFT);
+      jbFour.setHorizontalAlignment(SwingConstants.LEFT);
+      for(int i = 0; i < party.size();i++){
+         if(yourPokemon.equals(party.get(i).getName())){
+            jbOne.setText("<html><h1 style='font-size:10px; color:black;margin:0;padding:0;'>"+party.get(i).getM1Name()+"</h1></html>");
+            jbTwo.setText("<html><h1 style='font-size:10px; color:black;margin:0;padding:0;'>"+party.get(i).getM2Name()+"</h1></html>");
+            jbThree.setText("<html><h1 style='font-size:10px; color:black;margin:0;padding:0;'>"+party.get(i).getM3Name()+"</h1></html>");
+            jbFour.setText("<html><h1 style='font-size:10px; color:black;margin:0;padding:0;'>"+party.get(i).getM4Name()+"</h1></html>");
+         }//end of if
+      }//end of for
+
+      if( yourPokemon.equals("Absol")) {
+          mPoke = new ImageIcon(getClass().getResource("AbsolBACK.png"));
+      }
+      if( yourPokemon.equals( "Bulbasaur")) {
+         mPoke = new ImageIcon(getClass().getResource("BulbasaurBACK.png"));
+      }
+      if( yourPokemon.equals( "Charizard")) {
+         mPoke = new ImageIcon(getClass().getResource("CharizardBACK.png"));
+      }
+      if( yourPokemon.equals( "Cyndaquill")) {
+         mPoke = new ImageIcon(getClass().getResource("CyndiquillBACK.png"));
+      }
+      if( yourPokemon.equals( "Drifblim")) {
+         mPoke = new ImageIcon(getClass().getResource("DrifblimBACK.png"));
+      }
+      if( yourPokemon.equals( "Feraligatr")) {
+         mPoke = new ImageIcon(getClass().getResource("FeraligatrBACK.png"));
+      }
+      if( yourPokemon.equals( "Gardevoir")) {
+         mPoke = new ImageIcon(getClass().getResource("GardevoirBACK.png"));
+      }
+      if( yourPokemon.equals( "Kadabra")) {
+         mPoke = new ImageIcon(getClass().getResource("KadabraBACK.png"));
+      }
+      if( yourPokemon.equals( "Milotic")) {
+         mPoke = new ImageIcon(getClass().getResource("MiloticBACK.png"));
+      }
+      if( yourPokemon.equals( "Pikachu")) {
+         mPoke = new ImageIcon(getClass().getResource("PikachuBACK.png"));
+      }
+      if( yourPokemon.equals( "Scizor")) {
+         mPoke = new ImageIcon(getClass().getResource("ScizorBACK.png"));
+      }
+      if( yourPokemon.equals( "Scolipede")) {
+         mPoke = new ImageIcon(getClass().getResource("ScolipedeBACK.png"));
+      }
+
+      //enemy Pokemon
+      if( theirPokemon.equals( "Absol")) {
+         tPoke = new ImageIcon(getClass().getResource("AbsolFRONT.png"));
+      }
+      if( theirPokemon.equals( "Bulbasaur")) {
+         tPoke = new ImageIcon(getClass().getResource("BulbasaurFRONT.png"));
+      }
+      if( theirPokemon.equals( "Charizard")) {
+         tPoke = new ImageIcon(getClass().getResource("CharizardFRONT.png"));
+      }
+      if( theirPokemon.equals( "Cyndaquill")) {
+         tPoke = new ImageIcon(getClass().getResource("CyndiquillFRONT.png"));
+      }
+      if( theirPokemon.equals( "Drifblim")) {
+         tPoke = new ImageIcon(getClass().getResource("DrifblimFRONT.png"));
+      }
+      if( theirPokemon.equals( "Feraligatr")) {
+         tPoke = new ImageIcon(getClass().getResource("FeraligatrFRONT.png"));
+      }
+      if( theirPokemon.equals( "Gardevoir")) {
+         tPoke = new ImageIcon(getClass().getResource("GardevoirFRONT.png"));
+      }
+      if( theirPokemon.equals( "Kadabra")) {
+         tPoke = new ImageIcon(getClass().getResource("KadabraFRONT.png"));
+      }
+      if( theirPokemon.equals( "Milotic")) {
+         tPoke = new ImageIcon(getClass().getResource("MiloticFRONT.png"));
+      }
+      if( theirPokemon.equals( "Pikachu")) {
+         tPoke = new ImageIcon(getClass().getResource("PikachuFRONT.png"));
+      }
+      if( theirPokemon.equals( "Scizor")) {
+         tPoke = new ImageIcon(getClass().getResource("ScizorFRONT.png"));
+      }
+      if( theirPokemon.equals( "Scolipede")) {
+         tPoke = new ImageIcon(getClass().getResource("ScolipedeFRONT.png"));
+      }
+
+
+
+
+   }//end of update pokemon
+
+   public void repaintPokemon(){
+         pf.repaint();
+   }
 
    public void remakeComboBox(String[] n){
       String[] reDrawNameList = n;
@@ -700,6 +653,10 @@ public class PokeClient extends JFrame implements ActionListener {
    }//end of music
 
    public void doFight() {
+      yourPokemon = "Milotic";
+      theirPokemon = "Absol";
+      updatePokemon();
+      repaintPokemon();
       //TODO add run event
    }
 
@@ -802,10 +759,63 @@ public class PokeClient extends JFrame implements ActionListener {
             index += 1;
          }//end of for
          choosePokemonFrame.setVisible(false);
-         setUpChatWindow();
 
-         lobbyThreadPrep();
+         for(int i = 0; i < chosenPokemon.length; i++){
+            if(chosenPokemon[i].equals("Absol")){
+               Absol ab = new Absol();
+               party.add(ab);
+            }
+            else if(chosenPokemon[i].equals("Pikachu")){
+               Pikachu pika = new Pikachu();
+               party.add(pika);
+            }
+            else if(chosenPokemon[i].equals("Charizard")){
+               Charizard chari = new Charizard();
+               party.add(chari);
+            }
+            else if(chosenPokemon[i].equals("Bulbasaur")){
+               Bulbasaur bulba = new Bulbasaur();
+               party.add(bulba);
+            }
+            else if(chosenPokemon[i].equals("Cyndaquil")){
+               Cyndaquil cyndi = new Cyndaquil();
+               party.add(cyndi);
+            }
+            else if(chosenPokemon[i].equals("Drifblim")){
+               Drifblim drif = new Drifblim();
+               party.add(drif);
+            }
+            else if(chosenPokemon[i].equals("Feraligatr")){
+               Feraligatr fera = new Feraligatr();
+               party.add(fera);
+            }
+            else if(chosenPokemon[i].equals("Gardevoir")){
+               Gardevoir gardi = new Gardevoir();
+               party.add(gardi);
+            }
+            else if(chosenPokemon[i].equals("Kadabra")){
+               Kadabra kad = new Kadabra();
+               party.add(kad);
+            }
+            else if(chosenPokemon[i].equals("Milotic")){
+               Milotic milo = new Milotic();
+               party.add(milo);
+            }
+            else if(chosenPokemon[i].equals("Scizor")){
+               Scizor sciz = new Scizor();
+               party.add(sciz);
+            }
+            else if(chosenPokemon[i].equals("Scolipede")){
+               Scolipede scoli = new Scolipede();
+               party.add(scoli);
+            }
+         }//end of for
 
+         //setUpChatWindow();
+
+         //lobbyThreadPrep();
+
+         setUpGameWindow();
       }//end of if
 
    } // end doConfirm()
@@ -991,8 +1001,14 @@ public class PokeClient extends JFrame implements ActionListener {
          try{
             Thread.sleep(1000);
             setUpGameWindow();
-            Thread.sleep(5000);
             System.out.println("Set up! "+name);
+
+            /*Repainting pokemon
+            yourPokemon = "Milotic";
+            theirPokemon = "Absol";
+            updatePokemon();
+            repaintPokemon();
+            */
 
             /*
             while(battling){
@@ -1075,5 +1091,18 @@ public class PokeClient extends JFrame implements ActionListener {
       }
    }
 //END OF THREAD CLASSES==================================
+//JPanel class to be repainted
+   public class PokeField extends JPanel{
+
+      public PokeField(){
+         setPreferredSize(new Dimension(480,140));
+      }
+      protected void paintComponent(Graphics g){
+         bg.paintIcon(jfGame,g,-0,0);
+         mPoke.paintIcon(jfGame,g,50,90);
+         tPoke.paintIcon(jfGame,g,380,10);
+      }
+
+   }//end of pokeField
 
 }//end of main class

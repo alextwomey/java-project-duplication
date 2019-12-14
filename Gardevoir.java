@@ -5,12 +5,12 @@ import java.util.Random;
  * @original_author Alex Twomey
  *@author Tyler Repard
  */
- 
- 
- 
+
+
+
 public class Gardevoir extends Pokemon{
    private int CONSTANT = 22;
-   
+
    public Gardevoir(){
       //Change all of these <<<<<<<<<<<<<
       setName("Gardevoir");
@@ -18,38 +18,38 @@ public class Gardevoir extends Pokemon{
       setAtt(65);
       setDef(65);
       setSpd(80);
-      
+
       setType("Psychic");
-      
+
       setM1PP(25);
       setM2PP(15);
       setM3PP(20);
       setM4PP(15);
-      
+
       setM1Name("Confusion");
       setM2Name("Double Team");
       setM3Name("Hypnosis");
-      setM4Name("Moonblast");
+      setM4Name("Moon Blast");
    }
-   
+
    public void move1(Pokemon enemy){
       //CHANGE NAME v<<<<<<<<<<<<<
       //Confusion
-      
+
       //DO NOT CHANGE THESE 5 v
       int randCrit = (int)(22 * Math.random()+1);
       boolean crit = false;
       boolean superEffective = false;
       boolean reduced = false;
       boolean moveHit = true;
-      
+
       //CHANGE ATTACK TO FALSE IF MOVE DOES NO DAMAGE<<<<<<<<<<<<<
       boolean attack = true;
       //CHANGE TYPE TO TYPE OF MOVE POWER AND ACCURACY<<<<<<<<<<<<<
       String type = "Psychic";
       int power = 50;
       int accuracy = 80;
-      
+
       //DO NOT CHANGE BELOW THIS
       int damage = ((CONSTANT * power * ( getAtt() / enemy.getDef() )) /50);
       if(randCrit == CONSTANT){
@@ -71,7 +71,7 @@ public class Gardevoir extends Pokemon{
          if(hit(accuracy)){
             //DO STATUS EFFECT STUFF HERE (ill figure out later)
          }
-         
+
       }
       lowerM1PP();
    }
@@ -79,22 +79,22 @@ public class Gardevoir extends Pokemon{
       //CHANGE NAME v <<<<<<<<<<<<<
       //Double Team
       // *** Increases user's evasion ***
-      
+
       //DO NOT CHANGE THESE 5 v
       boolean crit = false;
       boolean superEffective = false;
       boolean reduced = false;
       boolean moveHit = true;
-      
+
       int randCrit = (int)(22 * Math.random()+1);
-      
+
       //CHANGE ATTACK TO FALSE IF MOVE DOES NO DAMAGE<<<<<<<<<<<<<
       boolean attack = false;
        //CHANGE TYPE TO TYPE OF MOVE POWER AND ACCURACY<<<<<<<<<<<<<
       String type = "Normal";
       int power = 0;
       int accuracy = 100;
-      
+
       //DO NOT CHANGE BELOW THIS
       int damage = ((CONSTANT * power * ( getAtt() / enemy.getDef() )) /50);
       if(randCrit == CONSTANT){
@@ -123,21 +123,21 @@ public class Gardevoir extends Pokemon{
       //CHANGE NAME v <<<<<<<<<<<<<
       // Hypnosis
       // *** Puts opponent to sleep ***
-      
+
       //DO NOT CHANGE THESE 5 v
       boolean crit = false;
       boolean superEffective = false;
       boolean reduced = false;
       boolean moveHit = true;
       int randCrit = (int)(22 * Math.random()+1);
-      
+
       //CHANGE ATTACK TO FALSE IF MOVE DOES NO DAMAGE<<<<<<<<<<<<<
       boolean attack = false;
        //CHANGE TYPE TO TYPE OF MOVE POWER AND ACCURACY<<<<<<<<<<<<<
       String type = "Psychic";
       int power = 0;
       int accuracy = 60;
-      
+
       //DO NOT CHANGE BELOW THIS
       int damage = ((CONSTANT * power * ( getAtt() / enemy.getDef() )) /50);
       if(randCrit == CONSTANT){
@@ -165,21 +165,21 @@ public class Gardevoir extends Pokemon{
    public void move4(Pokemon enemy){
       //CHANGE NAME v<<<<<<<<<<<<<
       //Moonblast
-      
+
       //DO NOT CHANGE THESE 5 v
       boolean crit = false;
       boolean superEffective = false;
       boolean reduced = false;
       boolean moveHit = true;
       int randCrit = (int)(22 * Math.random()+1);
-      
+
       //CHANGE ATTACK TO FALSE IF MOVE DOES NO DAMAGE<<<<<<<<<<<<<
       boolean attack = true;
        //CHANGE TYPE TO TYPE OF MOVE POWER AND ACCURACY<<<<<<<<<<<<<
       String type = "Fairy";
       int power = 95;
       int accuracy = 100;
-      
+
       //DO NOT CHANGE BELOW THIS
       int damage = ((CONSTANT * power * ( getAtt() / enemy.getDef() )) /50);
       if(randCrit == CONSTANT){
@@ -204,13 +204,13 @@ public class Gardevoir extends Pokemon{
       }
       lowerM4PP();
    }
-   
-   
+
+
    //---------------------------------------------------------
    // DO NOT CHANGE BELOW THIS
    //---------------------------------------------------------
    public boolean checkSE(String myType, String theirType){
-       
+
        if(theirType.equals("Fire")){
          if(myType.equals("Water")||myType.equals("Ground")||myType.equals("Rock")){
             return true;
@@ -219,12 +219,12 @@ public class Gardevoir extends Pokemon{
          if(myType.equals("Grass")||myType.equals("Electric")){
             return true;
          }
-       
+
        }else if(theirType.equals("Psychic")){
          if(myType.equals("Bug")||myType.equals("Ghost")||myType.equals("Dark")){
             return true;
          }
-       
+
        }else if(theirType.equals("Bug")){
          if(myType.equals("Fire")||myType.equals("Flying")||myType.equals("Rock")){
             return true;
@@ -233,17 +233,17 @@ public class Gardevoir extends Pokemon{
          if(myType.equals("Ground")){
             return true;
          }
-       
+
        }else if(theirType.equals("Ghost")){
          if(myType.equals("Ghost")||myType.equals("Dark")){
             return true;
          }
-       
+
        }else if(theirType.equals("Dark")){
          if(myType.equals("Fighting")||myType.equals("Bug")||myType.equals("Fairy")){
             return true;
          }
-       
+
        }
        else if(theirType.equals("Grass")){
          if(myType.equals("Fire")||myType.equals("Ice")||myType.equals("Poison")||myType.equals("Flying")||myType.equals("Bug")){
@@ -251,10 +251,10 @@ public class Gardevoir extends Pokemon{
          }
        }
        return false;
-       
+
    }
-   
-   
+
+
 
       public boolean checkNVE(String myType, String theirType){
          if(myType.equals("Fire")){
@@ -265,12 +265,12 @@ public class Gardevoir extends Pokemon{
          if(theirType.equals("Grass")||theirType.equals("Electric")){
             return true;
          }
-       
+
        }else if(myType.equals("Psychic")){
          if(theirType.equals("Bug")||theirType.equals("Ghost")||theirType.equals("Dark")){
             return true;
          }
-       
+
        }else if(myType.equals("Bug")){
          if(theirType.equals("Fire")||theirType.equals("Flying")||theirType.equals("Rock")){
             return true;
@@ -279,27 +279,27 @@ public class Gardevoir extends Pokemon{
          if(theirType.equals("Ground")){
             return true;
          }
-       
+
        }else if(myType.equals("Ghost")){
          if(theirType.equals("Ghost")||theirType.equals("Dark")){
             return true;
          }
-       
+
        }else if(myType.equals("Dark")){
          if(theirType.equals("Fighting")||theirType.equals("Bug")||theirType.equals("Fairy")){
             return true;
          }
-       
+
        }
        else if(myType.equals("Grass")){
          if(theirType.equals("Fire")||theirType.equals("Ice")||theirType.equals("Poison")||theirType.equals("Flying")||theirType.equals("Bug")){
             return true;
          }
        }
-      
+
          return false;
       }
-      
+
       public boolean hit(int acc){
          double test = Math.random();
          double accTest = (double)acc;
@@ -308,6 +308,6 @@ public class Gardevoir extends Pokemon{
             return false;
          }
          return true;
-         
+
       }
 }
