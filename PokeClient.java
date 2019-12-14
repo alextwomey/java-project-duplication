@@ -66,6 +66,8 @@ public class PokeClient extends JFrame implements ActionListener {
    private JCheckBox jcbPikachu;
    private JCheckBox jcbScizor;
    private JCheckBox jcbScolipede;
+   //JFrame for game window
+   private JFrame jfGame;
 
 //END OF GUI ATTRIBUTES------------------------------------
 
@@ -109,8 +111,12 @@ public class PokeClient extends JFrame implements ActionListener {
    }//end of main
 
    public PokeClient() {
-      //
-      setupChoiceWindow();
+      //START HERE
+      //setupChoiceWindow();
+
+      //TEST HERE
+      setUpGameWindow();
+
 
       //setUpChatWindow();
 
@@ -389,10 +395,14 @@ public class PokeClient extends JFrame implements ActionListener {
    public void setUpGameWindow(){
       //starts music thread
       tm = new ThreadMusic();
-      tm.start();
+      //tm.start();
+
+      jfGame = new JFrame();
 
       JPanel jpSouth = new JPanel(new GridLayout(1, 2));
       JPanel jpRunFight = new JPanel(new GridLayout(2, 3));
+
+      /*
 
       JPanel friendlyPokemon = new JPanel( new FlowLayout());
       JPanel enemyPokemon = new JPanel( new FlowLayout());
@@ -541,8 +551,27 @@ public class PokeClient extends JFrame implements ActionListener {
       this.add( friendlyPokemon, BorderLayout.WEST);
       this.add( enemyPokemon, BorderLayout.EAST);
 
+      */
+      Icon mPoke = new ImageIcon(getClass().getResource("BulbasaurBACK.png"));
+      Icon tPoke = new ImageIcon(getClass().getResource("KadabraFRONT.png"));
+      Icon bg = new ImageIcon(getClass().getResource("background.jpg"));
 
-      this.add(jpSouth, BorderLayout.SOUTH);
+      class PokeField extends JPanel{
+
+         public PokeField(){
+            setPreferredSize(new Dimension(480,140));
+         }
+         protected void paintComponent(Graphics g){
+            bg.paintIcon(jfGame,g,-0,0);
+            mPoke.paintIcon(jfGame,g,50,90);
+            tPoke.paintIcon(jfGame,g,380,10);
+         }
+
+      }
+      PokeField pf = new PokeField();
+      jfGame.add(pf);
+
+      jfGame.add(jpSouth, BorderLayout.SOUTH);
 
       // Add components to south
       jpSouth.add(jspOut);
@@ -567,13 +596,13 @@ public class PokeClient extends JFrame implements ActionListener {
       jtaOut.setEditable(false);
       jtaOut.setText("What would you like to do?");
 
-      this.setTitle("PokeClient - Game");
-      this.setSize(480, 224);
-      this.setResizable(false);
-      this.setLocationRelativeTo(chat);
-      this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-      this.setVisible(true);
-
+      jfGame.setTitle("PokeClient - Game");
+      jfGame.setSize(480, 224);
+      jfGame.setResizable(false);
+      jfGame.setLocationRelativeTo(chat);
+      //jfGame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+      jfGame.setVisible(true);
+      /*
       this.addWindowListener(new java.awt.event.WindowAdapter() {
          @Override
          public void windowClosing(java.awt.event.WindowEvent windowEvent) {
@@ -584,7 +613,7 @@ public class PokeClient extends JFrame implements ActionListener {
             JOptionPane.INFORMATION_MESSAGE);
          }//end of windowClosing
       });
-
+      */
    }//end of game window
 
    public void closeGameWindow(){
