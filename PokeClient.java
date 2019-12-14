@@ -1,7 +1,7 @@
 /**
- * @author Ethan Ruszanowski
- * @version 1.0.1
- * */
+* @author Alex Twomey, Ethan Ruszanowski
+* @version 1.0.1
+* */
 
 import java.awt.*;
 import javax.swing.*;
@@ -18,358 +18,238 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
 /**
- * Main class
- */
+* Main class
+*/
 public class PokeClient extends JFrame implements ActionListener {
-  // Create JButtons
-  private JButton jbFight = new JButton("Fight");
-  private JButton jbRun = new JButton("Run");
-  private JButton jbSend = new JButton("Send");
-  private JButton jBattle;
-  private JButton jbConfirm;
+//GUI ATTRIBUTES------------------------------------------
 
-  //networking attributes
-  private JTextPane myReadArea;
-  private Socket s;
-  private Socket s2;
-  private Socket s3;
-  private boolean connected = false;
-  private String ipaddress = "null";
-  private String name= "null";
-  private int PORT = 27015;
-  private int PORT2 = 27016;
-  private int PORT3 = 27017;
-  private OutputStream out;
-  private PrintWriter pout;
-  private boolean listFlag = false;
-  private ArrayList<String> cNames = new ArrayList<String>();
-  private boolean battling = false;
+   // Create JButtons
+   private JButton jbFight = new JButton("Fight");
+   private JButton jbRun = new JButton("Run");
+   private JButton jbSend = new JButton("Send");
+   private JButton jbOne = new JButton("One");
+   private JButton jbTwo = new JButton("Two");
+   private JButton jbThree = new JButton("Three");
+   private JButton jbFour = new JButton("Four");
+   private JButton jBattle;
+   private JButton jbConfirm;
+   //Attribute for lobby list
+   private JPanel jpList;
+   private JTextArea jtList;
+   private JComboBox nameSelect;
+   private DefaultComboBoxModel model = new DefaultComboBoxModel();
+   // Output text area
+   private JTextArea jtaOut = new JTextArea(2, 10);
+   private JScrollPane jspOut = new JScrollPane(jtaOut);
+   // Chat assets
+   private JTextPane jtaChat = new JTextPane();
+   private JScrollPane jspChat = new JScrollPane(jtaChat);
+   private JFrame chat;
+   // Message box
+   private JTextArea jtaMessageBox = new JTextArea(2, 10);
+   private JScrollPane jspMessageBox = new JScrollPane(jtaMessageBox);
+   //holders for updating graphics
+   private String yourPokemon = "";
+   private String theirPokemon = "";
+   // Global JFrame for choosing Pokemon
+   private JFrame choosePokemonFrame;
+   // Global JCheckBox's
+   private JCheckBox jcbAbsol;
+   private JCheckBox jcbBulb;
+   private JCheckBox jcbCharizard;
+   private JCheckBox jcbCyndaquill;
+   private JCheckBox jcbDrifblim;
+   private JCheckBox jcbFeraligatr;
+   private JCheckBox jcbGardevoir;
+   private JCheckBox jcbKadabra;
+   private JCheckBox jcbMilotic;
+   private JCheckBox jcbPikachu;
+   private JCheckBox jcbScizor;
+   private JCheckBox jcbScolipede;
 
-  //TEST ATTRIBUTE FOR POKEMON ARRAY
-  String[] pokeArray = {"Pikachu", "Charizard"};
+//END OF GUI ATTRIBUTES------------------------------------
 
-  //synchronized assets
-  String syncMe = "pls pls pls sync meee";
+//NETWORKING ATTRIBUTES------------------------------------
 
-  //Attribute for lobby list
-  private JPanel jpList;
-  private JTextArea jtList;
-  private JComboBox nameSelect;
-  private DefaultComboBoxModel model = new DefaultComboBoxModel();
-  // Output text area
-  private JTextArea jtaOut = new JTextArea(2, 10);
-    private JScrollPane jspOut = new JScrollPane(jtaOut);
+   //networking attributes
+   private JTextPane myReadArea;
+   private Socket s;
+   private Socket s2;
+   private Socket s3;
+   private boolean connected = false;
+   private String ipaddress = "null";
+   private String name= "null";
+   private int PORT = 27015;
+   private int PORT2 = 27016;
+   private int PORT3 = 27017;
+   private OutputStream out;
+   private PrintWriter pout;
+   private boolean listFlag = false;
+   private ArrayList<String> cNames = new ArrayList<String>();
+   private boolean battling = false;
 
-  // Chat assets
-  private JTextPane jtaChat = new JTextPane();
-    private JScrollPane jspChat = new JScrollPane(jtaChat);
-  private JFrame chat;
+//END OF NETWORKING ATTRUBITES-----------------------------
 
-  // Message box
-  private JTextArea jtaMessageBox = new JTextArea(2, 10);
-    private JScrollPane jspMessageBox = new JScrollPane(jtaMessageBox);
+//LOGIC ATTRIBUTES-----------------------------------------
+   //music thread atrribute
+   ThreadMusic tm;
+   //stop music thread attribute
+   boolean musicContinue;
+   //synchronized assets
+   String syncMe = "pls pls pls sync meee";
+   // ArrayList for chosen Pokemon
+   private ArrayList<JCheckBox> jcbList = new ArrayList<JCheckBox>();
+   //Array for Poemon names
+   private String[] chosenPokemon = new String[6];
 
-  // ArrayList for chosen Pokemon
-  private ArrayList<JCheckBox> jcbList = new ArrayList<JCheckBox>();
-  //Array for Poemon names
-  private String[] chosenPokemon = new String[ 6];
-  // Global JCheckBox's
-  private JCheckBox jcbAbsol;
-  private JCheckBox jcbBulb;
-  private JCheckBox jcbCharizard;
-  private JCheckBox jcbCyndaquill;
-  private JCheckBox jcbDrifblim;
-  private JCheckBox jcbFeraligatr;
-  private JCheckBox jcbGardevoir;
-  private JCheckBox jcbKadabra;
-  private JCheckBox jcbMilotic;
-  private JCheckBox jcbPikachu;
-  private JCheckBox jcbScizor;
-  private JCheckBox jcbScolipede;
-  // Global JFrame for choosing Pokemon
-  private JFrame choosePokemonFrame;
+//END OF LOGIC ATTRIBUTES----------------------------------
 
-  public static void main(String[] args) {
-		new PokeClient();
-	}
+   public static void main(String[] args) {
+      new PokeClient();
+   }//end of main
 
-	public PokeClient() {
+   public PokeClient() {
       //
-      //setupChoiceWindow();
+      setupChoiceWindow();
 
-      setUpChatWindow();
+      //setUpChatWindow();
 
-      lobbyThreadPrep();
+      //lobbyThreadPrep();
       //setupWindow();
 
 
       //setUpGameWindow();
 
-     // background music method called to run automatically
-     //music();
-	}
+   }//End of PokeClient
+
+//NETWORKING PREP THREAD METHODS--------------------------
+
    //Networking chat start area, connects and starts thread
    public void chatThreadPrep(){
       try{
-        boolean nameSelected = false;
-        boolean ipEntered = false;
-        while(!ipEntered){
-          ipaddress = JOptionPane.showInputDialog("Enter Ip Address to connect to: ");
-          if(ipaddress.equals("null")||ipaddress.equals("")){
-            JOptionPane.showMessageDialog(null, "Please enter an Ip address");
-          }else{
-            ipEntered = true;
-            //System.out.println(ipaddress);
-          }
-        }
+         boolean nameSelected = false;
+         boolean ipEntered = false;
 
-        while(!nameSelected){
-          name = JOptionPane.showInputDialog("Enter your name:  ");
-          if(name.equals("null")|| name.equals("")){
-            JOptionPane.showMessageDialog(null, "Please enter a name");
-          }else{
-            nameSelected = true;
-            //System.out.println(name);
-          }
-        }
-        Thread chatThread = new ThreadChatClient(ipaddress);
-        chatThread.start();
+         while(!ipEntered){
+            ipaddress = JOptionPane.showInputDialog("Enter Ip Address to connect to: ");
+            if(ipaddress.equals("null")||ipaddress.equals("")){
+               JOptionPane.showMessageDialog(null, "Please enter an Ip address");
+            }else{
+               ipEntered = true;
+               //System.out.println(ipaddress);
+            }//end of else
+         }//end of while
+         ipaddress = ipaddress.replace("\n","").replace("\r","");
+         ipaddress = ipaddress.trim();
+         while(!nameSelected){
+            name = JOptionPane.showInputDialog("Enter your name:  ");
+            if(name.equals("null")|| name.equals("")){
+               JOptionPane.showMessageDialog(null, "Please enter a name");
+            }else{
+               nameSelected = true;
+               //System.out.println(name);
+            }//end of else
+         }//end of while
+         name = name.replace("\n","").replace("\r","");
+         name = name.trim();
+         Thread chatThread = new ThreadChatClient(ipaddress);
+         chatThread.start();
 
       }catch(Exception e){}
-   }
+   }//end ofchat thread prep
+
+   //Starting a battle thread
    public void battleThreadPrep(String eN){
-     String ee = eN;
-
-     try{
-       ThreadBattle battleThread = new ThreadBattle(ee);
-       battleThread.start();
-     }catch(Exception e){
-       e.printStackTrace();
-     }
+      String ee = eN;
+      try{
+         ThreadBattle battleThread = new ThreadBattle(ee);
+         battleThread.start();
+      }catch(Exception e){
+         e.printStackTrace();
+      }
    }
+
+   //Starting lobby thread
    public void lobbyThreadPrep(){
-     try{
-       Thread lobbyThread = new ThreadLobby();
-       lobbyThread.start();
-     }catch(Exception e){
-       e.printStackTrace();
-     }
+      try{
+         Thread lobbyThread = new ThreadLobby();
+         lobbyThread.start();
+      }catch(Exception e){
+         e.printStackTrace();
+      }
 
    }
+
+//End of networking prep thread methods------------------
+
+//GUI THREAD methods--------------------------------------
 
    public void setUpLobby(){
-     JPanel lobby = new JPanel(new BorderLayout());
+      JPanel lobby = new JPanel(new BorderLayout());
 
-     lobby.setSize(400, 400);
+      lobby.setSize(400, 400);
 
+      JPanel jpTitle = new JPanel(new FlowLayout());
+      JLabel jlChoose = new JLabel("Please choose someone to battle!");
+      jpTitle.add(jlChoose);
 
+      jpList = new JPanel(new BorderLayout());
+      jtList = new JTextArea(15,15);
+      jtList.setEditable(false);
+      jpList.add(jtList,"Center");
 
-     JPanel jpTitle = new JPanel(new FlowLayout());
-     JLabel jlChoose = new JLabel("Please choose someone to battle!");
-     jpTitle.add(jlChoose);
+      model = new DefaultComboBoxModel();
+      nameSelect = new JComboBox();
+      nameSelect.setModel(model);
+      jpList.add(nameSelect,"South");
 
+      JPanel jpBattle = new JPanel(new FlowLayout());
+      jBattle = new JButton("Battle!");
+      jpBattle.add(jBattle);
 
-     jpList = new JPanel(new BorderLayout());
-     jtList = new JTextArea(15,15);
-     jtList.setEditable(false);
-     jpList.add(jtList,"Center");
+      lobby.add(jpTitle, "North");
+      lobby.add(jpList, "Center");
+      lobby.add(jpBattle,"South");
 
-     //Dummy ARray for combobox
-
-     model = new DefaultComboBoxModel();
-     nameSelect = new JComboBox();
-     nameSelect.setModel(model);
-     jpList.add(nameSelect,"South");
-
-
-     JPanel jpBattle = new JPanel(new FlowLayout());
-     jBattle = new JButton("Battle!");
-     jpBattle.add(jBattle);
-
-
-     lobby.add(jpTitle, "North");
-     lobby.add(jpList, "Center");
-     lobby.add(jpBattle,"South");
-
-     chat.add(lobby,"East");
-     //lobby.setVisible(true);
-     jBattle.addActionListener(this);
+      chat.add(lobby,"East");
+      //lobby.setVisible(true);
+      jBattle.addActionListener(this);
 
 
-   }
+   }//end of lobby
 
-   public void remakeComboBox(String[] n){
-     String[] reDrawNameList = n;
-     model = new DefaultComboBoxModel(reDrawNameList);
-     nameSelect.setModel(model);
-   }
+   public void setUpChatWindow(){
+      // Chat window setup
+      chat = new JFrame();
+      JPanel jpChatSouth = new JPanel(new GridLayout(1, 2));
+      chat.setTitle("PokeClient - Chat");
+      chat.setSize(800, 400);
+      chat.setResizable(false);
+      chat.setLocation(300,200);
+      // Prevent close from chat window
+      chat.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-   public void redrawNames(String nS){
-     String nameString = nS;
-     String[] arrOfName = nameString.split(",");
-     String[] arrOfNameSansMe = new String[arrOfName.length-1];
-     String namesNewL = "";
-     for(int i = 0; i < arrOfName.length; i++){
-       if(arrOfName[i].equals(name)){
-         namesNewL = namesNewL +"\nMe: "+arrOfName[i]+",";
-       }
-       else{
-       namesNewL = namesNewL +"\n"+arrOfName[i]+",";
-     }
-     }
-     jtList.setText(namesNewL);
-     ArrayList<String> al = new ArrayList<String>(Arrays.asList(arrOfName));
-     al.remove(name);
-     arrOfNameSansMe = al.toArray(arrOfNameSansMe);
-     remakeComboBox(arrOfNameSansMe);
-   }
-
-  public void setUpChatWindow(){
-    // Chat window setup
-    chat = new JFrame();
-    JPanel jpChatSouth = new JPanel(new GridLayout(1, 2));
-    chat.setTitle("PokeClient - Chat");
-    chat.setSize(800, 400);
-    chat.setResizable(false);
-    chat.setLocation(300,200);
-    // Prevent close from chat window
-    chat.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-    // Add components to chat center
-    JPanel jpChatHolder = new JPanel(new BorderLayout());
-    jpChatHolder.setSize(400,400);
-    jpChatHolder.add(jspChat, "Center");
+      // Add components to chat center
+      JPanel jpChatHolder = new JPanel(new BorderLayout());
+      jpChatHolder.setSize(400,400);
+      jpChatHolder.add(jspChat, "Center");
 
 
-    // Add components to jpChatSouth
+      // Add components to jpChatSouth
 
-    jpChatSouth.add(jspMessageBox);
-    jpChatSouth.add(jbSend);
-    jbSend.addActionListener(this);
-    jtaChat.setEditable(false);
-    jpChatHolder.add(jpChatSouth, BorderLayout.SOUTH);
-    chat.add(jpChatHolder, "Center");
-
-
-    setUpLobby();
-    chatThreadPrep();
-    chat.setVisible(true);
-  }
-  public void setUpGameWindow(){
-    //starts music thread
-    ThreadMusic tm = new ThreadMusic();
-    tm.start();
-
-    JPanel jpSouth = new JPanel(new GridLayout(1, 2));
-    JPanel jpRunFight = new JPanel(new GridLayout(1, 2));
-
-    this.add(jpSouth, BorderLayout.SOUTH);
-
-    // Add components to south
-    jpSouth.add(jspOut);
-    jpSouth.add(jpRunFight);
-    jpRunFight.add(jbRun);
-    jpRunFight.add(jbFight);
-
-    // Add action stuff
-    jbFight.addActionListener(this);
-    jbRun.addActionListener(this);
-    jbSend.addActionListener(this);
-
-    // Set up jtaOut
-    jtaOut.setEditable(false);
-    jtaOut.setText("What would you like to do?");
-
-    this.setTitle("PokeClient - Game");
-    this.setSize(480, 224);
-    this.setResizable(false);
-    this.setLocation(500,601);
-    this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-    this.setVisible(true);
-    this.addWindowListener(new java.awt.event.WindowAdapter() {
-    @Override
-    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-      JOptionPane.showMessageDialog(
-        chat,
-        "Please close from the Chat window.",
-        "Oops!",
-        JOptionPane.INFORMATION_MESSAGE);
-      }
-    });
-
-  }
-
-	public void setupWindow() {
-    /*
-    JPanel jpSouth = new JPanel(new GridLayout(1, 2));
-    JPanel jpRunFight = new JPanel(new GridLayout(1, 2));
-    JPanel jpChatSouth = new JPanel(new GridLayout(1, 2));
-    this.add(jpSouth, BorderLayout.SOUTH);
-
-    // Add components to south
-    jpSouth.add(jspOut);
-    jpSouth.add(jpRunFight);
-    jpRunFight.add(jbRun);
-    jpRunFight.add(jbFight);
-
-    // Add action stuff
-    jbFight.addActionListener(this);
-    jbRun.addActionListener(this);
-    jbSend.addActionListener(this);
-
-    // Set up jtaOut
-    jtaOut.setEditable(false);
-    jtaOut.setText("What would you like to do?");
-
-    this.setTitle("PokeClient - Game");
-    this.setSize(480, 224);
-    this.setResizable(false);
-    this.setLocation(500,601);
-    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    */
-    /*
-    // Chat window setup
-    chat = new JFrame();
-    chat.setTitle("PokeClient - Chat");
-    chat.setSize(800, 400);
-    chat.setResizable(false);
-    chat.setLocation(300,200);
-    // Prevent close from chat window
-    chat.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
-    // Add components to chat center
-    JPanel jpChatHolder = new JPanel(new BorderLayout());
-    jpChatHolder.setSize(400,400);
-    jpChatHolder.add(jspChat, "Center");
+      jpChatSouth.add(jspMessageBox);
+      jpChatSouth.add(jbSend);
+      jbSend.addActionListener(this);
+      jtaChat.setEditable(false);
+      jpChatHolder.add(jpChatSouth, BorderLayout.SOUTH);
+      chat.add(jpChatHolder, "Center");
 
 
-    // Add components to jpChatSouth
+      setUpLobby();
+      chatThreadPrep();
+      chat.setVisible(true);
+   }//end of chat window
 
-    jpChatSouth.add(jspMessageBox);
-    jpChatSouth.add(jbSend);
-    jtaChat.setEditable(false);
-    jpChatHolder.add(jpChatSouth, BorderLayout.SOUTH);
-    chat.add(jpChatHolder, "Center");
-
-    // jtaChat.setWrapStyleWord(true);
-    // jtaMessageBox.setWrapStyleWord(true);
-
-    chat.addWindowListener(new java.awt.event.WindowAdapter() {
-    @Override
-    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-      JOptionPane.showMessageDialog(
-        chat,
-        "Please close from the game window.",
-        "Oops!",
-        JOptionPane.INFORMATION_MESSAGE);
-      }
-    });
-    setUpLobby();
-    chat.setVisible(true);
-    */
-	}
-
-   // window for choosing Pokemon
    public void setupChoiceWindow() {
 
       JPanel jpTitle = new JPanel( new FlowLayout());
@@ -482,128 +362,196 @@ public class PokeClient extends JFrame implements ActionListener {
       jpConfirm.add(jbConfirm);
       jbConfirm.addActionListener( this);
 
-    // Choose Pokemon window setup
-    choosePokemonFrame = new JFrame();
-    choosePokemonFrame.setTitle("Choose Your Pokemon!");
-    choosePokemonFrame.setResizable(false);
-    choosePokemonFrame.setLocation(200,100);
-    // Prevent close from chat window
-    choosePokemonFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-    //add to choosePokemonFrame
-    choosePokemonFrame.add(jpTitle, BorderLayout.NORTH);
-    choosePokemonFrame.add(jpList, BorderLayout.CENTER);
-    choosePokemonFrame.add(jpConfirm, BorderLayout.SOUTH);
-    // pack frame to match dimensions
-    choosePokemonFrame.pack();
+      // Choose Pokemon window setup
+      choosePokemonFrame = new JFrame();
+      choosePokemonFrame.setTitle("Choose Your Pokemon!");
+      choosePokemonFrame.setResizable(false);
+      choosePokemonFrame.setLocationRelativeTo(null);
+      // Prevent close from chat window
+      choosePokemonFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+      //add to choosePokemonFrame
+      choosePokemonFrame.add(jpTitle, BorderLayout.NORTH);
+      choosePokemonFrame.add(jpList, BorderLayout.CENTER);
+      choosePokemonFrame.add(jpConfirm, BorderLayout.SOUTH);
+      // pack frame to match dimensions
+      choosePokemonFrame.pack();
 
-    choosePokemonFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-    @Override
-    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-      JOptionPane.showMessageDialog(
-        choosePokemonFrame,
-        "Please close from the game window.",
-        "Oops!",
-        JOptionPane.INFORMATION_MESSAGE);
-      }
-    });
+      choosePokemonFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+         @Override
+         public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+            System.exit(0);
+         }//end of window Closing
+      });
 
-    choosePokemonFrame.setVisible(true);
-	 }
-  //action listener for getting the Battle button
+      choosePokemonFrame.setVisible(true);
+   }//end of choice window
 
-  // GUI button switch
-  public void actionPerformed(ActionEvent ae) {
+   public void setUpGameWindow(){
+      //starts music thread
+      tm = new ThreadMusic();
+      tm.start();
 
-  /*
-    switch(ae.getActionCommand()) {
-      case "Fight":
-        doFight();
-        break;
-      case "Run":
-        doRun();
-        break;
-      case "Send":
-        doSend();
-        break;
-      case "Confirm":
-         doConfirm();
-         break;
-         */
+      JPanel jpSouth = new JPanel(new GridLayout(1, 2));
+      JPanel jpRunFight = new JPanel(new GridLayout(2, 3));
 
-    Object choice = ae.getSource();
-    if(choice.equals(jBattle)){
-      String opponent = (String)nameSelect.getSelectedItem();
-      //System.out.println(opponent);
-      if(opponent != null){
-        //System.out.println(opponent);
-        ThreadBattle battleThread = new ThreadBattle(opponent);
-        battleThread.start();
-        jBattle.setEnabled(false);
-        //battling = true;
+      this.add(jpSouth, BorderLayout.SOUTH);
 
-    }
-    }else if(choice.equals(jbSend)){
-      doSend();
-    }else if(choice.equals(jbRun)){
-      doRun();
-    }
-    else if(choice.equals(jbFight)){
-      doFight();
-    }
-    else if(choice.equals(jbConfirm)){
-      doConfirm();
-    }
+      // Add components to south
+      jpSouth.add(jspOut);
+      jpSouth.add(jpRunFight);
+      jpRunFight.add(jbRun);
+      jpRunFight.add(jbOne);
+      jpRunFight.add(jbTwo);
+      jpRunFight.add(jbFight);
+      jpRunFight.add(jbThree);
+      jpRunFight.add(jbFour);
 
-  }
+      // Add action stuff
+      jbFight.addActionListener(this);
+      jbRun.addActionListener(this);
+      jbSend.addActionListener(this);
+      jbOne.addActionListener(this);
+      jbTwo.addActionListener(this);
+      jbThree.addActionListener(this);
+      jbFour.addActionListener(this);
 
-  // music() method for background music
-  public static void music() {
-       try {
-         AudioInputStream ais = AudioSystem.getAudioInputStream( new File(
-            "BackgroundMusic.wav"));
+      // Set up jtaOut
+      jtaOut.setEditable(false);
+      jtaOut.setText("What would you like to do?");
 
-            Clip clip = AudioSystem.getClip();
-            clip.open(ais);
+      this.setTitle("PokeClient - Game");
+      this.setSize(480, 224);
+      this.setResizable(false);
+      this.setLocationRelativeTo(chat);
+      this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+      this.setVisible(true);
 
-            while(true){
-               clip.start();
-               clip.loop(clip.LOOP_CONTINUOUSLY);
-            }
-       } catch( Exception e) {
-            e.printStackTrace();
-       }
+      this.addWindowListener(new java.awt.event.WindowAdapter() {
+         @Override
+         public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+            JOptionPane.showMessageDialog(
+            chat,
+            "Please close from the Chat window.",
+            "Oops!",
+            JOptionPane.INFORMATION_MESSAGE);
+         }//end of windowClosing
+      });
+
+   }//end of game window
+
+   public void closeGameWindow(){
+      this.setVisible(false);
+      musicContinue = false;
+      jBattle.setEnabled(true);
    }
 
-  public void doFight() {
-    //TODO add run event
-  }
+//End of gui method threads------------------------------
 
-  public void doRun() {
-    // TODO add fight event
-  }
+//OTHER METHODS------------------------------------------
 
-  public void doSend() {
-   try{
-      out = s.getOutputStream();
-      pout = new PrintWriter(out);
-      pout.println(name+": "+jtaMessageBox.getText().trim());
-      pout.flush();
-      String formatOut = String.format("\n%s", "Me: " + jtaMessageBox.getText().trim());
-      jtaChat.setEditable(true);
-      appendToPane(jtaChat, formatOut,Color.BLUE );
-      jtaChat.setEditable(false);
-      jtaMessageBox.setText("");
-   }catch(Exception eee){}
+   public void remakeComboBox(String[] n){
+      String[] reDrawNameList = n;
+      model = new DefaultComboBoxModel(reDrawNameList);
+      nameSelect.setModel(model);
+   }//end of remakecombo
 
-    //jtaChat.append("Me: " + jtaMessageBox.getText() + "\n");
-    //jtaMessageBox.setText("");
-    // TODO finish send method
-  }
-  
-  public void doConfirm() {
+   public void redrawNames(String nS){
+      String nameString = nS;
+      String[] arrOfName = nameString.split(",");
+      String[] arrOfNameSansMe = new String[arrOfName.length-1];
+      String namesNewL = "";
+      for(int i = 0; i < arrOfName.length; i++){
+         if(arrOfName[i].equals(name)){
+         namesNewL = namesNewL +"\nMe: "+arrOfName[i]+",";
+         }else{
+         namesNewL = namesNewL +"\n"+arrOfName[i]+",";
+         }//end of else
+      }//end of for
+      jtList.setText(namesNewL);
+      ArrayList<String> al = new ArrayList<String>(Arrays.asList(arrOfName));
+      al.remove(name);
+      arrOfNameSansMe = al.toArray(arrOfNameSansMe);
+      remakeComboBox(arrOfNameSansMe);
+   }//end of redrawnames
+
+   public void actionPerformed(ActionEvent ae) {
+      Object choice = ae.getSource();
+      if(choice.equals(jBattle)){
+         String opponent = (String)nameSelect.getSelectedItem();
+         //System.out.println(opponent);
+         if(opponent != null){
+            //System.out.println(opponent);
+            ThreadBattle battleThread = new ThreadBattle(opponent);
+            battleThread.start();
+            jBattle.setEnabled(false);
+            //battling = true;
+         }//end of inner if
+      }else if(choice.equals(jbSend)){
+         doSend();
+      }else if(choice.equals(jbRun)){
+         doRun();
+      }
+      else if(choice.equals(jbFight)){
+         doFight();
+      }
+      else if(choice.equals(jbConfirm)){
+         doConfirm();
+      }
+
+   }//end of action listener
+
+   public void music() {
+      musicContinue = true;
+      try {
+         AudioInputStream ais = AudioSystem.getAudioInputStream( new File(
+         "BackgroundMusic.wav"));
+         Clip clip = AudioSystem.getClip();
+         clip.open(ais);
+
+      while(musicContinue){
+         clip.start();
+         clip.loop(clip.LOOP_CONTINUOUSLY);
+      }//end of while
+      if(!musicContinue){
+         //clip.loop(-1);
+         clip.stop();
+         clip.flush();
+      }
+      }catch(Exception e) {
+         e.printStackTrace();
+      }
+   }//end of music
+
+   public void doFight() {
+      //TODO add run event
+   }
+
+   public void doRun() {
+      // TODO add fight event
+   }
+
+   public void doSend() {
+      try{
+         out = s.getOutputStream();
+         pout = new PrintWriter(out);
+         pout.println(name+": "+jtaMessageBox.getText().trim());
+         pout.flush();
+         String formatOut = String.format("\n%s", "Me: " + jtaMessageBox.getText().trim());
+         jtaChat.setEditable(true);
+         appendToPane(jtaChat, formatOut,Color.BLUE );
+         jtaChat.setEditable(false);
+         jtaMessageBox.setText("");
+      }catch(Exception eee){}
+
+      //jtaChat.append("Me: " + jtaMessageBox.getText() + "\n");
+      //jtaMessageBox.setText("");
+      // TODO finish send method
+   }//end of send
+
+   public void doConfirm() {
       int count = 0;
       int index = 0;
-      
+
       if(jcbAbsol.isSelected() ) {
          count += 1;
          jcbList.add( jcbAbsol);
@@ -611,7 +559,7 @@ public class PokeClient extends JFrame implements ActionListener {
       if( jcbBulb.isSelected() ) {
          count += 1;
          jcbList.add( jcbBulb);
-      }  
+      }
       if( jcbCharizard.isSelected() ) {
          count+= 1;
          jcbList.add( jcbCharizard);
@@ -668,27 +616,50 @@ public class PokeClient extends JFrame implements ActionListener {
          jcbScizor.setSelected( false);
          jcbScolipede.setSelected( false);
          jcbList.clear();
-      }
+      }//end of if
       //just enough chosen
       if( count == 6) {
          for( JCheckBox j : jcbList ) {
             String name = j.getText();
             chosenPokemon[index] = name;
             index += 1;
-         }
-      }
-      
+         }//end of for
+         choosePokemonFrame.setVisible(false);
+         setUpChatWindow();
+
+         lobbyThreadPrep();
+
+      }//end of if
+
    } // end doConfirm()
 
+   public void appendToPane(JTextPane tp, String msg, Color c){
+      //AppendToPane method taken from internet, so i can change color of text in text pane
+      //this is the only code that i have taken from somewhere else and it is only for
+      //visual purposes, I had it working with JTextArea initially but i wanted to add
+      //color,  and you can see my JTextArea commented out.
+      StyleContext sc = StyleContext.getDefaultStyleContext();
+      AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
+
+      aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
+      aset = sc.addAttribute(aset, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
+
+      int len = tp.getDocument().getLength();
+      tp.setCaretPosition(len);
+      tp.setCharacterAttributes(aset, false);
+      tp.replaceSelection(msg);
+   }
+
+//END OF OTHER METHODS----------------------------------
+
+//THREAD CLASSES========================================
    public class ThreadChatClient extends Thread{
       private String ipA;
       private String display;
 
       public ThreadChatClient(String ip){
          ipA = ip;
-
-
-      }
+      }//end of constructor
 
       public void run(){
          try{
@@ -711,7 +682,7 @@ public class PokeClient extends JFrame implements ActionListener {
             pout.println(name);
             pout.flush();
 
-            }catch(Exception e){e.printStackTrace();}
+         }catch(Exception e){e.printStackTrace();}
          while(connected){
             try{
                InputStream in = s.getInputStream();
@@ -722,164 +693,210 @@ public class PokeClient extends JFrame implements ActionListener {
                appendToPane(jtaChat, outS ,Color.RED );
                jtaChat.setEditable(false);
             }catch(Exception e){}
-         }
-      }
+         }//end of while
+      }//end of run
 
 
-   }
-   //AppendToPane method taken from internet, so i can change color of text in text pane
-      //this is the only code that i have taken from somewhere else and it is only for
-      //visual purposes, I had it working with JTextArea initially but i wanted to add
-      //color,  and you can see my JTextArea commented out.
-   private void appendToPane(JTextPane tp, String msg, Color c)
-      {
-         StyleContext sc = StyleContext.getDefaultStyleContext();
-         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
-
-         aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
-         aset = sc.addAttribute(aset, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
-
-         int len = tp.getDocument().getLength();
-         tp.setCaretPosition(len);
-         tp.setCharacterAttributes(aset, false);
-         tp.replaceSelection(msg);
-       }
+   }//end of ThredChatClient
 
    public class ThreadLobby extends Thread{
-        private boolean connected1 = true;
-         public ThreadLobby(){
+      private boolean connected1 = true;
+      private InputStream in;
+      private BufferedReader bin;
+      public ThreadLobby(){
 
-         }
+      }
 
-         public void run(){
-           try{
-              s2 = new Socket(ipaddress, PORT2);
-              //System.out.println("we made it");
-              InputStream in = s2.getInputStream();
-              BufferedReader bin = new BufferedReader(new InputStreamReader(in));
-              out = s2.getOutputStream();
-              pout = new PrintWriter(out);
-              pout.println(name);
-              pout.flush();
-              while(connected1){
-
-                String inS = bin.readLine();
-                //send to update list
-                if(inS.equals("N")){
+      public void run(){
+         try{
+            s2 = new Socket(ipaddress, PORT2);
+            //System.out.println("we made it");
+            in = s2.getInputStream();
+            bin = new BufferedReader(new InputStreamReader(in));
+            out = s2.getOutputStream();
+            pout = new PrintWriter(out);
+            pout.println(name);
+            pout.flush();
+            while(connected1){
+               in = s2.getInputStream();
+               bin = new BufferedReader(new InputStreamReader(in));
+               String inS = bin.readLine();
+               //send to update list
+               if(inS.equals("N")){
                   String holder = bin.readLine();
                   //System.out.println(holder);
                   redrawNames(holder);
                   //sent to challenge to a battle
-                }else if(inS.equals("B")){
+               }else if(inS.equals("B")){
                   //Start battle thread
                   String challenger = bin.readLine();
-                  System.out.println("Challenged! by: "+challenger);
+                  jtaChat.setEditable(true);
+                  String cBy = "\nChallenged! by: "+challenger;
+                  appendToPane(jtaChat, cBy, Color.GREEN );
+                  jtaChat.setEditable(false);
 
                   battling = true;
 
                   if(battling==true){
-                    jBattle.setEnabled(false);
-                    ThreadBattle battleThread1 = new ThreadBattle(challenger);
-                    battleThread1.start();
-                  }
+                     jBattle.setEnabled(false);
+                     ThreadBattle battleThread1 = new ThreadBattle(challenger);
+                     battleThread1.start();
+                     battleThread1.join();
+                  }//end of if
 
 
-                }
+               }//end of else if
 
-                }
+            }//end of while
 
 
-           }catch(Exception e){
-             e.printStackTrace();
-             connected = false;
-           }
+         }catch(Exception e){
+            System.out.println("NO LONGER WAITING ");
+            e.printStackTrace();
+            connected = false;
          }
+      }//end of run
 
-       }
+   }//end of thread lobby
 
    public class ThreadBattle extends Thread{
-     private InputStream in;
-     private BufferedReader bin;
-     String enemy = "";
-     public ThreadBattle(String opp){
-       enemy = opp;
-     }
+      private InputStream in;
+      private BufferedReader bin;
+      String enemy = "";
 
-     public void run(){
+      public ThreadBattle(String opp){
+         enemy = opp;
+      }
+
+      public void run(){
          try{
-          s3 = new Socket(ipaddress, PORT3);
-           in = s3.getInputStream();
-           bin = new BufferedReader(new InputStreamReader(in));
-           out = s3.getOutputStream();
-           pout = new PrintWriter(out);
-           if(battling){
-             pout.println("BA");
-             pout.flush();
-             //System.out.println("send BA");
-             pout.println(name);
-             pout.flush();
-             pout.println(enemy);
-             pout.flush();
-             String listOfPokemon = "";
-             for(int i = 0; i < pokeArray.length; i++){
-               listOfPokemon = listOfPokemon + pokeArray[i]+",";
-             }
-             pout.println(listOfPokemon);
-             pout.flush();
-           }
-           else if(!battling){
-             pout.println("NB");
-             pout.flush();
-             pout.println(name);
-             pout.flush();
-             pout.println(enemy);
-             pout.flush();
-             String listOfPokemon = "";
-             for(int i = 0; i < pokeArray.length; i++){
-               listOfPokemon = listOfPokemon + pokeArray[i]+",";
-             }
-             pout.println(listOfPokemon);
-             pout.flush();
-             battling = true;
+            s3 = new Socket(ipaddress, PORT3);
+            in = s3.getInputStream();
+            bin = new BufferedReader(new InputStreamReader(in));
+            out = s3.getOutputStream();
+            pout = new PrintWriter(out);
+            if(battling){
+               pout.println("BA");
+               pout.flush();
+               //System.out.println("send BA");
+               pout.println(name);
+               pout.flush();
+               pout.println(enemy);
+               pout.flush();
+               String listOfPokemon = "";
+               for(int i = 0; i < chosenPokemon.length; i++){
+                  listOfPokemon = listOfPokemon + chosenPokemon[i]+",";
+               }
+               pout.println(listOfPokemon);
+               pout.flush();
+            }else if(!battling){
+               pout.println("NB");
+               pout.flush();
+               pout.println(name);
+               pout.flush();
+               pout.println(enemy);
+               pout.flush();
+               String listOfPokemon = "";
+               for(int i = 0; i < chosenPokemon.length; i++){
+                  listOfPokemon = listOfPokemon + chosenPokemon[i]+",";
+               }
+               pout.println(listOfPokemon);
+               pout.flush();
+               battling = true;
 
-           }
+            }
 
 
          }catch(Exception e){
-           e.printStackTrace();
+            e.printStackTrace();
          }
 
          try{
-           Thread.sleep(1000);
-           boolean waiting = true;
-           setUpGameWindow();
-           System.out.println("Set up! "+name);
+            Thread.sleep(1000);
+            setUpGameWindow();
+            Thread.sleep(5000);
+            System.out.println("Set up! "+name);
 
-           pout.println("R");
-           pout.flush();
-           while(battling){
-             //BATTLE LOGIC
-             in = s3.getInputStream();
-             bin = new BufferedReader(new InputStreamReader(in));
-             out = s3.getOutputStream();
-             pout = new PrintWriter(out);
+            /*
+            while(battling){
+               //BATTLE LOGIC
+               in = s3.getInputStream();
+               bin = new BufferedReader(new InputStreamReader(in));
+               out = s3.getOutputStream();
+               pout = new PrintWriter(out);
 
-             String bCase = bin.readLine();
+               String bCase = bin.readLine();
+               //System.out.println(bCase+name);
+               if(bCase.equals("MOVE")){
+                  yourPokemon = bin.readLine();
+                  theirPokemon = bin.readLine();
+                  Scanner uip = new Scanner(System.in);
+                  //System.out.print("1,2,3,4");
+                  //String m = uip.nextLine();
+                  String m = "1";
+                  pout.println(m);
+                  pout.flush();
+               }
+               else if(bCase.equals("EOT")){
+                  //UPDATE GRAPHICS
+                  try{
+                     //Thread.sleep(5000);
+                     String poke1Hp = bin.readLine();
+                     String poke2Hp = bin.readLine();
+                     String outString = poke1Hp+"\n"+poke2Hp;
+                     jtaOut.setText(outString);
 
 
 
+                  }catch(Exception e){
+                     e.printStackTrace();
+                  }
+               }else if(bCase.equals("OVER")){
+                  String poke1Hp = bin.readLine();
+                  String poke2Hp = bin.readLine();
+                  String outString = poke1Hp+"\n"+poke2Hp;
+                  jtaOut.setText(outString);
+                  battling=false;
+                  jBattle.setEnabled(false);
+                  jtaOut.append("\nGAME OVER");
 
-           }
+               }
+
+            }//end of while
+            */
+            /*
+            while(battling){
+               //BATTLE LOGIC
+               in = s3.getInputStream();
+               bin = new BufferedReader(new InputStreamReader(in));
+               out = s3.getOutputStream();
+               pout = new PrintWriter(out);
+
+               String bCase = bin.readLine();
+            }
+            */
+            pout.close();
+            out.close();
+            bin.close();
+            in.close();
          }catch(Exception e){
-           e.printStackTrace();
+            e.printStackTrace();
          }
-     }//end of run
+         closeGameWindow();
 
-   }
+      }//end of run
+
+   }//end of Thread Battle
 
    public class ThreadMusic extends Thread{
-     public void run(){
-       music();
-     }
+      public ThreadMusic(){
+
+      }
+
+      public void run(){
+            music();
+      }
    }
-}
+//END OF THREAD CLASSES==================================
+
+}//end of main class
