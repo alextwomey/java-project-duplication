@@ -24,7 +24,7 @@ public class PokeClient extends JFrame implements ActionListener {
 //GUI ATTRIBUTES------------------------------------------
 
    // Create JButtons
-   private JButton jbFight = new JButton("Fight");
+   private JButton jbFight = new JButton("");
    private JButton jbRun = new JButton("Run");
    private JButton jbSend = new JButton("Send");
    private JButton jbOne = new JButton("One");
@@ -78,8 +78,11 @@ public class PokeClient extends JFrame implements ActionListener {
 
    //networking attributes
    private JTextPane myReadArea;
+   //chat socket
    private Socket s;
+   //lobby socket
    private Socket s2;
+   //battle socket
    private Socket s3;
    private boolean connected = false;
    private String ipaddress = "null";
@@ -97,18 +100,23 @@ public class PokeClient extends JFrame implements ActionListener {
 
 //LOGIC ATTRIBUTES-----------------------------------------
    //music thread atrribute
-   ThreadMusic tm;
+   private ThreadMusic tm;
    //stop music thread attribute
-   boolean musicContinue;
+   private boolean musicContinue;
    //synchronized assets
-   String syncMe = "pls pls pls sync meee";
+   private String syncMe = "pls pls pls sync meee";
    // ArrayList for chosen Pokemon
    private ArrayList<JCheckBox> jcbList = new ArrayList<JCheckBox>();
    private ArrayList<Pokemon> party = new ArrayList<Pokemon>();
    //Array for Poemon names
    private String[] chosenPokemon = new String[6];
-   //
-   PokeField pf;
+   //JPanel class for painting
+   private PokeField pf;
+   //boolean for telling paintComponent to move pokemon when they attack
+   private boolean mAttack = false;
+   private boolean eAttack = false;
+   private boolean mDie = false;
+   private boolean eDie = false;
 
 //END OF LOGIC ATTRIBUTES----------------------------------
 
@@ -415,6 +423,8 @@ public class PokeClient extends JFrame implements ActionListener {
 
 
       pf = new PokeField();
+      Thread t = new Thread(pf);
+      t.start();
       jfGame.add(pf);
 
       jfGame.add(jpSouth, BorderLayout.SOUTH);
@@ -428,6 +438,14 @@ public class PokeClient extends JFrame implements ActionListener {
       jpRunFight.add(jbFight);
       jpRunFight.add(jbThree);
       jpRunFight.add(jbFour);
+
+      //set the buttons to off by default
+      jbFight.setEnabled(false);
+      jbOne.setEnabled(false);
+      jbTwo.setEnabled(false);
+      jbThree.setEnabled(false);
+      jbFour.setEnabled(false);
+
 
       // Add action stuff
       jbFight.addActionListener(this);
@@ -446,7 +464,8 @@ public class PokeClient extends JFrame implements ActionListener {
       jfGame.setSize(480, 265);
       jfGame.setResizable(false);
       jfGame.setLocationRelativeTo(chat);
-      //jfGame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+      //DO_NOTHING_ON_CLOSE
+      jfGame.setDefaultCloseOperation(3);
       jfGame.setVisible(true);
       /*
       this.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -472,13 +491,15 @@ public class PokeClient extends JFrame implements ActionListener {
 //End of gui method threads------------------------------
 
 //OTHER METHODS------------------------------------------
-   int pppp = 0;
+   //int pppp = 0;
+   String[] epklist = {"Absol","Bulbasaur","Charizard","Cyndaquill","Drifblim","Feraligatr","Gardevoir","Kadabra","Milotic","Pikachu","Scizor","Scolipede"};
    public void updatePokemon(){
 
       //TESTTEST
-      yourPokemon = party.get(pppp).getName();
-      theirPokemon = "Charizard";
-      pppp++;
+      //party.get(pppp).getName();
+      yourPokemon = epklist[0];
+      theirPokemon = epklist[0];
+      //pppp++;
       //TESTTEST
       //update buttons
       System.out.println(party);
@@ -579,6 +600,24 @@ public class PokeClient extends JFrame implements ActionListener {
          pf.repaint();
    }
 
+   public void mPokeAttack(){
+      mAttack = true;
+      //pf.repaint();
+   }
+
+   public void ePokeAttack(){
+      eAttack = true;
+      //pf.repaint();
+   }
+
+   public void mPokeDie(){
+      mDie = true;
+   }
+
+   public void ePokeDie(){
+      eDie = true;
+   }
+
    public void remakeComboBox(String[] n){
       String[] reDrawNameList = n;
       model = new DefaultComboBoxModel(reDrawNameList);
@@ -653,15 +692,21 @@ public class PokeClient extends JFrame implements ActionListener {
    }//end of music
 
    public void doFight() {
-      yourPokemon = "Milotic";
-      theirPokemon = "Absol";
-      updatePokemon();
-      repaintPokemon();
       //TODO add run event
    }
 
    public void doRun() {
-      // TODO add fight event
+      // TODO add disconnect
+      //mPokeAttack();
+      mPokeDie();
+      //ePokeAttack();
+      //ePokeDie();
+
+
+
+      //connected = false;
+      //battling = false;
+      //System.exit(-1);
    }
 
    public void doSend() {
@@ -677,9 +722,6 @@ public class PokeClient extends JFrame implements ActionListener {
          jtaMessageBox.setText("");
       }catch(Exception eee){}
 
-      //jtaChat.append("Me: " + jtaMessageBox.getText() + "\n");
-      //jtaMessageBox.setText("");
-      // TODO finish send method
    }//end of send
 
    public void doConfirm() {
@@ -1092,15 +1134,86 @@ public class PokeClient extends JFrame implements ActionListener {
    }
 //END OF THREAD CLASSES==================================
 //JPanel class to be repainted
-   public class PokeField extends JPanel{
-
+   public class PokeField extends JPanel implements Runnable{
+      private int placeX = 50;
+      private int placeY = 90;
+      private int ePlaceX = 380;
+      private int ePlaceY = 10;
+      private boolean run = true;
       public PokeField(){
          setPreferredSize(new Dimension(480,140));
       }
+
+      public void run(){
+         while(run){
+            System.out.print("");
+            if(mAttack){
+               //System.out.println("FUCLK");
+               try{
+                  for(int i = 0; i <10; i++){
+                     placeX += 4;
+                     placeY -= 4;
+                     repaint();
+                     Thread.sleep(15);
+                  }//end of for
+               }catch(Exception e){}
+               placeX = 50;
+               placeY = 90;
+               repaint();
+               mAttack = false;
+            }//end of if
+
+            if(eAttack){
+               try{
+                  for(int i = 0; i <10; i++){
+                     ePlaceX -= 4;
+                     ePlaceY += 4;
+                     repaint();
+                     Thread.sleep(15);
+                  }//end of for
+               }catch(Exception e){}
+               ePlaceX = 380;
+               ePlaceY = 10;
+               repaint();
+               eAttack = false;
+            }
+
+            if(mDie){
+               try{
+                  for(int i = 0; i <100; i++){
+                     placeY += 1;
+                     repaint();
+                     Thread.sleep(15);
+                  }
+               }catch(Exception e){}
+               placeX = 50;
+               placeY = 90;
+               mDie = false;
+            }
+
+            if(eDie){
+               try{
+                  for(int i = 0; i <100; i++){
+                     ePlaceX += 1;
+                     repaint();
+                     Thread.sleep(15);
+                  }
+               }catch(Exception e){}
+               ePlaceX = 380;
+               ePlaceY = 10;
+               eAttack = false;
+               eDie = false;
+            }
+         }//end of while
+      }//end of run
+
       protected void paintComponent(Graphics g){
+         super.paintComponent(g);
          bg.paintIcon(jfGame,g,-0,0);
-         mPoke.paintIcon(jfGame,g,50,90);
-         tPoke.paintIcon(jfGame,g,380,10);
+         mPoke.paintIcon(jfGame,g,placeX,placeY);
+         tPoke.paintIcon(jfGame,g,ePlaceX,ePlaceY);
+
+
       }
 
    }//end of pokeField
