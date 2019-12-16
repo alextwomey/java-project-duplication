@@ -14,7 +14,7 @@ public class Scizor extends Pokemon{
    public Scizor(){
       //Change all of these <<<<<<<<<<<<<
       setName("Scizor");
-      setHp(70);
+      setHp(210);
       setAtt(130);
       setDef(100);
       setSpd(105);

@@ -11,7 +11,7 @@ public class Pikachu extends Pokemon{
    public Pikachu(){
       //Change all of these <<<<<<<<<<<<<
       setName("Pikachu");
-      setHp(55);
+      setHp(165);
       setAtt(35);
       setDef(30);
       setSpd(90);

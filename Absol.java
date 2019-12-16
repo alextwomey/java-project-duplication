@@ -12,7 +12,7 @@ public class Absol extends Pokemon{
    public Absol(){
       //Change all of these <<<<<<<<<<<<<
       setName("Absol");
-      setHp(65);
+      setHp(195);
       setAtt(130);
       setDef(60);
       setSpd(75);
@@ -64,6 +64,7 @@ public class Absol extends Pokemon{
       }
       if(attack  && hit(accuracy)){
          enemy.lowerHp(damage);
+         System.out.println("Doing Damage");
       }
       else{
          if(hit(accuracy)){

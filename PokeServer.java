@@ -633,52 +633,271 @@ public class PokeServer extends JFrame implements ActionListener {
                      //get player 1s input
                      mc1 = getMove(bin1,bout1);
                      mc2 = getMove(bin2,bout2);
-                     mc1 = stringToMove(mc1,cbp1);
-                     mc2 = stringToMove(mc2,cbp2);
-                     
-                     jtaLog.append("\n"+p1n+" has selected move: "+mc1);
-                     jtaLog.append("\n"+p2n+" has selected move: "+mc2);
+                     String mOut1 = stringToMove(mc1,cbp1);
+                     String mOut2 = stringToMove(mc2,cbp2);
 
-                     bout1.println("YT");
-                     bout1.flush();
-                     bout1.println(mc1);
-                     bout1.flush();
-                     bout1.println(mc2);
-                     bout1.flush();
+                     jtaLog.append("\n"+p1n+" has selected move: "+mOut1);
+                     jtaLog.append("\n"+p2n+" has selected move: "+mOut2);
 
-                     bout2.println("TY");
-                     bout2.flush();
-                     bout2.println(mc1);
-                     bout2.flush();
-                     bout2.println(mc2);
-                     bout2.flush();
+                     //Tell client if a pokemon has died
+                     String breakPoint = applyMove1(mc1,mc2);
+
+                     if(breakPoint.equals("P1F")){
+                        //TELLING CLIENT 1 THAT THEY LIVED
+                        bout1.println("YFTL");
+                        bout1.flush();
+                        bout1.println(cbp1.getName()+" has used "+mOut1+"!");
+                        bout1.flush();
+                        bout1.println(cbp2.getName()+" has used "+mOut2+"!");
+                        bout1.flush();
+                        bout1.println(Integer.toString(cbp2.getHp()));
+                        bout1.flush();
+                        bout1.println("You have fainted!");
+                        bout1.flush();
+                        p1cpi++;
+                        if(p1cpi<6){
+                           System.out.println("p1Died");
+                           cbp1 = p1Party.get(p1cpi);
+                           bout1.println(cbp1.getName());
+                           bout1.flush();
+                        }else{
+                           bout1.println("OVER");
+                           bout1.flush();
+                           //battling = false;
+                        }
+                        //TELLING CLIENT 2 THAT THE ENEMY FAINTED
+                        bout2.println("TFYL");
+                        bout2.flush();
+                        bout2.println(cbp2.getName()+" has used "+mOut2+"!");
+                        bout2.flush();
+                        bout2.println("The enemy has fainted!");
+                        bout2.flush();
+                        bout2.println(Integer.toString(cbp2.getHp()));
+                        bout2.flush();
+                        //p2cpi++;
+                        if(p1cpi<6){
+                           //cbp2 = p2Party.get(p2cpi);
+                           //THe split for if nPoke.equals(OVEr)
+                           bout2.println(cbp1.getName());
+                           bout2.flush();
+                        }else{
+                           bout2.println("OVER");
+                           bout2.flush();
+                           battling = false;
+                           //PLAYER 1 HAS WON p2 IS OUT OF POKEMON
+                        }
+
+                     }
+                     else if(breakPoint.equals("P2F")){
+                        //TELLING CLIENT 1 THAT THEY LIVED
+                        bout1.println("TFYL");
+                        bout1.flush();
+                        bout1.println(cbp1.getName()+" has used "+mOut1+"!");
+                        bout1.flush();
+                        bout1.println("The enemy has fainted!");
+                        bout1.flush();
+                        bout1.println(Integer.toString(cbp1.getHp()));
+                        bout1.flush();
+                        p2cpi++;
+                        if(p2cpi<6){
+                           System.out.println("p2Died");
+                           cbp2 = p2Party.get(p2cpi);
+                           //THe split for if nPoke.equals(OVEr)
+                           bout1.println(cbp2.getName());
+                           bout1.flush();
+                        }else{
+                           bout1.println("OVER");
+                           bout1.flush();
+                           //battling = false;
+                           //PLAYER 1 HAS WON p2 IS OUT OF POKEMON
+                        }
+                        //TELLING CLIENT 2 THAT THEY FAINTED
+                        bout2.println("YFTL");
+                        bout2.flush();
+                        bout2.println(cbp2.getName()+" has used "+mOut2+"!");
+                        bout2.flush();
+                        bout2.println(cbp1.getName()+" has used "+mOut1+"!");
+                        bout2.flush();
+                        bout2.println(Integer.toString(cbp1.getHp()));
+                        bout2.flush();
+                        bout2.println("You have fainted!");
+                        bout2.flush();
+                        //p1cpi++;
+                        if(p1cpi<6){
+                           //cbp1 = p1Party.get(p1cpi);
+                           bout2.println(cbp2.getName());
+                           bout2.flush();
+                        }else{
+                           bout2.println("OVER");
+                           bout2.flush();
+                           battling = false;
+                        }
+
+                     }
+                     else if(breakPoint.equals("OK")){
+                        bout1.println("YT");
+                        bout1.flush();
+                        bout1.println(cbp1.getName()+" has used "+mOut1+"!");
+                        bout1.flush();
+                        bout1.println(cbp2.getName()+" has used "+mOut2+"!");
+                        bout1.flush();
+                        bout1.println(cbp1.getHp());
+                        bout1.flush();
+                        bout1.println(cbp2.getHp());
+                        bout1.flush();
+
+
+                        bout2.println("TY");
+                        bout2.flush();
+                        bout2.println(cbp1.getName()+" has used "+mOut1+"!");
+                        bout2.flush();
+                        bout2.println(cbp2.getName()+" has used "+mOut2+"!");
+                        bout2.flush();
+                        bout2.println(cbp1.getHp());
+                        bout2.flush();
+                        bout2.println(cbp2.getHp());
+                        bout2.flush();
+
+                     }
+
+
 
                      Thread.sleep(2000);
-                  }
+                  }//end of if
                   //if player 2 is faster
                   else if(p2Faster){
+                     //get player 2s input
                      mc2 = getMove(bin2,bout2);
                      mc1 = getMove(bin1,bout1);
-                     mc2 = stringToMove(mc2,cbp2);
-                     mc1 = stringToMove(mc1,cbp1);
-                     jtaLog.append("\n"+p2n+" has selected move: "+mc2);
-                     jtaLog.append("\n"+p1n+" has selected move: "+mc1);
+                     String mOut2 = stringToMove(mc2,cbp2);
+                     String mOut1 = stringToMove(mc1,cbp1);
 
-                     bout2.println("YT");
-                     bout2.flush();
-                     bout2.println(mc2);
-                     bout2.flush();
-                     bout2.println(mc1);
-                     bout2.flush();
+                     jtaLog.append("\n"+p2n+" has selected move: "+mOut2);
+                     jtaLog.append("\n"+p1n+" has selected move: "+mOut1);
 
-                     bout1.println("TY");
-                     bout1.flush();
-                     bout1.println(mc2);
-                     bout1.flush();
-                     bout1.println(mc1);
-                     bout1.flush();
+                     //Tell client if a pokemon has died
+                     String breakPoint = applyMove2(mc2,mc1);
+
+                     if(breakPoint.equals("P2F")){
+                        //TELLING CLIENT 2 THAT THEY LIVED
+                        bout2.println("YFTL");
+                        bout2.flush();
+                        bout2.println(cbp2.getName()+" has used "+mOut2+"!");
+                        bout2.flush();
+                        bout2.println(cbp1.getName()+" has used "+mOut1+"!");
+                        bout2.flush();
+                        bout2.println(Integer.toString(cbp1.getHp()));
+                        bout2.flush();
+                        bout2.println("You have fainted!");
+                        bout2.flush();
+                        p2cpi++;
+                        if(p2cpi<6){
+                           System.out.println("p2Died");
+                           cbp2 = p2Party.get(p2cpi);
+                           bout2.println(cbp2.getName());
+                           bout2.flush();
+                        }else{
+                           bout2.println("OVER");
+                           bout2.flush();
+                           //battling = false;
+                        }
+                        //TELLING CLIENT 1 THAT THE ENEMY FAINTED
+                        bout1.println("TFYL");
+                        bout1.flush();
+                        bout1.println(cbp1.getName()+" has used "+mOut1+"!");
+                        bout1.flush();
+                        bout1.println("The enemy has fainted!");
+                        bout1.flush();
+                        bout1.println(Integer.toString(cbp1.getHp()));
+                        bout1.flush();
+                        //p1cpi++;
+                        if(p2cpi<6){
+                           //cbp1 = p1Party.get(p1cpi);
+                           //THe split for if nPoke.equals(OVEr)
+                           bout1.println(cbp2.getName());
+                           bout1.flush();
+                        }else{
+                           bout1.println("OVER");
+                           bout1.flush();
+                           battling = false;
+                           //PLAYER 2 HAS WON p1 IS OUT OF POKEMON
+                        }
+
+                     }
+                     else if(breakPoint.equals("P1F")){
+                        //TELLING CLIENT 2 THAT THEY LIVED
+                        bout2.println("TFYL");
+                        bout2.flush();
+                        bout2.println(cbp2.getName()+" has used "+mOut2+"!");
+                        bout2.flush();
+                        bout2.println("The enemy has fainted!");
+                        bout2.flush();
+                        bout2.println(Integer.toString(cbp2.getHp()));
+                        bout2.flush();
+                        p1cpi++;
+                        if(p1cpi<6){
+                           System.out.println("p1Died");
+                           cbp1 = p1Party.get(p1cpi);
+                           //THe split for if nPoke.equals(OVEr)
+                           bout2.println(cbp1.getName());
+                           bout2.flush();
+                        }else{
+                           bout2.println("OVER");
+                           bout2.flush();
+                           //battling = false;
+                           //PLAYER 2 HAS WON p1 IS OUT OF POKEMON
+                        }
+                        //TELLING CLIENT 1 THAT THEY FAINTED
+                        bout1.println("YFTL");
+                        bout1.flush();
+                        bout1.println(cbp1.getName()+" has used "+mOut1+"!");
+                        bout1.flush();
+                        bout1.println(cbp2.getName()+" has used "+mOut2+"!");
+                        bout1.flush();
+                        bout1.println(Integer.toString(cbp2.getHp()));
+                        bout1.flush();
+                        bout1.println("You have fainted!");
+                        bout1.flush();
+                        //p2cpi++;
+                        if(p2cpi<6){
+                           //cbp2 = p2Party.get(p2cpi);
+                           bout1.println(cbp1.getName());
+                           bout1.flush();
+                        }else{
+                           bout1.println("OVER");
+                           bout1.flush();
+                           battling = false;
+                        }
+
+                     }
+                     else if(breakPoint.equals("OK")){
+                        bout2.println("YT");
+                        bout2.flush();
+                        bout2.println(cbp2.getName()+" has used "+mOut2+"!");
+                        bout2.flush();
+                        bout2.println(cbp1.getName()+" has used "+mOut1+"!");
+                        bout2.flush();
+                        bout2.println(cbp2.getHp());
+                        bout2.flush();
+                        bout2.println(cbp1.getHp());
+                        bout2.flush();
+
+
+                        bout1.println("TY");
+                        bout1.flush();
+                        bout1.println(cbp2.getName()+" has used "+mOut2+"!");
+                        bout1.flush();
+                        bout1.println(cbp1.getName()+" has used "+mOut1+"!");
+                        bout1.flush();
+                        bout1.println(cbp2.getHp());
+                        bout1.flush();
+                        bout1.println(cbp1.getHp());
+                        bout1.flush();
+
+                     }
+
                      Thread.sleep(2000);
-                  }
+                  }//end of if
 
 
 
@@ -686,204 +905,6 @@ public class PokeServer extends JFrame implements ActionListener {
 
             }//end of battling
 
-            /*
-            while(battling){
-               if(cbp1.getSpd()>=cbp2.getSpd()){
-                  bout1.println("MOVE");
-                  bout1.flush();
-
-                  bout1.println(cbp1.getName());
-                  bout1.flush();
-                  bout1.println(cbp2.getName());
-                  bout1.flush();
-
-                  bout2.println(cbp1.getName());
-                  bout2.flush();
-                  bout2.println(cbp2.getName());
-                  bout2.flush();
-
-                  mc1 = bin1.readLine();
-                  if(mc1.equals("1")){
-                     jtaLog.append("\n"+p1n+" has chosen move: "+cbp1.getM1Name());
-                     cbp1.move1(cbp2);
-                     //cbp1.lowerM1PP();
-                  }
-                  else if(mc1.equals("2")){
-                     jtaLog.append("\n"+p1n+" has chosen move: "+cbp1.getM2Name());
-                     cbp1.move2(cbp2);
-                     //cbp1.lowerM2PP();
-                  }
-                  else if(mc1.equals("3")){
-                     jtaLog.append("\n"+p1n+" has chosen move: "+cbp1.getM3Name());
-                     cbp1.move3(cbp2);
-                     //cbp1.lowerM3PP();
-                  }
-                  else if(mc1.equals("4")){
-                     jtaLog.append("\n"+p1n+" has chosen move: "+cbp1.getM4Name());
-                     cbp1.move4(cbp2);
-                     //cbp1.lowerM4PP();
-                  }
-                  if(!cbp2.getAlive()){
-                     jtaLog.append("\n"+p2n+"s "+cbp2.getName()+" has fainted!");
-                     //battling = false;
-                     p2cpi++;
-                     cbp2 = p2Party.get(p2cpi);
-                     if(p2cpi > 6){
-                        battling = false;
-                     }
-                     break;
-                  }
-                  //jtaLog.append("\n"+p1n+" has chosen move: "+);
-                  bout2.println("MOVE");
-                  bout2.flush();
-
-                  bout1.println(cbp1.getName());
-                  bout1.flush();
-                  bout1.println(cbp2.getName());
-                  bout1.flush();
-
-                  bout2.println(cbp1.getName());
-                  bout2.flush();
-                  bout2.println(cbp2.getName());
-                  bout2.flush();
-
-                  mc2 = bin2.readLine();
-                  if(mc2.equals("1")){
-                     jtaLog.append("\n"+p2n+" has chosen move: "+cbp2.getM1Name());
-                     cbp2.move1(cbp1);
-                  }
-                  else if(mc2.equals("2")){
-                     jtaLog.append("\n"+p2n+" has chosen move: "+cbp2.getM2Name());
-                     cbp2.move2(cbp1);
-                  }
-                  else if(mc2.equals("3")){
-                     jtaLog.append("\n"+p2n+" has chosen move: "+cbp2.getM3Name());
-                     cbp2.move3(cbp1);
-                  }
-                  else if(mc2.equals("4")){
-                     jtaLog.append("\n"+p2n+" has chosen move: "+cbp2.getM4Name());
-                     cbp2.move4(cbp1);
-                  }
-                  if(!cbp1.getAlive()){
-                     jtaLog.append("\n"+p1n+"s "+cbp1.getName()+" has fainted!");
-                     //battling = false;
-                     p1cpi++;
-                     cbp1 = p1Party.get(p1cpi);
-                     if(p1cpi > 6){
-                        battling = false;
-                     }
-                     break;
-                  }
-               }//end of speed check if
-               else{
-                  bout2.println("MOVE");
-                  bout2.flush();
-
-                  bout1.println(cbp1.getName());
-                  bout1.flush();
-                  bout1.println(cbp2.getName());
-                  bout1.flush();
-
-                  bout2.println(cbp1.getName());
-                  bout2.flush();
-                  bout2.println(cbp2.getName());
-                  bout2.flush();
-
-                  mc2 = bin2.readLine();
-                  if(mc2.equals("1")){
-                     jtaLog.append("\n"+p2n+" has chosen move: "+cbp2.getM1Name());
-                     cbp2.move1(cbp1);
-                  }
-                  else if(mc2.equals("2")){
-                     jtaLog.append("\n"+p2n+" has chosen move: "+cbp2.getM2Name());
-                     cbp2.move2(cbp1);
-                  }
-                  else if(mc2.equals("3")){
-                     jtaLog.append("\n"+p2n+" has chosen move: "+cbp2.getM3Name());
-                     cbp2.move3(cbp1);
-                  }
-                  else if(mc2.equals("4")){
-                     jtaLog.append("\n"+p2n+" has chosen move: "+cbp2.getM4Name());
-                     cbp2.move4(cbp1);
-                  }
-                  if(!cbp1.getAlive()){
-                     jtaLog.append("\n"+p1n+"s "+cbp1.getName()+" has fainted!");
-                     //battling = false;
-                     p1cpi++;
-                     cbp1 = p1Party.get(p1cpi);
-                     if(p1cpi > 6){
-                        battling = false;
-                     }
-                     break;
-                  }
-
-                  bout1.println("MOVE");
-                  bout1.flush();
-
-                  bout1.println(cbp1.getName());
-                  bout1.flush();
-                  bout1.println(cbp2.getName());
-                  bout1.flush();
-
-                  bout2.println(cbp1.getName());
-                  bout2.flush();
-                  bout2.println(cbp2.getName());
-                  bout2.flush();
-
-                  mc1 = bin1.readLine();
-                  if(mc1.equals("1")){
-                     jtaLog.append("\n"+p1n+" has chosen move: "+cbp1.getM1Name());
-                     cbp1.move1(cbp2);
-                  }
-                  else if(mc1.equals("2")){
-                     jtaLog.append("\n"+p1n+" has chosen move: "+cbp1.getM2Name());
-                     cbp1.move2(cbp2);
-                  }
-                  else if(mc1.equals("3")){
-                     jtaLog.append("\n"+p1n+" has chosen move: "+cbp1.getM3Name());
-                     cbp1.move3(cbp2);
-                  }
-                  else if(mc1.equals("4")){
-                     jtaLog.append("\n"+p1n+" has chosen move: "+cbp1.getM4Name());
-                     cbp1.move4(cbp2);
-                  }
-                  if(!cbp2.getAlive()){
-                     jtaLog.append("\n"+p2n+"s "+cbp2.getName()+" has fainted!");
-                     //battling = false;
-                     p2cpi++;
-                     cbp2 = p2Party.get(p2cpi);
-
-                     if(p2cpi > 6){
-                        battling = false;
-                     }
-                     break;
-                  }//end of alive if
-
-               }//end of speed check else
-
-               bout1.println("EOT");
-               bout1.flush();
-               bout1.println(cbp1.getName()+"s HP: "+cbp1.getHp());
-               bout1.flush();
-               bout1.println(cbp2.getName()+"s HP: "+cbp2.getHp());
-               bout1.flush();
-               //send back pokemon health and info, cbp1,cbp2
-
-               bout2.println("EOT");
-               bout2.flush();
-               bout2.println(cbp1.getName()+"s HP: "+cbp1.getHp());
-               bout2.flush();
-               bout2.println(cbp2.getName()+"s HP: "+cbp2.getHp());
-               bout2.flush();
-               //send back pokemon health and info, cbp1,cbp2
-
-               jtaLog.append("\n"+cbp1.getName()+"s health is "+cbp1.getHp());
-               jtaLog.append("\n"+cbp2.getName()+"s health is "+cbp2.getHp());
-               jtaLog.append("\n");
-               Thread.sleep(5000);
-            }//end of while
-               */
-            //Thread.sleep(5000);
             jtaLog.append("\n"+"battle over");
             battlers.remove(p1n);
             battlers.remove(p2n);
@@ -944,6 +965,84 @@ public class PokeServer extends JFrame implements ActionListener {
          }
          return selectedM;
       }//end of stringToMove
+
+      public String applyMove1(String m1, String m2){
+         if(m1.equals("ONE")){
+            cbp1.move1(cbp2);
+         }else if(m1.equals("TWO")){
+            cbp1.move2(cbp2);
+         }else if(m1.equals("THREE")){
+            cbp1.move3(cbp2);
+         }else if(m1.equals("FOUR")){
+            cbp1.move4(cbp2);
+         }
+         //if seconcbp2 pokemon survvives the first pokemons cbp1ttcbp1cks then it cbp1ttcbp1cks bcbp1ck
+         if(cbp2.getAlive()){
+            if(m2.equals("ONE")){
+               cbp2.move1(cbp1);
+            }else if(m2.equals("TWO")){
+               cbp2.move2(cbp1);
+            }else if(m2.equals("THREE")){
+               cbp2.move3(cbp1);
+            }else if(m2.equals("FOUR")){
+               cbp2.move4(cbp1);
+            }
+         }//encbp2 if if seconcbp2 is cbp1live
+
+         if(!cbp1.getAlive()){
+            return "P1F";
+            //return cbp1ttcbp1cker 1 hcbp1s cbp2iecbp2
+         }
+         else if(!cbp2.getAlive()){
+            return "P2F";
+            //return cbp2efencbp2er 2 hcbp1s cbp2iecbp2
+         }
+         else{
+            return "OK";
+            //return both are alive and move has gone normally
+         }
+         //return "no";
+      }//end of apply move 1
+
+      public String applyMove2(String m1, String m2){
+         if(m1.equals("ONE")){
+            cbp2.move1(cbp1);
+         }else if(m1.equals("TWO")){
+            cbp2.move2(cbp1);
+         }else if(m1.equals("THREE")){
+            cbp2.move3(cbp1);
+         }else if(m1.equals("FOUR")){
+            cbp2.move4(cbp1);
+         }
+         //if seconcbp1 pokemon survvives the first pokemons cbp2ttcbp2cks then it cbp2ttcbp2cks bcbp2ck
+         if(cbp1.getAlive()){
+            if(m2.equals("ONE")){
+               cbp1.move1(cbp2);
+            }else if(m2.equals("TWO")){
+               cbp1.move2(cbp2);
+            }else if(m2.equals("THREE")){
+               cbp1.move3(cbp2);
+            }else if(m2.equals("FOUR")){
+               cbp1.move4(cbp2);
+            }
+         }//encbp1 if if seconcbp1 is cbp2live
+
+         if(!cbp2.getAlive()){
+            return "P2F";
+            //return cbp2ttcbp2cker 1 hcbp2s cbp1iecbp1
+         }
+         else if(!cbp1.getAlive()){
+            return "P1F";
+            //return cbp2efencbp2er 2 hcbp1s cbp2iecbp2
+         }
+         else{
+            return "OK";
+            //return both are alive and move has gone normally
+         }
+         //return "no";
+      }//end of apply move 1
+
+
 
    }//end of battle logic class
 

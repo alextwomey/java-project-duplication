@@ -14,7 +14,7 @@ public class Gardevoir extends Pokemon{
    public Gardevoir(){
       //Change all of these <<<<<<<<<<<<<
       setName("Gardevoir");
-      setHp(68);
+      setHp(204);
       setAtt(65);
       setDef(65);
       setSpd(80);

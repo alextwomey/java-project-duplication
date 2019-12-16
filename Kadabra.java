@@ -14,7 +14,7 @@ public class Kadabra extends Pokemon{
    public Kadabra(){
       //Change all of these <<<<<<<<<<<<<
       setName("Kadabra");
-      setHp(40);
+      setHp(120);
       setAtt(35);
       setDef(30);
       setSpd(105);

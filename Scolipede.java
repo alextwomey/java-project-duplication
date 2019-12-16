@@ -14,7 +14,7 @@ public class Scolipede extends Pokemon{
    public Scolipede(){
       //Change all of these <<<<<<<<<<<<<
       setName("Scolipede");
-      setHp(60);
+      setHp(180);
       setAtt(90);
       setDef(89);
       setSpd(112);

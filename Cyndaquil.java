@@ -14,7 +14,7 @@ public class Cyndaquil extends Pokemon{
    public Cyndaquil(){
       //Change all of these <<<<<<<<<<<<<
       setName("Cyndaquill");
-      setHp(39);
+      setHp(117);
       setAtt(52);
       setDef(43);
       setSpd(65);

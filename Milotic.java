@@ -14,7 +14,7 @@ public class Milotic extends Pokemon{
    public Milotic(){
       //Change all of these <<<<<<<<<<<<<
       setName("Milotic");
-      setHp(95);
+      setHp(285);
       setAtt(60);
       setDef(79);
       setSpd(81);

@@ -16,7 +16,7 @@ public class Bulbasaur extends Pokemon{
    public Bulbasaur(){
       //Change all of these <<<<<<<<<<<<<
       setName("Bulbasaur");
-      setHp(45);
+      setHp(135);
       setAtt(49);
       setDef(49);
       setSpd(45);

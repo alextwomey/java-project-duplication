@@ -14,7 +14,7 @@ public class Feraligatr extends Pokemon{
    public Feraligatr(){
       //Change all of these <<<<<<<<<<<<<
       setName("Feraligatr");
-      setHp(85);
+      setHp(255);
       setAtt(105);
       setDef(100);
       setSpd(78);

@@ -1002,7 +1002,7 @@ public class PokeClient extends JFrame implements ActionListener {
       private BufferedReader bin;
       private boolean firstTime = true;
       String enemy = "";
-
+      boolean won = false;
       public ThreadBattle(String opp){
          enemy = opp;
       }
@@ -1057,63 +1057,11 @@ public class PokeClient extends JFrame implements ActionListener {
             setUpGameWindow();
             System.out.println("Set up! "+name);
 
-            /*Repainting pokemon
-            yourPokemon = "Milotic";
-            theirPokemon = "Absol";
-            updatePokemon();
-            repaintPokemon();
-            */
-
-            /*
-            while(battling){
-               //BATTLE LOGIC
-               in = s3.getInputStream();
-               bin = new BufferedReader(new InputStreamReader(in));
-               out = s3.getOutputStream();
-               pout = new PrintWriter(out);
-
-               String bCase = bin.readLine();
-               //System.out.println(bCase+name);
-               if(bCase.equals("MOVE")){
-                  yourPokemon = bin.readLine();
-                  theirPokemon = bin.readLine();
-                  Scanner uip = new Scanner(System.in);
-                  //System.out.print("1,2,3,4");
-                  //String m = uip.nextLine();
-                  String m = "1";
-                  pout.println(m);
-                  pout.flush();
-               }
-               else if(bCase.equals("EOT")){
-                  //UPDATE GRAPHICS
-                  try{
-                     //Thread.sleep(5000);
-                     String poke1Hp = bin.readLine();
-                     String poke2Hp = bin.readLine();
-                     String outString = poke1Hp+"\n"+poke2Hp;
-                     jtaOut.setText(outString);
-
-
-
-                  }catch(Exception e){
-                     e.printStackTrace();
-                  }
-               }else if(bCase.equals("OVER")){
-                  String poke1Hp = bin.readLine();
-                  String poke2Hp = bin.readLine();
-                  String outString = poke1Hp+"\n"+poke2Hp;
-                  jtaOut.setText(outString);
-                  battling=false;
-                  jBattle.setEnabled(false);
-                  jtaOut.append("\nGAME OVER");
-
-               }
-
-            }//end of while
-            */
             Thread.sleep(3000);
             while(battling){
+               //updatePokemon();
                //BATTLE LOGIC
+
                in = s3.getInputStream();
                bin = new BufferedReader(new InputStreamReader(in));
                out = s3.getOutputStream();
@@ -1152,8 +1100,13 @@ public class PokeClient extends JFrame implements ActionListener {
                      //make yuour pokemon animation go first
                      String myMove = bin.readLine();
                      String eMove = bin.readLine();
+                     String mHp = bin.readLine();
+                     String eHp = bin.readLine();
                      //update etxtare with moves chosen
-                     jtaOut.setText("You have selected "+myMove+"\nThe enemy has selected "+eMove);
+                     jtaOut.setText(myMove+
+                     "\n"+eMove+
+                     "\nYour HP: "+mHp+
+                     "\nEnemy HP: "+eHp);
                      mPokeAttack();
                      Thread.sleep(1000);
                      ePokeAttack();
@@ -1163,12 +1116,67 @@ public class PokeClient extends JFrame implements ActionListener {
                      //make enemy pokemn go first
                      String eMove = bin.readLine();
                      String myMove = bin.readLine();
+                     String eHp = bin.readLine();
+                     String mHp = bin.readLine();
                      //update textarea with moves chosen
-                     jtaOut.setText("The enemy has selected "+eMove+"\nYou have selected "+myMove);
+                     jtaOut.setText(eMove+
+                     "\n"+myMove+
+                     "\nYour HP: "+mHp+
+                     "\nEnemy HP: "+eHp);
                      ePokeAttack();
                      Thread.sleep(1000);
                      mPokeAttack();
                      Thread.sleep(1000);
+                  }
+                  else if(moveOrder.equals("YFTL")){
+                     //If you died
+                     String mMove = bin.readLine();
+                     String eMove = bin.readLine();
+                     String eHp = bin.readLine();
+                     String mState = bin.readLine();
+                     String nPoke = bin.readLine();
+                     if(nPoke.equals("OVER")){
+                        jtaOut.setText("You have fainted and are out of usable pokemon!"+
+                        "\n YOU LOSE!");
+                        won = false;
+                        battling = false;
+                     }else{
+                        jtaOut.setText(mMove+
+                        "\n"+eMove+
+                        "\n"+mState+
+                        "\nEnemy HP: "+eHp+
+                        "\nYou sent out "+nPoke);
+                     }
+                     ePokeAttack();
+                     Thread.sleep(1000);
+                     mPokeDie();
+                     Thread.sleep(2000);
+                     outPoke[0] = nPoke;
+                     updatePokemon();
+                  }
+                  else if(moveOrder.equals("TFYL")){
+                     //If they died
+                     String myMove = bin.readLine();
+                     String eState = bin.readLine();
+                     String mHp = bin.readLine();
+                     String nPoke = bin.readLine();
+                     if(nPoke.equals("OVER")){
+                        jtaOut.setText("The enemy has fainted and is out of usable pokemon."+
+                        "\n YOU WIN!");
+                        won = true;
+                        battling = false;
+                     }else{
+                        jtaOut.setText(myMove+
+                        "\n"+eState+
+                        "\nYour HP: "+mHp+
+                        "\nThe enemy sent out"+nPoke);
+                     }
+                     mPokeAttack();
+                     Thread.sleep(1000);
+                     ePokeDie();
+                     Thread.sleep(2000);
+                     outPoke[1] = nPoke;
+                     updatePokemon();
                   }
 
                }//end of select
@@ -1176,6 +1184,14 @@ public class PokeClient extends JFrame implements ActionListener {
             }//end of battling
 
             //Thread.sleep(5000);
+            if(won){
+               JOptionPane.showMessageDialog(jfGame,"You Won!!!!\nTo play again please reload the program");
+               System.exit(1);
+            }
+            else{
+               JOptionPane.showMessageDialog(jfGame,"You Lost :( :(\nTo play again please reload the program");
+               System.exit(1);
+            }
             pout.close();
             out.close();
             bin.close();
@@ -1183,6 +1199,7 @@ public class PokeClient extends JFrame implements ActionListener {
             closeGameWindow();
          }catch(Exception e){
             e.printStackTrace();
+            JOptionPane.showMessageDialog(jfGame,"You Lost :( :(\nTo play again please reload the program");
             try{
                pout.close();
                out.close();

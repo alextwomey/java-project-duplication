@@ -14,7 +14,7 @@ public class Drifblim extends Pokemon{
    public Drifblim(){
       //Change all of these <<<<<<<<<<<<<
       setName("Drifblim");
-      setHp(150);
+      setHp(450);
       setAtt(80);
       setDef(44);
       setSpd(80);

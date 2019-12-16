@@ -16,7 +16,7 @@ public class Charizard extends Pokemon{
    public Charizard(){
       //Change all of these <<<<<<<<<<<<<
       setName("Charizard");
-      setHp(78);
+      setHp(234);
       setAtt(84);
       setDef(78);
       setSpd(100);
