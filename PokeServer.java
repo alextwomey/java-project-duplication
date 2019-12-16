@@ -44,11 +44,11 @@ public class PokeServer extends JFrame implements ActionListener {
    private int PORT = 27015;
    private int PORT2 = 27016;
    private int PORT3 = 27017;
-   private Map<String, Socket> connectedSocketsChat = new HashMap<String, Socket>();
-   private Map<String, Socket> connectedSocketsLobby = new HashMap<String, Socket>();
-   private Map<String, Socket> connectedSocketsBattle = new HashMap<String, Socket>();
-   private Map<String, Socket> battlers = new HashMap<String, Socket>();
-   private Map<String, ArrayList<Pokemon>> partyList = new HashMap<String, ArrayList<Pokemon>>();
+   private Hashtable<String, Socket> connectedSocketsChat = new Hashtable<String, Socket>();
+   private Hashtable<String, Socket> connectedSocketsLobby = new Hashtable<String, Socket>();
+   private Hashtable<String, Socket> connectedSocketsBattle = new Hashtable<String, Socket>();
+   private Hashtable<String, Socket> battlers = new Hashtable<String, Socket>();
+   private Hashtable<String, ArrayList<Pokemon>> partyList = new Hashtable<String, ArrayList<Pokemon>>();
 //END OF NETWORKING ATTRIBUTES----------------------------------------
 
    public static void main(String[] args) {
@@ -282,10 +282,9 @@ public class PokeServer extends JFrame implements ActionListener {
 
             }catch(SocketException e){
                jtaLog.append("\nRemoved "+ cName +" from server list");
-               synchronized(syncMe){
-                  connectedSocketsChat.remove(cName);
-                  cod = true;
-               }
+               connectedSocketsChat.remove(cName);
+               connectedSocketsLobby.remove(cName);
+               cod = true;
                connected = false;
                updateNameList();
             }
@@ -330,7 +329,7 @@ public class PokeServer extends JFrame implements ActionListener {
             ObjectOutputStream oos = new ObjectOutputStream(out);
             */
             while(connected1){
-
+               System.out.print("");
             }
 
 
@@ -349,16 +348,18 @@ public class PokeServer extends JFrame implements ActionListener {
 
       }
       public void run(){
-         try{
-            while(!isFinished){
-               Socket sBattle = listener3.accept();
-               ThreadBattleServer bThread = new ThreadBattleServer(sBattle);
-               bThread.start();
+         //while(connected){
+            try{
+               while(!isFinished){
+                  Socket sBattle = listener3.accept();
+                  ThreadBattleServer bThread = new ThreadBattleServer(sBattle);
+                  bThread.start();
+               }
+            }catch(IOException ioe){
+               System.out.println("Exception found on accept. Ignoring. Stack Trace :");
+               ioe.printStackTrace();
             }
-         }catch(IOException ioe){
-            System.out.println("Exception found on accept. Ignoring. Stack Trace :");
-            ioe.printStackTrace();
-         }
+         //}//end of first while
       }//end of run
 
    }//end of wait for battle
@@ -443,7 +444,7 @@ public class PokeServer extends JFrame implements ActionListener {
             //connectedSocketsBattle.put(enemy,(Socket)connectedSocketsLobby.get(enemy));
             //connectedSocketsLobby.remove(cName);
             //connectedSocketsLobby.remove(enemy);
-            Thread.sleep(1000);
+            //Thread.sleep(1000);
             updateNameList();
 
             for(int i = 0; i < pokeList.length; i++){
@@ -508,9 +509,9 @@ public class PokeServer extends JFrame implements ActionListener {
 
          public void run(){
 
-            jtaLog.append("\n"+Integer.toString(battlers.size()));
+            //jtaLog.append("\n"+Integer.toString(battlers.size()));
             try{
-               Thread.sleep(1000);
+               //Thread.sleep(1000);
 
                if(battlingString.equals("BA")){
 
@@ -536,7 +537,7 @@ public class PokeServer extends JFrame implements ActionListener {
 
 
             }catch(Exception e){
-               //e.printStackTrace();
+               e.printStackTrace();
             }
 
          }//end of run
@@ -570,6 +571,11 @@ public class PokeServer extends JFrame implements ActionListener {
       private int p1cpi = 0;
       private int p2cpi = 0;
 
+      private boolean p1Faster = false;
+      private boolean p2Faster = false;
+
+      private boolean firstTime = true;
+
       public ThreadBattleLogic (Socket p1, Socket p2, String n1, String n2, ArrayList<Pokemon> p1p, ArrayList<Pokemon> p2p){
          p1s = p1;
          p2s = p2;
@@ -588,23 +594,98 @@ public class PokeServer extends JFrame implements ActionListener {
          try{
             String mc1 = "";
             String mc2 = "";
-            in1 = p1s.getInputStream();
-            bin1 = new BufferedReader(new InputStreamReader(in1));
-            out1 = p1s.getOutputStream();
-            bout1 = new PrintWriter(out1);
 
-            in2 = p2s.getInputStream();
-            bin2 = new BufferedReader(new InputStreamReader(in2));
-            out2 = p2s.getOutputStream();
-            bout2 = new PrintWriter(out2);
 
             cbp1 = p1Party.get(p1cpi);
             cbp2 = p2Party.get(p2cpi);
-            /*
-            while(battling){
 
-            }
-            */
+            while(battling){
+               in1 = p1s.getInputStream();
+               bin1 = new BufferedReader(new InputStreamReader(in1));
+               out1 = p1s.getOutputStream();
+               bout1 = new PrintWriter(out1);
+
+               in2 = p2s.getInputStream();
+               bin2 = new BufferedReader(new InputStreamReader(in2));
+               out2 = p2s.getOutputStream();
+               bout2 = new PrintWriter(out2);
+               System.out.println("Server REading");
+               String p1R = bin1.readLine().trim();
+               String p2R = bin2.readLine().trim();
+               //start if both players are ready
+               if(p1R.equals("R") && p2R.equals("R")){
+                  System.out.println("Server Ready");
+                  //send currently out pokemon string.
+                  String cbpS1 = cbp1.getName()+","+cbp2.getName();
+                  bout1.println(cbpS1);
+                  bout1.flush();
+                  String cbpS2 = cbp2.getName()+","+cbp1.getName();
+                  bout2.println(cbpS2);
+                  bout2.flush();
+                  if(firstTime){
+                     Thread.sleep(3000);
+                     firstTime = false;
+                  }
+                  //checks to see whos the faster pokemon
+                  checkFaster();
+                  //if player 1 is faster
+                  if(p1Faster){
+                     //get player 1s input
+                     mc1 = getMove(bin1,bout1);
+                     mc2 = getMove(bin2,bout2);
+                     mc1 = stringToMove(mc1,cbp1);
+                     mc2 = stringToMove(mc2,cbp2);
+                     
+                     jtaLog.append("\n"+p1n+" has selected move: "+mc1);
+                     jtaLog.append("\n"+p2n+" has selected move: "+mc2);
+
+                     bout1.println("YT");
+                     bout1.flush();
+                     bout1.println(mc1);
+                     bout1.flush();
+                     bout1.println(mc2);
+                     bout1.flush();
+
+                     bout2.println("TY");
+                     bout2.flush();
+                     bout2.println(mc1);
+                     bout2.flush();
+                     bout2.println(mc2);
+                     bout2.flush();
+
+                     Thread.sleep(2000);
+                  }
+                  //if player 2 is faster
+                  else if(p2Faster){
+                     mc2 = getMove(bin2,bout2);
+                     mc1 = getMove(bin1,bout1);
+                     mc2 = stringToMove(mc2,cbp2);
+                     mc1 = stringToMove(mc1,cbp1);
+                     jtaLog.append("\n"+p2n+" has selected move: "+mc2);
+                     jtaLog.append("\n"+p1n+" has selected move: "+mc1);
+
+                     bout2.println("YT");
+                     bout2.flush();
+                     bout2.println(mc2);
+                     bout2.flush();
+                     bout2.println(mc1);
+                     bout2.flush();
+
+                     bout1.println("TY");
+                     bout1.flush();
+                     bout1.println(mc2);
+                     bout1.flush();
+                     bout1.println(mc1);
+                     bout1.flush();
+                     Thread.sleep(2000);
+                  }
+
+
+
+               }//end of ready
+
+            }//end of battling
+
             /*
             while(battling){
                if(cbp1.getSpd()>=cbp2.getSpd()){
@@ -802,7 +883,7 @@ public class PokeServer extends JFrame implements ActionListener {
                Thread.sleep(5000);
             }//end of while
                */
-            Thread.sleep(5000);
+            //Thread.sleep(5000);
             jtaLog.append("\n"+"battle over");
             battlers.remove(p1n);
             battlers.remove(p2n);
@@ -828,6 +909,41 @@ public class PokeServer extends JFrame implements ActionListener {
          }
 
       }//end of run
+
+      public void checkFaster(){
+         if(cbp1.getSpd() >= cbp2.getSpd()){
+            p2Faster = false;
+            p1Faster = true;
+         }
+         else if(cbp2.getSpd() > cbp1.getSpd()){
+            p1Faster = false;
+            p2Faster = true;
+         }
+      }//end of checkFaster
+      public String getMove(BufferedReader br, PrintWriter pw){
+         try{
+            pw.println("SELECT");
+            pw.flush();
+
+            String choice = br.readLine();
+            return choice;
+         }catch(Exception e){e.printStackTrace();}
+         return "no";
+      }//end of getMove
+
+      public String stringToMove(String mIn, Pokemon cp){
+         String selectedM = "";
+         if(mIn.equals("ONE")){
+            selectedM = cp.getM1Name();
+         }else if(mIn.equals("TWO")){
+            selectedM = cp.getM2Name();
+         }else if(mIn.equals("THREE")){
+            selectedM = cp.getM3Name();
+         }else if(mIn.equals("FOUR")){
+            selectedM = cp.getM4Name();
+         }
+         return selectedM;
+      }//end of stringToMove
 
    }//end of battle logic class
 

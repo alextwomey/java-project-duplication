@@ -68,8 +68,8 @@ public class PokeClient extends JFrame implements ActionListener {
    private JCheckBox jcbScolipede;
    //JFrame for game window
    private JFrame jfGame;
-   private Icon mPoke;
-   private Icon tPoke;
+   private Icon mPoke = new ImageIcon(getClass().getResource("BLANK.png"));;
+   private Icon tPoke = new ImageIcon(getClass().getResource("BLANK.png"));;
    private Icon bg = new ImageIcon(getClass().getResource("background.jpg"));
 
 //END OF GUI ATTRIBUTES------------------------------------
@@ -118,6 +118,10 @@ public class PokeClient extends JFrame implements ActionListener {
    private boolean mDie = false;
    private boolean eDie = false;
 
+   private String[] outPoke = {"",""};
+
+   private String buttonChoice = "";
+
 //END OF LOGIC ATTRIBUTES----------------------------------
 
    public static void main(String[] args) {
@@ -126,19 +130,7 @@ public class PokeClient extends JFrame implements ActionListener {
 
    public PokeClient() {
       //START HERE
-      //setupChoiceWindow();
-
-      //TEST HERE
-      //setUpGameWindow();
       setupChoiceWindow();
-
-      //setUpChatWindow();
-
-      //lobbyThreadPrep();
-      //setupWindow();
-
-
-      //setUpGameWindow();
 
    }//End of PokeClient
 
@@ -234,7 +226,6 @@ public class PokeClient extends JFrame implements ActionListener {
       chat.add(lobby,"East");
       //lobby.setVisible(true);
       jBattle.addActionListener(this);
-
 
    }//end of lobby
 
@@ -409,11 +400,12 @@ public class PokeClient extends JFrame implements ActionListener {
 
    public void setUpGameWindow(){
       //starts music thread
+      System.out.println(name+"setting up game window step 1.");
       tm = new ThreadMusic();
-      //tm.start();
+      tm.start();
 
       jfGame = new JFrame();
-
+      //updatePokemon();
       JPanel jpSouth = new JPanel(new GridLayout(1, 2));
       JPanel jpRunFight = new JPanel(new GridLayout(2, 3));
 
@@ -465,9 +457,9 @@ public class PokeClient extends JFrame implements ActionListener {
       jfGame.setResizable(false);
       jfGame.setLocationRelativeTo(chat);
       //DO_NOTHING_ON_CLOSE
-      jfGame.setDefaultCloseOperation(3);
+      jfGame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
       jfGame.setVisible(true);
-      /*
+
       this.addWindowListener(new java.awt.event.WindowAdapter() {
          @Override
          public void windowClosing(java.awt.event.WindowEvent windowEvent) {
@@ -478,12 +470,13 @@ public class PokeClient extends JFrame implements ActionListener {
             JOptionPane.INFORMATION_MESSAGE);
          }//end of windowClosing
       });
-      */
-      updatePokemon();
+
+
    }//end of game window
 
    public void closeGameWindow(){
-      this.setVisible(false);
+      jfGame.setVisible(false);
+      jfGame.dispatchEvent(new WindowEvent(jfGame, WindowEvent.WINDOW_CLOSING));
       musicContinue = false;
       jBattle.setEnabled(true);
    }
@@ -492,17 +485,14 @@ public class PokeClient extends JFrame implements ActionListener {
 
 //OTHER METHODS------------------------------------------
    //int pppp = 0;
-   String[] epklist = {"Absol","Bulbasaur","Charizard","Cyndaquill","Drifblim","Feraligatr","Gardevoir","Kadabra","Milotic","Pikachu","Scizor","Scolipede"};
-   public void updatePokemon(){
 
-      //TESTTEST
-      //party.get(pppp).getName();
-      yourPokemon = epklist[0];
-      theirPokemon = epklist[0];
-      //pppp++;
-      //TESTTEST
-      //update buttons
-      System.out.println(party);
+
+   public void updatePokemon(){
+      System.out.println("Updating Pokemon for "+name);
+
+      yourPokemon = outPoke[0];
+      theirPokemon = outPoke[1];
+
       jbOne.setHorizontalAlignment(SwingConstants.LEFT);
       jbTwo.setHorizontalAlignment(SwingConstants.LEFT);
       jbThree.setHorizontalAlignment(SwingConstants.LEFT);
@@ -516,40 +506,42 @@ public class PokeClient extends JFrame implements ActionListener {
          }//end of if
       }//end of for
 
+      System.out.println(name+"s pokemon: "+yourPokemon+theirPokemon);
+
       if( yourPokemon.equals("Absol")) {
           mPoke = new ImageIcon(getClass().getResource("AbsolBACK.png"));
       }
-      if( yourPokemon.equals( "Bulbasaur")) {
+      else if( yourPokemon.equals( "Bulbasaur")) {
          mPoke = new ImageIcon(getClass().getResource("BulbasaurBACK.png"));
       }
-      if( yourPokemon.equals( "Charizard")) {
+      else if( yourPokemon.equals( "Charizard")) {
          mPoke = new ImageIcon(getClass().getResource("CharizardBACK.png"));
       }
-      if( yourPokemon.equals( "Cyndaquill")) {
+      else if( yourPokemon.equals( "Cyndaquill")) {
          mPoke = new ImageIcon(getClass().getResource("CyndiquillBACK.png"));
       }
-      if( yourPokemon.equals( "Drifblim")) {
+      else if( yourPokemon.equals( "Drifblim")) {
          mPoke = new ImageIcon(getClass().getResource("DrifblimBACK.png"));
       }
-      if( yourPokemon.equals( "Feraligatr")) {
+      else if( yourPokemon.equals( "Feraligatr")) {
          mPoke = new ImageIcon(getClass().getResource("FeraligatrBACK.png"));
       }
-      if( yourPokemon.equals( "Gardevoir")) {
+      else if( yourPokemon.equals( "Gardevoir")) {
          mPoke = new ImageIcon(getClass().getResource("GardevoirBACK.png"));
       }
-      if( yourPokemon.equals( "Kadabra")) {
+      else if( yourPokemon.equals( "Kadabra")) {
          mPoke = new ImageIcon(getClass().getResource("KadabraBACK.png"));
       }
-      if( yourPokemon.equals( "Milotic")) {
+      else if( yourPokemon.equals( "Milotic")) {
          mPoke = new ImageIcon(getClass().getResource("MiloticBACK.png"));
       }
-      if( yourPokemon.equals( "Pikachu")) {
+      else if( yourPokemon.equals( "Pikachu")) {
          mPoke = new ImageIcon(getClass().getResource("PikachuBACK.png"));
       }
-      if( yourPokemon.equals( "Scizor")) {
+      else if( yourPokemon.equals( "Scizor")) {
          mPoke = new ImageIcon(getClass().getResource("ScizorBACK.png"));
       }
-      if( yourPokemon.equals( "Scolipede")) {
+      else if( yourPokemon.equals( "Scolipede")) {
          mPoke = new ImageIcon(getClass().getResource("ScolipedeBACK.png"));
       }
 
@@ -557,41 +549,41 @@ public class PokeClient extends JFrame implements ActionListener {
       if( theirPokemon.equals( "Absol")) {
          tPoke = new ImageIcon(getClass().getResource("AbsolFRONT.png"));
       }
-      if( theirPokemon.equals( "Bulbasaur")) {
+      else if( theirPokemon.equals( "Bulbasaur")) {
          tPoke = new ImageIcon(getClass().getResource("BulbasaurFRONT.png"));
       }
-      if( theirPokemon.equals( "Charizard")) {
+      else if( theirPokemon.equals( "Charizard")) {
          tPoke = new ImageIcon(getClass().getResource("CharizardFRONT.png"));
       }
-      if( theirPokemon.equals( "Cyndaquill")) {
+      else if( theirPokemon.equals( "Cyndaquill")) {
          tPoke = new ImageIcon(getClass().getResource("CyndiquillFRONT.png"));
       }
-      if( theirPokemon.equals( "Drifblim")) {
+      else if( theirPokemon.equals( "Drifblim")) {
          tPoke = new ImageIcon(getClass().getResource("DrifblimFRONT.png"));
       }
-      if( theirPokemon.equals( "Feraligatr")) {
+      else if( theirPokemon.equals( "Feraligatr")) {
          tPoke = new ImageIcon(getClass().getResource("FeraligatrFRONT.png"));
       }
-      if( theirPokemon.equals( "Gardevoir")) {
+      else if( theirPokemon.equals( "Gardevoir")) {
          tPoke = new ImageIcon(getClass().getResource("GardevoirFRONT.png"));
       }
-      if( theirPokemon.equals( "Kadabra")) {
+      else if( theirPokemon.equals( "Kadabra")) {
          tPoke = new ImageIcon(getClass().getResource("KadabraFRONT.png"));
       }
-      if( theirPokemon.equals( "Milotic")) {
+      else if( theirPokemon.equals( "Milotic")) {
          tPoke = new ImageIcon(getClass().getResource("MiloticFRONT.png"));
       }
-      if( theirPokemon.equals( "Pikachu")) {
+      else if( theirPokemon.equals( "Pikachu")) {
          tPoke = new ImageIcon(getClass().getResource("PikachuFRONT.png"));
       }
-      if( theirPokemon.equals( "Scizor")) {
+      else if( theirPokemon.equals( "Scizor")) {
          tPoke = new ImageIcon(getClass().getResource("ScizorFRONT.png"));
       }
-      if( theirPokemon.equals( "Scolipede")) {
+      else if( theirPokemon.equals( "Scolipede")) {
          tPoke = new ImageIcon(getClass().getResource("ScolipedeFRONT.png"));
       }
 
-
+      repaintPokemon();
 
 
    }//end of update pokemon
@@ -666,7 +658,18 @@ public class PokeClient extends JFrame implements ActionListener {
       else if(choice.equals(jbConfirm)){
          doConfirm();
       }
-
+      else if(choice.equals(jbOne)){
+         buttonChoice = "ONE";
+      }
+      else if(choice.equals(jbTwo)){
+         buttonChoice = "TWO";
+      }
+      else if(choice.equals(jbThree)){
+         buttonChoice = "THREE";
+      }
+      else if(choice.equals(jbFour)){
+         buttonChoice = "FOUR";
+      }
    }//end of action listener
 
    public void music() {
@@ -682,7 +685,7 @@ public class PokeClient extends JFrame implements ActionListener {
          clip.loop(clip.LOOP_CONTINUOUSLY);
       }//end of while
       if(!musicContinue){
-         //clip.loop(-1);
+         clip.loop(-1);
          clip.stop();
          clip.flush();
       }
@@ -697,16 +700,10 @@ public class PokeClient extends JFrame implements ActionListener {
 
    public void doRun() {
       // TODO add disconnect
-      //mPokeAttack();
-      mPokeDie();
-      //ePokeAttack();
-      //ePokeDie();
 
-
-
-      //connected = false;
-      //battling = false;
-      //System.exit(-1);
+      connected = false;
+      battling = false;
+      System.exit(-1);
    }
 
    public void doSend() {
@@ -853,11 +850,11 @@ public class PokeClient extends JFrame implements ActionListener {
             }
          }//end of for
 
-         //setUpChatWindow();
+         setUpChatWindow();
 
-         //lobbyThreadPrep();
+         lobbyThreadPrep();
 
-         setUpGameWindow();
+         //setUpGameWindow();
       }//end of if
 
    } // end doConfirm()
@@ -877,6 +874,20 @@ public class PokeClient extends JFrame implements ActionListener {
       tp.setCaretPosition(len);
       tp.setCharacterAttributes(aset, false);
       tp.replaceSelection(msg);
+   }
+
+   public void setButtonsEnabled(){
+      jbOne.setEnabled(true);
+      jbTwo.setEnabled(true);
+      jbThree.setEnabled(true);
+      jbFour.setEnabled(true);
+   }
+
+   public void setButtonsDisabled(){
+      jbOne.setEnabled(false);
+      jbTwo.setEnabled(false);
+      jbThree.setEnabled(false);
+      jbFour.setEnabled(false);
    }
 
 //END OF OTHER METHODS----------------------------------
@@ -900,7 +911,7 @@ public class PokeClient extends JFrame implements ActionListener {
             //recieve date and time from server
             InputStream in = s.getInputStream();
             BufferedReader bin = new BufferedReader(new InputStreamReader(in));
-            display = bin.readLine();
+            display = bin.readLine().trim();
             jtaChat.setEditable(true);
             appendToPane(jtaChat, display,Color.GREEN );
             jtaChat.setEditable(false);
@@ -916,7 +927,7 @@ public class PokeClient extends JFrame implements ActionListener {
             try{
                InputStream in = s.getInputStream();
                BufferedReader bin = new BufferedReader(new InputStreamReader(in));
-               display = bin.readLine();
+               display = bin.readLine().trim();
                String outS = String.format("\n%s",display);
                jtaChat.setEditable(true);
                appendToPane(jtaChat, outS ,Color.RED );
@@ -937,52 +948,50 @@ public class PokeClient extends JFrame implements ActionListener {
       }
 
       public void run(){
-         try{
-            s2 = new Socket(ipaddress, PORT2);
-            //System.out.println("we made it");
-            in = s2.getInputStream();
-            bin = new BufferedReader(new InputStreamReader(in));
-            out = s2.getOutputStream();
-            pout = new PrintWriter(out);
-            pout.println(name);
-            pout.flush();
-            while(connected1){
+         while(connected1){
+            try{
+               s2 = new Socket(ipaddress, PORT2);
+               //System.out.println("we made it");
                in = s2.getInputStream();
                bin = new BufferedReader(new InputStreamReader(in));
-               String inS = bin.readLine();
-               //send to update list
-               if(inS.equals("N")){
-                  String holder = bin.readLine();
-                  //System.out.println(holder);
-                  redrawNames(holder);
-                  //sent to challenge to a battle
-               }else if(inS.equals("B")){
-                  //Start battle thread
-                  String challenger = bin.readLine();
-                  jtaChat.setEditable(true);
-                  String cBy = "\nChallenged! by: "+challenger;
-                  appendToPane(jtaChat, cBy, Color.GREEN );
-                  jtaChat.setEditable(false);
+               out = s2.getOutputStream();
+               pout = new PrintWriter(out);
+               pout.println(name);
+               pout.flush();
+               while(connected1){
+                  in = s2.getInputStream();
+                  bin = new BufferedReader(new InputStreamReader(in));
+                  String inS = bin.readLine();
+                  //send to update list
+                  if(inS.equals("N")){
+                     String holder = bin.readLine();
+                     //System.out.println(holder);
+                     redrawNames(holder);
+                     //sent to challenge to a battle
+                  }else if(inS.equals("B")){
+                     //Start battle thread
+                     String challenger = bin.readLine();
+                     jtaChat.setEditable(true);
+                     String cBy = "\nChallenged! by: "+challenger;
+                     appendToPane(jtaChat, cBy, Color.GREEN );
+                     jtaChat.setEditable(false);
 
-                  battling = true;
-
-                  if(battling==true){
+                     battling = true;
                      jBattle.setEnabled(false);
                      ThreadBattle battleThread1 = new ThreadBattle(challenger);
                      battleThread1.start();
-                     battleThread1.join();
-                  }//end of if
+                     //battleThread1.join();
+
+                  }//end of else if
+
+               }//end of while
 
 
-               }//end of else if
-
-            }//end of while
-
-
-         }catch(Exception e){
-            System.out.println("NO LONGER WAITING ");
-            e.printStackTrace();
-            connected = false;
+            }catch(Exception e){
+               System.out.println("NO LONGER WAITING ");
+               e.printStackTrace();
+               connected = false;
+            }
          }
       }//end of run
 
@@ -991,6 +1000,7 @@ public class PokeClient extends JFrame implements ActionListener {
    public class ThreadBattle extends Thread{
       private InputStream in;
       private BufferedReader bin;
+      private boolean firstTime = true;
       String enemy = "";
 
       public ThreadBattle(String opp){
@@ -1005,6 +1015,7 @@ public class PokeClient extends JFrame implements ActionListener {
             out = s3.getOutputStream();
             pout = new PrintWriter(out);
             if(battling){
+               //being challenged
                pout.println("BA");
                pout.flush();
                //System.out.println("send BA");
@@ -1019,6 +1030,7 @@ public class PokeClient extends JFrame implements ActionListener {
                pout.println(listOfPokemon);
                pout.flush();
             }else if(!battling){
+               //challenging another user
                pout.println("NB");
                pout.flush();
                pout.println(name);
@@ -1041,7 +1053,7 @@ public class PokeClient extends JFrame implements ActionListener {
          }
 
          try{
-            Thread.sleep(1000);
+            //Thread.sleep(1000);
             setUpGameWindow();
             System.out.println("Set up! "+name);
 
@@ -1099,25 +1111,87 @@ public class PokeClient extends JFrame implements ActionListener {
 
             }//end of while
             */
-            /*
+            Thread.sleep(3000);
             while(battling){
                //BATTLE LOGIC
                in = s3.getInputStream();
                bin = new BufferedReader(new InputStreamReader(in));
                out = s3.getOutputStream();
                pout = new PrintWriter(out);
+               //new turn ready
+               System.out.println(name+" Ready");
+               pout.println("R");
+               pout.flush();
+               //recieve the currently battling pokemon string
+               String battlingPokes = bin.readLine();
+               outPoke = battlingPokes.split(",");
+               System.out.println(name+"s pokemon are : "+Arrays.toString(outPoke));
+               if(firstTime){
+                  Thread.sleep(3000);
+                  firstTime = false;
+               }
+               updatePokemon();
 
-               String bCase = bin.readLine();
-            }
-            */
+               //wait for server to decide who goes first
+               String bCase = bin.readLine().trim();
+               //SELECT a move
+               if(bCase.equals("SELECT")){
+                  setButtonsEnabled();
+                  while(buttonChoice.equals("")){
+                     System.out.print("");
+                  }
+                  pout.println(buttonChoice);
+                  pout.flush();
+                  setButtonsDisabled();
+                  buttonChoice = "";
+
+                  //Server tells what move was used
+
+                  String moveOrder = bin.readLine();
+                  if(moveOrder.equals("YT")){
+                     //make yuour pokemon animation go first
+                     String myMove = bin.readLine();
+                     String eMove = bin.readLine();
+                     //update etxtare with moves chosen
+                     jtaOut.setText("You have selected "+myMove+"\nThe enemy has selected "+eMove);
+                     mPokeAttack();
+                     Thread.sleep(1000);
+                     ePokeAttack();
+                     Thread.sleep(1000);
+                  }
+                  else if(moveOrder.equals("TY")){
+                     //make enemy pokemn go first
+                     String eMove = bin.readLine();
+                     String myMove = bin.readLine();
+                     //update textarea with moves chosen
+                     jtaOut.setText("The enemy has selected "+eMove+"\nYou have selected "+myMove);
+                     ePokeAttack();
+                     Thread.sleep(1000);
+                     mPokeAttack();
+                     Thread.sleep(1000);
+                  }
+
+               }//end of select
+
+            }//end of battling
+
+            //Thread.sleep(5000);
             pout.close();
             out.close();
             bin.close();
             in.close();
+            closeGameWindow();
          }catch(Exception e){
             e.printStackTrace();
+            try{
+               pout.close();
+               out.close();
+               bin.close();
+               in.close();
+            }catch(Exception ee){ee.printStackTrace();}
+            closeGameWindow();
          }
-         closeGameWindow();
+         //closeGameWindow();
 
       }//end of run
 
@@ -1142,6 +1216,10 @@ public class PokeClient extends JFrame implements ActionListener {
       private boolean run = true;
       public PokeField(){
          setPreferredSize(new Dimension(480,140));
+         placeX = 50;
+         placeY = 90;
+         ePlaceX = 380;
+         ePlaceY = 10;
       }
 
       public void run(){
@@ -1208,11 +1286,15 @@ public class PokeClient extends JFrame implements ActionListener {
       }//end of run
 
       protected void paintComponent(Graphics g){
+         try{
          super.paintComponent(g);
          bg.paintIcon(jfGame,g,-0,0);
          mPoke.paintIcon(jfGame,g,placeX,placeY);
          tPoke.paintIcon(jfGame,g,ePlaceX,ePlaceY);
-
+         }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("Error on "+name);
+         }
 
       }
 
