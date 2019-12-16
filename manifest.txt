@@ -1,0 +1,6 @@
+Manifest-Version: 1.1
+Created-By: Alex Twomey
+Package-Name: PokeClient
+Main-Class: PokeClient
+
+

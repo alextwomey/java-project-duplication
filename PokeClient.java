@@ -675,8 +675,8 @@ public class PokeClient extends JFrame implements ActionListener {
    public void music() {
       musicContinue = true;
       try {
-         AudioInputStream ais = AudioSystem.getAudioInputStream( new File(
-         "BackgroundMusic.wav"));
+         InputStream iis = getClass().getResourceAsStream("BackgroundMusic.wav");
+         AudioInputStream ais = AudioSystem.getAudioInputStream(new BufferedInputStream(iis));
          Clip clip = AudioSystem.getClip();
          clip.open(ais);
 

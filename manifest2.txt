@@ -1,0 +1,4 @@
+Manifest-Version: 1.1
+Created-By: Alex Twomey
+Package-Name: PokeServer
+Main-Class: PokeServer
